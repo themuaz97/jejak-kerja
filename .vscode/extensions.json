@@ -1,0 +1,16 @@
+{
+  "recommendations": [
+    "Vue.vscode-typescript-vue-plugin",
+    "formulahendry.auto-rename-tag",
+    "formulahendry.auto-close-tag",
+    "mikestead.dotenv",
+    "ritwickdey.liveserver",
+    "pkief.material-icon-theme",
+    "esbenp.prettier-vscode",
+    "prisma.prisma",
+    "bradlc.vscode-tailwindcss",
+    "gruntfuggly.todo-tree",
+    "vue.volar",
+    "codeium.codeium"
+  ]
+}

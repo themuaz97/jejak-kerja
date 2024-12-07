@@ -1,0 +1,159 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model application_overall {
+  id                       Int               @id @default(autoincrement())
+  name                     String
+  is_active                Boolean           @default(true)
+  created_at               DateTime          @default(now())
+  created_by               String?
+  updated_at               DateTime?         @updatedAt
+  updated_by               String?
+  job_application          job_application[]
+  overall_apply_created_by users?            @relation("overall_apply_created_by", fields: [created_by], references: [id])
+  overall_apply_updated_by users?            @relation("overall_apply_updated_by", fields: [updated_by], references: [id])
+}
+
+model application_status {
+  id                            Int               @id @default(autoincrement())
+  name                          String
+  is_active                     Boolean           @default(true)
+  created_at                    DateTime          @default(now())
+  created_by                    String?
+  updated_at                    DateTime?         @updatedAt
+  updated_by                    String?
+  job_application               job_application[]
+  application_status_created_by users?            @relation("application_status_created_by", fields: [created_by], references: [id])
+  application_status_updated_by users?            @relation("application_status_updated_by", fields: [updated_by], references: [id])
+}
+
+model faq_answers {
+  id               Int           @id @default(autoincrement())
+  answer           String
+  faq_question_id  Int
+  is_active        Boolean       @default(true)
+  created_at       DateTime      @default(now())
+  created_by       String?
+  updated_at       DateTime?     @updatedAt
+  updated_by       String?
+  faq_questions    faq_questions @relation(fields: [faq_question_id], references: [id], onDelete: Cascade)
+  users_created_by users?        @relation("faq_answers_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
+  users_updated_by users?        @relation("faq_answers_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
+}
+
+model faq_categories {
+  id               Int       @id @default(autoincrement())
+  category_name    String
+  is_active        Boolean   @default(true)
+  created_at       DateTime  @default(now())
+  created_by       String?
+  updated_at       DateTime? @updatedAt
+  updated_by       String?
+  users_created_by users?    @relation("faq_categories_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
+  users_updated_by users?    @relation("faq_categories_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
+}
+
+model faq_questions {
+  id               Int           @id @default(autoincrement())
+  question         String
+  faq_category_id  Int
+  is_active        Boolean       @default(true)
+  created_at       DateTime      @default(now())
+  created_by       String?
+  updated_at       DateTime?     @updatedAt
+  updated_by       String?
+  users_created_by users?        @relation("faq_questions_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
+  users_updated_by users?        @relation("faq_questions_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
+  faq_answers      faq_answers[]
+}
+
+model job_application {
+  id                 String               @id @default(uuid())
+  user_id            String
+  position           String
+  position_level     String?
+  company            String?
+  platform           String?
+  location           String?
+  expected_salary    Float?
+  offered_salary     Float?
+  apply_status_id    Int
+  apply_overall_id   Int? // optional
+  remarks            String?
+  is_active          Boolean              @default(true)
+  created_at         DateTime             @default(now())
+  updated_at         DateTime?            @updatedAt
+  user               users                @relation(fields: [user_id], references: [id])
+  application_status application_status   @relation(fields: [apply_status_id], references: [id], onDelete: Cascade)
+  overall_apply      application_overall? @relation(fields: [apply_overall_id], references: [id], onDelete: Cascade)
+}
+
+model roles {
+  id         String    @id @default(uuid())
+  name       String
+  is_active  Boolean   @default(true)
+  created_at DateTime  @default(now())
+  updated_at DateTime? @updatedAt
+  users      users[]
+}
+
+model sso_providers {
+  id          String    @id @default(uuid())
+  user_id     String
+  provider    Provider?
+  provider_id String?   @unique
+  created_at  DateTime  @default(now())
+  user        users     @relation(fields: [user_id], references: [id])
+}
+
+model tokens {
+  id                 Int       @id @default(autoincrement())
+  user_id            String
+  token              String
+  refresh_token      String?
+  token_type         String?
+  expired_at         DateTime?
+  refresh_expired_at DateTime?
+  created_at         DateTime  @default(now())
+  users              users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+}
+
+model users {
+  id                            String                @id @default(uuid())
+  first_name                    String
+  last_name                     String
+  email                         String                @unique
+  password                      String? //optional because of sso providers
+  profile_img                   String?
+  username                      String?
+  phone_no                      String?
+  is_active                     Boolean               @default(true)
+  role_id                       String
+  created_at                    DateTime              @default(now())
+  updated_at                    DateTime?             @updatedAt
+  applications                  job_application[]
+  ssoProviders                  sso_providers[]
+  roles                         roles                 @relation(fields: [role_id], references: [id])
+  tokens                        tokens[]
+  application_status_created_by application_status[]  @relation("application_status_created_by")
+  application_status_updated_by application_status[]  @relation("application_status_updated_by")
+  overall_apply_created_by      application_overall[] @relation("overall_apply_created_by")
+  overall_apply_updated_by      application_overall[] @relation("overall_apply_updated_by")
+  faq_categories_created_by     faq_categories[]      @relation("faq_categories_created_by")
+  faq_categories_updated_by     faq_categories[]      @relation("faq_categories_updated_by")
+  faq_questions_created_by      faq_questions[]       @relation("faq_questions_created_by")
+  faq_questions_updated_by      faq_questions[]       @relation("faq_questions_updated_by")
+  faq_answers_created_by        faq_answers[]         @relation("faq_answers_created_by")
+  faq_answers_updated_by        faq_answers[]         @relation("faq_answers_updated_by")
+}
+
+enum Provider {
+  internal
+  google
+}
