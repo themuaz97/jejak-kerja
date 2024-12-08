@@ -6,6 +6,7 @@ import { addUser, getUsers } from "../controllers/user.controller.js";
 import { protectAdminRoute, protectRoute } from "../middleware/auth.middleware.js";
 import { addApplyStatus, deleteApplyStatus, getApplyStatus, updateApplyStatus } from "../controllers/applyStatus.controller.js";
 import { addApplyOverall, deleteApplyOverall, getApplyOverall, updateApplyOverall } from "../controllers/applyOverall.controller.js";
+import { addJobApplication, deleteJobApplication, getJobApplications, updateJobApplication } from "../controllers/jobApplication.controller.js";
 
 const router = express.Router();
 
@@ -34,5 +35,11 @@ router.get('/application-overall', getApplyOverall)
 router.post('/application-overall/add', addApplyOverall)
 router.put('/application-overall/:id/update', updateApplyOverall)
 router.put('/application-overall/:id/delete', deleteApplyOverall)
+
+// job application
+router.get('/job-applications', getJobApplications)
+router.post('/job-application/add', addJobApplication)
+router.put('/job-application/:id/update', updateJobApplication)
+router.put('/job-application/:id/delete', deleteJobApplication)
 
 export default router;
