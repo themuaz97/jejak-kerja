@@ -10,13 +10,13 @@ const router = createRouter({
             children: [
                 {
                     path: '/',
-                    name: 'openstreetmaps',
+                    name: 'dashboard',
                     component: () => import('@/views/Dashboard.vue')
                 },
                 {
-                    path: '/uikit/formlayout',
-                    name: 'formlayout',
-                    component: () => import('@/views/uikit/FormLayout.vue')
+                    path: '/admin/configuration',
+                    name: 'config-general',
+                    component: () => import('@/views/pages/configuration/ConfigTab.vue')
                 },
                 {
                     path: '/uikit/input',

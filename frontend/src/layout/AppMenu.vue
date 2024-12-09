@@ -5,19 +5,19 @@ import AppMenuItem from './AppMenuItem.vue';
 
 const model = ref([
     {
-        label: 'Basemaps',
+        label: 'Home',
+        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/' }],
+    },
+    {
+        label: 'Job Tracker',
         items: [
-        { label: 'Map View', icon: 'pi pi-fw pi-map', to: '/' },
-        // { label: 'World Imagery', icon: 'pi pi-fw pi-map', to: '/world-imagery' }
+            { label: 'Job Applications', icon: 'pi pi-fw pi-briefcase', to: '/users' },
         ],
     },
     {
-        label: 'Layers',
+        label: 'Admin Configuration',
         items: [
-            { label: 'Survey', icon: 'pi pi-fw pi-id-card', to: '/uikit/formlayout' },
-            { label: 'Design', icon: 'pi pi-fw pi-check-square', to: '/uikit/input' },
-            { label: 'Environment', icon: 'pi pi-fw pi-mobile', to: '/uikit/button', class: 'rotated-icon' },
-            { label: 'Permit Area', icon: 'pi pi-fw pi-table', to: '/uikit/table' },
+            { label: 'Configuration', icon: 'pi pi-fw pi-cog', to: '/admin/configuration' },
             // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },

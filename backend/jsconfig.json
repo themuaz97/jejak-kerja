@@ -3,7 +3,16 @@
     "module": "ESNext",
     "moduleResolution": "node",
     "target": "ES6",
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
   },
-  "include": ["src/**/*.js", "src/index.js", "src/db/prisma.js"]
+  "include": ["src/**/*.js", "src/index.js", "src/db/prisma.js"],
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

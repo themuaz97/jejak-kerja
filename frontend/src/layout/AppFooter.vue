@@ -2,7 +2,7 @@
 
 <template>
     <div class="layout-footer">
-        Digital Permit Viewer by
-        <a href="https://github.com/themuaz97" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">Muaz</a>
+        Jejak Kerja by
+        <a href="https://github.com/themuaz97" target="_blank" rel="noopener noreferrer" class="text-primary font-bold hover:underline">themuaz97</a>
     </div>
 </template>
