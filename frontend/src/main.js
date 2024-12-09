@@ -43,5 +43,8 @@ app.use(PrimeVue, {
 });
 app.use(ToastService);
 app.use(ConfirmationService);
+Object.values(import.meta.glob("@/plugins/*.js", { eager: true })).forEach((i) =>
+    app.use(i),
+);
 
 app.mount('#app');

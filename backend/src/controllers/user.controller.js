@@ -1,6 +1,6 @@
 /** @format */
 
-import prisma from "@/db/prisma.js";
+import prisma from "../db/prisma.js";
 import bcrypt from "bcrypt";
 
 export const getUsers = async (req, res) => {
