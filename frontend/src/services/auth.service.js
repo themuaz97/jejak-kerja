@@ -9,3 +9,11 @@ export const login = async (data) => {
 export const register = async (data) => {
     return await apiService(ENDPOINTS.REGISTER, METHOD.POST, data);
 };
+
+export const me = async () => {
+    return await apiService(ENDPOINTS.ME, METHOD.GET);
+};
+
+export const refreshToken = async (data) => {
+    return await apiService(ENDPOINTS.REFRESH_TOKEN, METHOD.POST, data);
+};

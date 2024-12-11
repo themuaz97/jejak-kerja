@@ -14,7 +14,12 @@ dotenv.config();
 const server = express();
 
 server.use(express.json()); // Parse JSON request bodies
-server.use(cors());
+server.use(cors(
+  {
+    origin: process.env.FRONTEND_URL,
+    credentials: true
+  }
+));
 server.use(cookieParser());
 
 server.get("/", (req, res) => {

@@ -51,11 +51,11 @@ export const generateToken = async (ssoId, userId, res, provider, token_type) =>
   });
 
   // 4. Set the access accessToken as an HTTP-only cookie
-  res.cookie("jwt", accessToken, {
+  res.cookie("refreshToken", refreshToken, {
     httpOnly: true,
-    secure: true,
-    sameSite: "none",
-    maxAge: 60 * 60 * 1000, // 1 hour in milliseconds
+    secure: process.env.NODE_ENV === "development",
+    sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 
   return { accessToken, refreshToken };

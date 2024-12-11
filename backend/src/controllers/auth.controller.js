@@ -122,6 +122,7 @@ export const me = async (req, res) => {
         username: user.username,
         first_name: user.first_name,
         last_name: user.last_name,
+        profile_img: user.profile_img,
         role: user.roles
       }
     });
@@ -249,49 +250,48 @@ export const resetPassword = async (req, res) => {
 };
 
 export const refreshToken = async (req, res) => {
-  const { refresh_token } = req.body;
-
-  if (!refresh_token) {
-    return res.status(400).send({ message: "Refresh token is required" });
-  }
-
-  let decoded;
   try {
-    // Verify the refresh token with the secret key and decode it
-    decoded = jwt.verify(refresh_token, process.env.REFRESH_SECRET_KEY);
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      return res.status(400).send({ message: "Refresh token is required" });
+    }
+
+    let decoded;
+    try {
+      // Verify the refresh token with the secret key and decode it
+      decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+    } catch (error) {
+      return res
+        .status(401)
+        .send({
+          message: "Invalid or expired refresh token",
+          error: error.message,
+        });
+    }
+
+    const userId = decoded.userId;
+
+    // Generate a new access token
+    const newAccessToken = jwt.sign({ userId }, process.env.SECRET_KEY, {
+      expiresIn: "1h",
+    });
+
+    // Calculate new expiration dates
+    const newAccessTokenExpiresAt = new Date();
+    newAccessTokenExpiresAt.setHours(newAccessTokenExpiresAt.getHours() + 1);
+
+    // Update the database with the new refresh token and expiration dates
+    await prisma.tokens.updateMany({
+      where: { refresh_token: refreshToken },
+      data: {
+        token: newAccessToken,
+        expired_at: newAccessTokenExpiresAt,
+      },
+    });
+
+    res.status(200).send({ message: "Token refreshed successfully", accessToken: newAccessToken });
   } catch (error) {
-    return res.status(401).send({ message: "Invalid or expired refresh token", error: error.message });
+    res.status(500).send({ message: "Internal server error", error: error.message });
   }
-
-  const userId = decoded.userId;
-
-  // Generate a new access token
-  const newAccessToken = jwt.sign({ userId }, process.env.SECRET_KEY, {
-    expiresIn: "1h",
-  });
-
-  // Generate a new refresh token
-  const newRefreshToken = jwt.sign({ userId }, process.env.REFRESH_SECRET_KEY, {
-    expiresIn: "7d",
-  });
-
-  // Calculate new expiration dates
-  const newAccessTokenExpiresAt = new Date();
-  newAccessTokenExpiresAt.setHours(newAccessTokenExpiresAt.getHours() + 1);
-
-  const newRefreshTokenExpiresAt = new Date();
-  newRefreshTokenExpiresAt.setDate(newRefreshTokenExpiresAt.getDate() + 7);
-
-  // Update the database with the new refresh token and expiration dates
-  await prisma.auth_tokens.updateMany({
-    where: { refresh_token: refresh_token },
-    data: {
-      token: newAccessToken,
-      expired_at: newAccessTokenExpiresAt,
-      refresh_token: newRefreshToken,
-      expired_refresh_at: newRefreshTokenExpiresAt,
-    },
-  });
-
-  res.status(200).send({ token: newAccessToken, refresh_token: newRefreshToken });
 };

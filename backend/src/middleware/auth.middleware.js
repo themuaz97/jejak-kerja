@@ -43,14 +43,11 @@ export const protectRoute = async (req, res, next) => {
       role_name: user.roles?.name,
     };
 
-    console.log(`protectRoute: ${JSON.stringify(req.user)}`);
-    
-
     // 5. Call the next middleware or route handler
     next();
   } catch (error) {
     console.error("Error in protectRoute:", error); // Log unexpected errors
-    res.status(500).send({ error: "Failed to authenticate user" });
+    res.status(500).send({ message: "Internal server error", error: error.message });
   }
 };
 
