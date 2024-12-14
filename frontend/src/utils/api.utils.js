@@ -10,6 +10,7 @@ export const apiService = async (
     retryCount = 0,
 ) => {
     let token = localStorage.getItem("accessToken");
+    
     const options = {
         method,
         headers: {
@@ -42,11 +43,11 @@ export const apiService = async (
                 // Attempt to refresh the token
                 const refreshResponse = await refreshToken();
 
-                if (refreshResponse && refreshResponse.accessToken) {
+                if (refreshResponse && refreshResponse.data.resData.accessToken) {
                     // Update the access token
                     localStorage.setItem(
                         "accessToken",
-                        refreshResponse.accessToken,
+                        refreshResponse.data.resData.accessToken,
                     );
 
                     // Retry the original request with the new token

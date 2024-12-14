@@ -8,64 +8,76 @@ import transporter from "../config/emailConfig.js";
 
 export const register = async (req, res) => {
   try {
-    const {firstName, lastName, email, password, confirmPassword, username, roleId} = req.body;
+    const { firstName, lastName, email, password, confirmPassword, username } = req.body;
 
-  if (!firstName || !lastName || !email || !password || !confirmPassword || !username || !roleId) {
-    return res.status(400).send({ message: "Missing required fields" });
-  }
+    if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
-  const existingUser = await prisma.users.findUnique({
-    where: { email },
-  });
+    const existingUser = await prisma.users.findUnique({
+      where: { email },
+    });
 
-  if (existingUser) {
-    return res.status(400).send({ message: "User already exists" });
-  }
-  
-  if (password !== confirmPassword) {
-    return res.status(400).send({ message: "Passwords do not match" });
-  }
+    if (existingUser) {
+      return res.status(400).send({ message: "Email already exists" });
+    }
 
-  const salt = bcrypt.genSaltSync();
-  const hashedPassword = bcrypt.hashSync(password, salt);
+    if (password !== confirmPassword) {
+      return res.status(400).send({ message: "Passwords do not match" });
+    }
 
-  const profilePic =`https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`;
+    const salt = bcrypt.genSaltSync();
+    const hashedPassword = bcrypt.hashSync(password, salt);
 
-  const user = await prisma.users.create({
-    data: {
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      password: hashedPassword,
-      username,
-      profile_img: profilePic,
-      role_id: roleId,
-    },
-  });
-    
-  const provider = await prisma.sso_providers.create({
-    data: {
-      user_id: user.id,
-      provider: Provider.internal,
-    },
-  })
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .send({ message: "Password must be at least 6 characters long" });
+    }
 
-  const mailOptions = {
-    from: process.env.MAIL_USER,
-    to: email,
-    subject: "Welcome to Our Jejak Kerja!",
-    text: `Hello ${firstName} ${lastName},\n\nWelcome to our app! We're excited to have you on board.\n\nFeel free to start exploring and reach out if you have any questions.
+    const profilePic = `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`;
+
+    const roles = await prisma.roles.findFirst({
+      where: {
+        name: "user"
+      }
+    })
+
+    const user = await prisma.users.create({
+      data: {
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        password: hashedPassword,
+        username,
+        profile_img: profilePic,
+        role_id: roles.id,
+      },
+    });
+
+    const provider = await prisma.sso_providers.create({
+      data: {
+        user_id: user.id,
+        provider: Provider.internal,
+      },
+    })
+
+    const mailOptions = {
+      from: process.env.MAIL_USER,
+      to: email,
+      subject: "Welcome to Our Jejak Kerja!",
+      text: `Hello ${firstName} ${lastName},\n\nWelcome to our app! We're excited to have you on board.\n\nFeel free to start exploring and reach out if you have any questions.
         \n\nBest regards,\nJejak Kerja Support Team`,
-    html: `<p>Hello ${firstName} ${lastName},</p>
+      html: `<p>Hello ${firstName} ${lastName},</p>
                <p>Welcome to our app! We're excited to have you on board.</p>
                <p>Feel free to start exploring and reach out if you have any questions.</p>
                <p>Best regards,<br>Jejak Kerja Support Team</p>`,
-  };
+    };
 
-  // Send the email
-  await transporter.sendMail(mailOptions);
-    
-  res.status(201).send({ message: "User registered successfully", user });
+    // Send the email
+    await transporter.sendMail(mailOptions);
+
+    res.status(201).send({ message: "User registered successfully", user });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -79,6 +91,10 @@ export const login = async (req, res) => {
       return res.status(400).send({ message: "Missing required fields" });
     }
 
+    if (password.length < 6) {
+      return res.status(400).send({ message: "Password must be at least 6 characters long" });
+    }
+
     const user = await prisma.users.findUnique({
       where: { email },
     });
@@ -86,7 +102,7 @@ export const login = async (req, res) => {
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
-    
+
     const provider = await prisma.sso_providers.findFirst({
       where: { user_id: user.id },
     });
@@ -98,14 +114,14 @@ export const login = async (req, res) => {
     }
 
     const { accessToken, refreshToken } = await generateToken(provider.id, user.id, res, Provider.internal, "auth");
-    
+
     res.status(200).send({ message: "Login successful", user, accessToken, refreshToken });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
 }
 
-export const me = async (req, res) => { 
+export const me = async (req, res) => {
   try {
     const user = await prisma.users.findFirst({
       where: { id: req.user.user_id },
@@ -254,13 +270,14 @@ export const refreshToken = async (req, res) => {
     const refreshToken = req.cookies.refreshToken;
 
     if (!refreshToken) {
-      return res.status(400).send({ message: "Refresh token is required" });
+      return res.status(401).send({ message: "refresh token cookie is missing!" });
     }
 
     let decoded;
     try {
       // Verify the refresh token with the secret key and decode it
       decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+
     } catch (error) {
       return res
         .status(401)

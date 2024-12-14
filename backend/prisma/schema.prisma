@@ -111,7 +111,7 @@ model sso_providers {
   provider    Provider?
   provider_id String?   @unique
   created_at  DateTime  @default(now())
-  user        users     @relation(fields: [user_id], references: [id])
+  user        users     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
 
 model tokens {

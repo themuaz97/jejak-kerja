@@ -5,6 +5,9 @@ import prisma from "../db/prisma.js";
 export const getJobApplications = async (req, res) => {
   try {
     const jobApplications = await prisma.job_application.findMany({
+      where: {
+        created_by: req.user.user_id,
+      },
       include: {
         application_status: true,
         application_overall: true,

@@ -7,7 +7,6 @@ export const protectRoute = async (req, res, next) => {
     // 1. Get the JWT token from the header's request Authorization
     const bearerToken = req.headers.authorization;
     const [type, token] = bearerToken?.split(" ") ?? [];
-    console.log(`protectRoute: ${type} -- ${token}`);
 
     if (!token || type !== "Bearer") {
       return res.status(401).send({ message: "No token found, authorization denied" });

@@ -30,12 +30,12 @@ export const protectRoute = (router) => {
             next(); // Session is valid, proceed
         } catch (error) {
             console.error("Session validation failed:", error.message);
-
-            // // Remove invalid token
-            // localStorage.removeItem("accessToken");
-
-            // Redirect to login page for protected routes
-            next({ name: "login" });
+            if (error.response?.status === 401) {
+                console.warn("Refresh token is invalid or expired. Redirecting to login.");
+                next({ name: "login" });
+            } else {
+                next(); // Proceed to other error handling if needed
+            }
         }
     });
 };
