@@ -21,11 +21,11 @@ const toast = useToast();
 
 const fetchMe = async () => {
   try {
-    const response = await me();
+    const {data} = await me();
 
-    const data = response.data;
-    console.log('log', data);
-    
+    const dataMe = data.resData;
+
+    console.log('respons', dataMe);
   } catch (error) {
     toast.add({ severity: 'error', summary: 'Error', detail: error.message, life: 3000 });
   }

@@ -36,7 +36,7 @@ export const getUsers = async (req, res) => {
     const hasNextPage = pageNumber < totalPages;
 
     res.status(200).send({
-      data: users,
+      users,
       meta: {
         page: pageNumber,
         limit: pageSize,
@@ -106,7 +106,7 @@ export const addUser = async (req, res) => {
       },
     });
 
-    res.status(201).send({ data: user });
+    res.status(201).send({ message: "User created successfully", user });
   } catch (error) {
     res
       .status(500)

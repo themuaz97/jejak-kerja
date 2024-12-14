@@ -4,7 +4,7 @@ export const getApplyStatus = async (req, res) => {
   try {
     const applyStatus = await prisma.application_status.findMany();
 
-    res.status(200).send({ data: applyStatus });
+    res.status(200).send({ applyStatus });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -26,7 +26,7 @@ export const addApplyStatus = async (req, res) => {
       },
     });
 
-    res.status(201).send({ data: applyStatus });
+    res.status(201).send({ applyStatus });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -46,7 +46,7 @@ export const updateApplyStatus = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: applyStatus });
+    res.status(200).send({ applyStatus });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -65,7 +65,7 @@ export const deleteApplyStatus = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: applyStatus });
+    res.status(200).send({ applyStatus });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

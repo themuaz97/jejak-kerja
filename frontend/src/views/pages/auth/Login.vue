@@ -2,28 +2,59 @@
 import { login } from '@/services/auth.service';
 import { useToast } from 'primevue/usetoast';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 const toast = useToast();
+const router = useRouter();
 
 const email = ref('');
 const password = ref('');
 const checked = ref(false);
 
+const loading = ref(false);
+
 // TODO: set if accessToken expired, use refreshToken. if refreshToken expired, kick to landing page
 const handleLogin = async () => {
+    loading.value = true;
     try {
-        const data = { email: email.value, password: password.value };
-        const response = await login(data);
-
+        const input = { email: email.value, password: password.value };
+        const { data } = await login(input); // Destructure response and input
+        console.log('response login', data);
+        
         // Save the token to localStorage
-        if (response.data && response.data.accessToken) {
-            localStorage.setItem('accessToken', response.data.accessToken);
+        if (data && data.response.accessToken) {
+            localStorage.setItem('accessToken', data.response.accessToken);
         }
 
-        toast.add({ severity: 'success', summary: 'Success', detail: 'Login successful', life: 3000 });
+        // Ensure you're using the correct toast method and parameters
+        if (data.response.status === 200) {
+            toast.add({ 
+                severity: 'success', 
+                summary: 'Success', 
+                detail: data.message || 'Login successful', 
+                life: 3000 
+            });
+            router.push('/dashboard');
+        } else {
+            toast.add({ 
+                severity: 'error', 
+                summary: 'Error', 
+                detail: data.message || 'Login failed', 
+                life: 3000 
+            });
+        }
+        
     } catch (error) {
-        console.error('Login Failed:', error.message);
-        toast.add({ severity: 'error', summary: 'Error', detail: error.message, life: 3000 });
+        console.error('Login Failed:', error);
+        
+        toast.add({ 
+            severity: 'error', 
+            summary: 'Error', 
+            detail: error.message, 
+            life: 3000 
+        });
+    } finally {
+        loading.value = false;
     }
 };
 
@@ -44,6 +75,7 @@ const handleLogin = async () => {
                     </div>
 
                     <div>
+                        <Toast />
                         <label for="email1"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
                         <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8"
@@ -62,7 +94,7 @@ const handleLogin = async () => {
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot
                                 password?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" as="router-link" to="/account" @click="handleLogin"></Button>
+                        <Button label="Sign In" class="w-full" :loading="loading" @click="handleLogin" />
                     </div>
                 </div>
             </div>

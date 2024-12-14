@@ -11,7 +11,7 @@ export const getJobApplications = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: jobApplications });
+    res.status(200).send({ jobApplications });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -38,7 +38,7 @@ export const addJobApplication = async (req, res) => {
       },
     });
 
-    res.status(201).send({ message: "Job application added successfully", data: jobApplication });
+    res.status(201).send({ message: "Job application added successfully", jobApplication });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -68,7 +68,7 @@ export const updateJobApplication = async (req, res) => {
       },
     });
 
-    res.status(200).send({ message: "Job application updated successfully", data: jobApplication });
+    res.status(200).send({ message: "Job application updated successfully", jobApplication });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -87,7 +87,7 @@ export const deleteJobApplication = async (req, res) => {
       },
     });
 
-    res.status(200).send({ message: "Job application deleted successfully", data: jobApplication });
+    res.status(200).send({ message: "Job application deleted successfully", jobApplication });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

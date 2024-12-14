@@ -1,19 +1,20 @@
 import { METHOD } from "@/constants/api-method.constant";
-import { base_url } from "../constants/api.constant";
-import { refreshToken } from "@/services/auth.service";
+import { base_url } from "@/constants/api.constant";
+import { refreshToken, logout } from "@/services/auth.service";
 
 export const apiService = async (
     url,
     method = METHOD.GET,
     body = null,
     headers = {},
+    retryCount = 0,
 ) => {
     let token = localStorage.getItem("accessToken");
     const options = {
         method,
         headers: {
-          "Content-Type": "application/json",
-          ...headers,
+            "Content-Type": "application/json",
+            ...headers,
         },
         credentials: "include",
     };
@@ -24,9 +25,8 @@ export const apiService = async (
 
     if (body) {
         if (headers["Content-Type"] === "multipart/form-data") {
-            // Do not stringify body for form-data
             options.body = body;
-            delete options.headers["Content-Type"]; // Let browser set the boundary automatically
+            delete options.headers["Content-Type"];
         } else {
             options.body = JSON.stringify(body);
         }
@@ -34,33 +34,38 @@ export const apiService = async (
 
     try {
         const response = await fetch(`${base_url}${url}`, options);
+        const data = await response.json();
 
-         if (response.status === 401) {
-             // Token expired, attempt to refresh
-             try {
-                 const refreshResponse = await refreshToken(); // No need to pass refreshToken from client, it will be sent automatically
-                 if (refreshResponse.accessToken) {
-                     // Save new accessToken and retry the original request
-                     token = refreshResponse.accessToken;
-                     localStorage.setItem("accessToken", token);
-                     options.headers.Authorization = `Bearer ${token}`;
-                     return await fetch(`${base_url}${url}`, options).then(
-                         (res) => res.json(),
-                     );
-                 }
-             } catch (error) {
-                 console.error("Refresh token failed:", error.message);
-                 window.location.href = "/";
-                 return Promise.reject("Session expired. Please log in again.");
-             }
-         }
+        // If unauthorized and we haven't retried yet
+        if (response.status === 401 && retryCount < 1) {
+            try {
+                // Attempt to refresh the token
+                const refreshResponse = await refreshToken();
 
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || "API request failed");
+                if (refreshResponse && refreshResponse.accessToken) {
+                    // Update the access token
+                    localStorage.setItem(
+                        "accessToken",
+                        refreshResponse.accessToken,
+                    );
+
+                    // Retry the original request with the new token
+                    return await apiService(
+                        url,
+                        method,
+                        body,
+                        headers,
+                        retryCount + 1,
+                    );
+                }
+            } catch (error) {
+                // If refresh fails, logout the user
+                await logout();
+                return Promise.reject("Session expired. Please log in again.");
+            }
         }
 
-        return await response.json();
+        return { data: { response, resData: data }};
     } catch (error) {
         console.error("API Error:", error.message);
         throw error;

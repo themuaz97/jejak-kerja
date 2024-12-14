@@ -6,7 +6,7 @@ export const getRoles = async (req, res) => {
   try {
     const roles = await prisma.roles.findMany();
 
-    res.status(200).send({ data: roles });
+    res.status(200).send({ roles });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -26,7 +26,7 @@ export const addRole = async (req, res) => {
       },
     });
 
-    res.status(201).send({ data: role });
+    res.status(201).send({ message: "Role created successfully", role });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -45,7 +45,7 @@ export const updateRole = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: role });
+    res.status(200).send({ message: "Role updated successfully", role });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -62,7 +62,7 @@ export const deleteRole = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: role });
+    res.status(200).send({ message: "Role deleted successfully", role });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

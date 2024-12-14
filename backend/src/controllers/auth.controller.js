@@ -65,7 +65,7 @@ export const register = async (req, res) => {
   // Send the email
   await transporter.sendMail(mailOptions);
     
-  res.status(201).send({ message: "User registered successfully", data: user });
+  res.status(201).send({ message: "User registered successfully", user });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -99,7 +99,7 @@ export const login = async (req, res) => {
 
     const { accessToken, refreshToken } = await generateToken(provider.id, user.id, res, Provider.internal, "auth");
     
-    res.status(200).send({ message: "Login successful", data: { user, accessToken, refreshToken } });
+    res.status(200).send({ message: "Login successful", user, accessToken, refreshToken });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -116,7 +116,7 @@ export const me = async (req, res) => {
     }
 
     res.status(200).send({
-      data: {
+      user: {
         id: user.id,
         email: user.email,
         username: user.username,
@@ -291,6 +291,21 @@ export const refreshToken = async (req, res) => {
     });
 
     res.status(200).send({ message: "Token refreshed successfully", accessToken: newAccessToken });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // Clear the refreshToken from the cookies
+    res.clearCookie("refreshToken", {
+      httpOnly: true, // Secure against XSS attacks
+      sameSite: "strict", // Prevent cross-site cookie usage
+      secure: process.env.NODE_ENV === "development", // Send cookie only over HTTPS in production
+    });
+
+    res.status(200).send({ message: "Successfully logged out" });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

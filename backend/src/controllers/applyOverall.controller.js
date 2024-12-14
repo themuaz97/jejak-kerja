@@ -4,7 +4,7 @@ export const getApplyOverall = async (req, res) => {
   try {
     const applyOverall = await prisma.application_overall.findMany();
 
-    res.status(200).send({ data: applyOverall });
+    res.status(200).send({ applyOverall });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -25,7 +25,7 @@ export const addApplyOverall = async (req, res) => {
       },
     });
 
-    res.status(201).send({ data: applyOverall });
+    res.status(201).send({ applyOverall });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -45,7 +45,7 @@ export const updateApplyOverall = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: applyOverall });
+    res.status(200).send({ applyOverall });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -64,7 +64,7 @@ export const deleteApplyOverall = async (req, res) => {
       },
     });
 
-    res.status(200).send({ data: applyOverall });
+    res.status(200).send({ applyOverall });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

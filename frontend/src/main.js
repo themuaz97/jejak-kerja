@@ -10,12 +10,12 @@ import ToastService from 'primevue/toastservice';
 
 import '@/assets/styles.scss';
 import '@/assets/tailwind.css';
-import { protectRoute } from './router/guard';
+import { protectRoute } from './middleware/guard';
 
 const app = createApp(App);
 
-protectRoute(router);
 app.use(router);
+protectRoute(router);
 
 const MyPreset = definePreset(Aura, {
     semantic: {
