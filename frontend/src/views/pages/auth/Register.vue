@@ -13,8 +13,6 @@ const email = ref("");
 const username = ref("");
 const password = ref('');
 const confirmPassword = ref('');
-const showPassword = ref(false);
-const showConfirmPassword = ref(false);
 
 const loading = ref(false);
 
@@ -27,7 +25,7 @@ const handleRegister = async () => {
     const { data } = await register(input); // Destructure response and input
 
     console.log("response register", data);
-    if (data.response.status === 200) {
+    if (data.response.status === 201) {
       toast.add({
         severity: "success",
         summary: "Success",
@@ -57,7 +55,6 @@ const handleRegister = async () => {
   }
 };
 </script>
-<!-- TODO: remember me, register, forgot password, save token -->
 <template>
   <div
     class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
@@ -100,18 +97,21 @@ const handleRegister = async () => {
             </div>
             <div class="flex flex-col col-span-2">
               <label for="password">Password</label>
-              <InputText id="password" :type="showPassword ? 'text' : 'password'" v-model="password"
-                placeholder="Password" class="w-full" :class="{ 'border-red-500': !passwordsMatch }" />
-              <small>Password must be at least 6 characters.</small>
+              <Password id="password" v-model="password" promptLabel="Choose a password" weakLabel="Too simple"
+                mediumLabel="Average complexity" strongLabel="Complex password" toggleMask fluid placeholder="Password"
+                v-tooltip="'Password must be at least 6 characters.'" class="w-full"
+                :class="{ 'border-red-500': !passwordsMatch }" />
             </div>
             <div class="flex flex-col col-span-2">
               <label for="confirmPassword">Confirm Password</label>
-              <InputText id="confirmPassword" :type="showConfirmPassword ? 'text' : 'password'"
-                v-model="confirmPassword" placeholder="Confirm Password" class="w-full" :class="{ 'border-red-500': !passwordsMatch }" />
+              <Password id="confirmPassword" promptLabel="Choose a password" weakLabel="Too simple"
+                mediumLabel="Average complexity" strongLabel="Complex password" toggleMask fluid
+                v-model="confirmPassword" placeholder="Confirm Password" v-tooltip="'Password must be at least 6 characters.'"
+                class="w-full" :class="{ 'p-invalid': !passwordsMatch }" />
             </div>
             <div class="flex flex-col gap-4 col-span-2">
               <Button label="Register" :loading="loading" @click="handleRegister" />
-              <Button label="Already have an account?" :loading="loading" @click="$router.push('/auth/login')" text />
+              <Button label="Already have an account?" @click="$router.push('/auth/login')" text />
             </div>
           </div>
         </div>
@@ -121,7 +121,8 @@ const handleRegister = async () => {
 </template>
 
 <style scoped>
-.border-red-500 {
+.p-invalid {
   border: 1px solid #f87171;
+  border-radius: var(--content-border-radius);
 }
 </style>

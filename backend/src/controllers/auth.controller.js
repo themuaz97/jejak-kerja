@@ -100,7 +100,7 @@ export const login = async (req, res) => {
     });
 
     if (!user) {
-      return res.status(404).send({ message: "User not found" });
+      return res.status(404).send({ message: "The email does not exist" });
     }
 
     const provider = await prisma.sso_providers.findFirst({

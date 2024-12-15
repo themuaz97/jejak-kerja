@@ -1,16 +1,17 @@
 import { METHOD } from "@/constants/api-method.constant";
 import { base_url } from "@/constants/api.constant";
-import { refreshToken, logout } from "@/services/auth.service";
+import { logout } from "@/services/auth.service";
 
 export const apiService = async (
     url,
     method = METHOD.GET,
     body = null,
     headers = {},
+    params = null,
     retryCount = 0,
 ) => {
     let token = localStorage.getItem("accessToken");
-    
+
     const options = {
         method,
         headers: {
@@ -33,8 +34,15 @@ export const apiService = async (
         }
     }
 
+    // Convert params to query string
+    let fullUrl = `${base_url}${url}`;
+    if (params) {
+        const queryString = new URLSearchParams(params).toString();
+        fullUrl = `${fullUrl}?${queryString}`;
+    }
+
     try {
-        const response = await fetch(`${base_url}${url}`, options);
+        const response = await fetch(fullUrl, options);
         const data = await response.json();
 
         // If unauthorized and we haven't retried yet
@@ -56,6 +64,7 @@ export const apiService = async (
                         method,
                         body,
                         headers,
+                        params,
                         retryCount + 1,
                     );
                 }
@@ -66,7 +75,7 @@ export const apiService = async (
             }
         }
 
-        return { data: { response, resData: data }};
+        return { data: { response, resData: data } };
     } catch (error) {
         console.error("API Error:", error.message);
         throw error;

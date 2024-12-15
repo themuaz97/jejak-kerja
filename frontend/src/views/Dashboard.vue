@@ -8,11 +8,6 @@
         <InputText class="bg-red-500" v-model="password" promptLabel="Choose a password" weakLabel="Too simple"
           mediumLabel="Average complexity" strongLabel="Complex password" toggleMask />
       </div>
-      <div class="flex flex-col col-span-2">
-        <label for="confirmPassword">Confirm Password</label>
-        <Password class="bg-red-500" v-model="confirmPassword" promptLabel="Choose a password" weakLabel="Too simple"
-          mediumLabel="Average complexity" strongLabel="Complex password" toggleMask />
-      </div>
       <div class="flex flex-col">
         <label for="confirmPassword">Confirm Password</label>
         <Button label="Submit" class="w-full" :loading="loading" variant="text" />

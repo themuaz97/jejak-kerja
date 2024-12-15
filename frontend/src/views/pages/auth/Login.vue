@@ -13,45 +13,47 @@ const checked = ref(false);
 
 const loading = ref(false);
 
-// TODO: set if accessToken expired, use refreshToken. if refreshToken expired, kick to landing page
+const emailError = ref('');
+const passwordError = ref('');
+
 const handleLogin = async () => {
     loading.value = true;
     try {
         const input = { email: email.value, password: password.value };
         const { data } = await login(input); // Destructure response and input
         console.log('response login', data);
-        
+
         // Save the token to localStorage
-        if (data && data.response.accessToken) {
-            localStorage.setItem('accessToken', data.response.accessToken);
+        if (data && data.resData.accessToken) {
+            localStorage.setItem('accessToken', data.resData.accessToken);
         }
 
         // Ensure you're using the correct toast method and parameters
         if (data.response.status === 200) {
-            toast.add({ 
-                severity: 'success', 
-                summary: 'Success', 
-                detail: data.message || 'Login successful', 
-                life: 3000 
+            toast.add({
+                severity: 'success',
+                summary: 'Success',
+                detail: data.resData.message || 'Login successful',
+                life: 3000
             });
             router.push('/dashboard');
         } else {
-            toast.add({ 
-                severity: 'error', 
-                summary: 'Error', 
-                detail: data.message || 'Login failed', 
-                life: 3000 
+            toast.add({
+                severity: 'error',
+                summary: 'Error',
+                detail: data.resData.message || 'Login failed',
+                life: 3000
             });
         }
-        
+
     } catch (error) {
         console.error('Login Failed:', error);
-        
-        toast.add({ 
-            severity: 'error', 
-            summary: 'Error', 
-            detail: error.message, 
-            life: 3000 
+
+        toast.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: error.message,
+            life: 3000
         });
     } finally {
         loading.value = false;
@@ -59,7 +61,7 @@ const handleLogin = async () => {
 };
 
 </script>
-<!-- TODO: remember me, invalid checking -->
+<!-- TODO: enhance: remember me, invalid checking -->
 <template>
     <div
         class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
@@ -76,29 +78,34 @@ const handleLogin = async () => {
 
                     <div>
                         <Toast />
-                        <label for="email1"
+                        <label for="email"
                             class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-                        <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-8"
-                            v-model="email" />
+                        <InputText id="email" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-4"
+                            v-model="email" :class="{ 'p-invalid': emailError }" />
 
-                        <label for="password1"
+                        <label for="password"
                             class="block text-surface-900 dark:text-surface-0 font-medium text-xl mb-2">Password</label>
-                        <Password id="password1" v-model="password" placeholder="Password" :toggleMask="true"
-                            class="mb-4" fluid :feedback="false"></Password>
+                        <Password id="password" v-model="password" placeholder="Password" :toggleMask="true"
+                            class="mb-4" fluid :feedback="false" :class="{ 'p-invalid': passwordError }"></Password>
 
                         <div class="flex items-center justify-between mt-2 mb-8 gap-8">
                             <div class="flex items-center">
-                                <Checkbox v-model="checked" id="rememberme1" binary class="mr-2"></Checkbox>
-                                <label for="rememberme1">Remember me</label>
+                                <Checkbox v-model="checked" id="rememberme" binary class="mr-2"></Checkbox>
+                                <label for="rememberme">Remember me</label>
                             </div>
-                            <span 
-                            class="font-medium no-underline ml-2 text-right cursor-pointer text-primary" 
-                            @click="$router.push('/auth/forgot-password')"
-                            >
+                            <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+                                @click="$router.push('/auth/forgot-password')">
                                 Forgot password?
                             </span>
                         </div>
-                        <Button label="Sign In" class="w-full" :loading="loading" @click="handleLogin" />
+                        <div class="flex flex-col gap-4">
+                            <Button label="Sign In" class="w-full" :loading="loading" @click="handleLogin" />
+                            <div class="flex flex-row justify-center items-center gap-2">
+                                <span class="text-end">Don't have an account?</span>
+                                <Button label="Register here" link
+                                    @click="$router.push('/auth/register')" style="margin: 0; padding: 0;" />
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -107,13 +114,7 @@ const handleLogin = async () => {
 </template>
 
 <style scoped>
-.pi-eye {
-    transform: scale(1.6);
-    margin-right: 1rem;
-}
-
-.pi-eye-slash {
-    transform: scale(1.6);
-    margin-right: 1rem;
+.p-invalid {
+    border: 1px solid #f87171;
 }
 </style>

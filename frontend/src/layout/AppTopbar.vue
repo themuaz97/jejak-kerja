@@ -61,30 +61,15 @@ onMounted(() => {
 <template>
     <div class="layout-topbar">
         <div class="layout-topbar-logo-container">
-            <button
-                class="layout-menu-button layout-topbar-action"
-                @click="onMenuToggle"
-            >
+            <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
             <router-link to="/" class="layout-topbar-logo">
                 <div v-if="!isDarkTheme">
-                    <img
-                        src="/demo/images/logo.svg"
-                        class="rounded-xl"
-                        alt=""
-                        height="35px"
-                        width="35px"
-                    />
+                    <img src="/demo/images/logo.svg" class="rounded-xl" alt="" height="35px" width="35px" />
                 </div>
                 <div v-else>
-                    <img
-                        src="/demo/images/logo-white.svg"
-                        class="rounded-xl"
-                        alt=""
-                        height="35px"
-                        width="35px"
-                    />
+                    <img src="/demo/images/logo-white.svg" class="rounded-xl" alt="" height="35px" width="35px" />
                 </div>
 
                 <span class="text-lg sm:text-base md:text-xl">Jejak Kerja</span>
@@ -93,31 +78,22 @@ onMounted(() => {
 
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
-                <button
-                    type="button"
-                    class="layout-topbar-action"
-                    @click="toggleDarkMode"
-                >
-                    <i
-                        :class="[
+                <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
+                    <i :class="[
                             'pi',
                             { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme },
-                        ]"
-                    ></i>
+                        ]"></i>
                 </button>
             </div>
 
-            <button
-                class="layout-topbar-menu-button layout-topbar-action"
-                v-styleclass="{
+            <button class="layout-topbar-menu-button layout-topbar-action" v-styleclass="{
                     selector: '@next',
                     enterFromClass: 'hidden',
                     enterActiveClass: 'animate-scalein',
                     leaveToClass: 'hidden',
                     leaveActiveClass: 'animate-fadeout',
                     hideOnOutsideClick: true,
-                }"
-            >
+                }">
                 <i class="pi pi-ellipsis-v"></i>
             </button>
 
@@ -129,28 +105,15 @@ onMounted(() => {
                     </button>
 
                     <!-- Avatar Component with Conditional Icon -->
-                    <Avatar
-                        v-if="!isLoading"
-                        :image="profileImg"
-                        @click="toggleAccount"
-                        class="layout-topbar-action"
-                        shape="circle"
-                        :icon="!profileImg ? 'pi pi-user' : undefined"
-                    />
+                    <button v-if="!isLoading && profileImg" @click="toggleAccount" class="layout-topbar-action">
+                        <Avatar :image="profileImg" shape="circle" :icon="!profileImg ? 'pi pi-user' : undefined" />
+                    </button>
+                    <button v-else-if="!isLoading && !profileImg" @click="toggleAccount" class="layout-topbar-action">
+                        <i class="pi pi-user" />
+                    </button>
                     <!-- TODO: fix loading state, pi pi-user wont show up because of layout-topbar-action -->
-                    <Avatar
-                        v-else
-                        icon="pi pi-spin pi-spinner"
-                        class="layout-topbar-action"
-                        shape="circle"
-                    />
-                    <!-- <Avatar icon="pi pi-spin pi-spinner" class="layout-topbar-action text-black" shape="circle" /> -->
-                    <Menu
-                        ref="menu"
-                        id="overlay_menu"
-                        :model="items"
-                        :popup="true"
-                    />
+                    <button v-else><i class="pi pi-spin pi-spinner"></i></button>
+                    <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
                 </div>
             </div>
         </div>
