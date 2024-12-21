@@ -25,7 +25,15 @@ export const ENDPOINTS = {
 
   // application status
   APPLICATION_STATUS: `/application-status`,
+  APPLICATION_STATUS_ADD: `/application-status/add`,
+  APPLICATION_STATUS_UPDATE: `/application-status/:id/update`,
+  APPLICATION_STATUS_DELETE: `/application-status/:id/delete`,
+  APPLICATION_STATUS_ACTIVATE: `/application-status/:id/activate`,
 
   // application overall
   APPLICATION_OVERALL: `/application-overall`,
+  APPLICATION_OVERALL_ADD: `/application-overall/add`,
+  APPLICATION_OVERALL_UPDATE: `/application-overall/:id/update`,
+  APPLICATION_OVERALL_DELETE: `/application-overall/:id/delete`,
+  APPLICATION_OVERALL_ACTIVATE: `/application-overall/:id/activate`,
 };

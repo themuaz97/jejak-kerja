@@ -1,7 +1,6 @@
-import { parse } from "dotenv";
 import prisma from "../db/prisma.js";
 
-// TODO : add pagination if needed
+// TODO : add sortBy, filterBy
 export const getJobApplications = async (req, res) => {
   try {
     const jobApplications = await prisma.job_application.findMany({

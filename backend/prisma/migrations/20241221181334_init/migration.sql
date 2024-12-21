@@ -2,9 +2,24 @@
 CREATE TYPE "Provider" AS ENUM ('internal', 'google');
 
 -- CreateTable
+CREATE TABLE "application_overall" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "color_code" TEXT DEFAULT '',
+    "is_active" BOOLEAN NOT NULL DEFAULT true,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "created_by" TEXT,
+    "updated_at" TIMESTAMP(3),
+    "updated_by" TEXT,
+
+    CONSTRAINT "application_overall_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "application_status" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
+    "color_code" TEXT,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_by" TEXT,
@@ -58,33 +73,23 @@ CREATE TABLE "faq_questions" (
 -- CreateTable
 CREATE TABLE "job_application" (
     "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
     "position" TEXT NOT NULL,
     "position_level" TEXT,
     "company" TEXT,
     "platform" TEXT,
     "location" TEXT,
+    "expected_salary" DOUBLE PRECISION,
+    "offered_salary" DOUBLE PRECISION,
     "apply_status_id" INTEGER NOT NULL,
     "apply_overall_id" INTEGER,
     "remarks" TEXT,
-    "is_active" BOOLEAN NOT NULL DEFAULT true,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3),
-
-    CONSTRAINT "job_application_pkey" PRIMARY KEY ("id")
-);
-
--- CreateTable
-CREATE TABLE "overall_application" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "created_by" TEXT,
     "updated_at" TIMESTAMP(3),
     "updated_by" TEXT,
 
-    CONSTRAINT "overall_application_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "job_application_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -102,8 +107,8 @@ CREATE TABLE "roles" (
 CREATE TABLE "sso_providers" (
     "id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
-    "provider" "Provider" NOT NULL,
-    "provider_id" TEXT NOT NULL,
+    "provider" "Provider",
+    "provider_id" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "sso_providers_pkey" PRIMARY KEY ("id")
@@ -132,6 +137,7 @@ CREATE TABLE "users" (
     "password" TEXT,
     "profile_img" TEXT,
     "username" TEXT,
+    "phone_no" TEXT,
     "is_active" BOOLEAN NOT NULL DEFAULT true,
     "role_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -145,6 +151,12 @@ CREATE UNIQUE INDEX "sso_providers_provider_id_key" ON "sso_providers"("provider
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- AddForeignKey
+ALTER TABLE "application_overall" ADD CONSTRAINT "application_overall_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "application_overall" ADD CONSTRAINT "application_overall_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "application_status" ADD CONSTRAINT "application_status_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -174,22 +186,19 @@ ALTER TABLE "faq_questions" ADD CONSTRAINT "fk_user_created" FOREIGN KEY ("creat
 ALTER TABLE "faq_questions" ADD CONSTRAINT "fk_user_updated" FOREIGN KEY ("updated_by") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
-ALTER TABLE "job_application" ADD CONSTRAINT "job_application_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "job_application" ADD CONSTRAINT "fk_user_created" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE "job_application" ADD CONSTRAINT "fk_user_updated" FOREIGN KEY ("updated_by") REFERENCES "users"("id") ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 -- AddForeignKey
 ALTER TABLE "job_application" ADD CONSTRAINT "job_application_apply_status_id_fkey" FOREIGN KEY ("apply_status_id") REFERENCES "application_status"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "job_application" ADD CONSTRAINT "job_application_apply_overall_id_fkey" FOREIGN KEY ("apply_overall_id") REFERENCES "overall_application"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "job_application" ADD CONSTRAINT "job_application_apply_overall_id_fkey" FOREIGN KEY ("apply_overall_id") REFERENCES "application_overall"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "overall_application" ADD CONSTRAINT "overall_application_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "overall_application" ADD CONSTRAINT "overall_application_updated_by_fkey" FOREIGN KEY ("updated_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "sso_providers" ADD CONSTRAINT "sso_providers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "sso_providers" ADD CONSTRAINT "sso_providers_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "tokens" ADD CONSTRAINT "tokens_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

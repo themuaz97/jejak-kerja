@@ -48,6 +48,38 @@ export const getApplicationStatus = async (params = {}) => {
   return await apiService(ENDPOINTS.APPLICATION_STATUS, METHOD.GET, null, {}, params);
 };
 
+export const addApplicationStatus = async (data) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS_ADD, METHOD.POST, data);
+};
+
+export const updateApplicationStatus = async (id, data) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS_UPDATE.replace(':id', id), METHOD.PUT, data);
+};
+
+export const deleteApplicationStatus = async (id) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS_DELETE.replace(':id', id), METHOD.PATCH);
+}
+
+export const activateApplicationStatus = async (id) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS_ACTIVATE.replace(':id', id), METHOD.PATCH);
+}
+
 export const getApplicationOverall = async (params = {}) => {
   return await apiService(ENDPOINTS.APPLICATION_OVERALL, METHOD.GET, null, {}, params);
 };
+
+export const addApplicationOverall = async (data) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL_ADD, METHOD.POST, data);
+};
+
+export const updateApplicationOverall = async (id, data) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL_UPDATE.replace(':id', id), METHOD.PUT, data);
+};
+
+export const deleteApplicationOverall = async (id) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL_DELETE.replace(':id', id), METHOD.PATCH);
+}
+
+export const activateApplicationOverall = async (id) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL_ACTIVATE.replace(':id', id), METHOD.PATCH);
+}

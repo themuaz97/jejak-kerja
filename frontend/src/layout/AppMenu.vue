@@ -14,10 +14,12 @@ const model = ref([
             { label: 'Job Applications', icon: 'pi pi-fw pi-briefcase', to: '/users' },
         ],
     },
+    // TODO: if user is admin, show admin configuration
     {
         label: 'Admin Configuration',
         items: [
             { label: 'Configuration', icon: 'pi pi-fw pi-cog', to: '/admin/configuration' },
+            { label: 'Notification', icon: 'pi pi-fw pi-cog', to: '/admin/notification' },
             // { label: 'List', icon: 'pi pi-fw pi-list', to: '/uikit/list' },
             // { label: 'Tree', icon: 'pi pi-fw pi-share-alt', to: '/uikit/tree' },
             // { label: 'Panel', icon: 'pi pi-fw pi-tablet', to: '/uikit/panel' },

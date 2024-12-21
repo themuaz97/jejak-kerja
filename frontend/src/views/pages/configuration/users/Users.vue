@@ -278,7 +278,7 @@ onMounted(() => {
       <Column field="roles.name" header="Roles"></Column>
       <Column field="is_active" header="Status">
         <template #body="slotProps">
-          <Badge :severity="getSeverity(slotProps.data.is_active)" :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
+          <Tag :severity="getSeverity(slotProps.data.is_active)" :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
         </template>
       </Column>
       <Column header="Action" style="width: 10%;">
@@ -287,7 +287,7 @@ onMounted(() => {
             class="p-button-sm p-button-primary mr-2" v-tooltip="'edit'" rounded />
           <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
             class="p-button-sm p-button-danger" v-tooltip="'delete'" rounded />
-          <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-refresh"
+          <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
             class="p-button-sm p-button-contrast" v-tooltip="'re-activate'" rounded />
         </template>
       </Column>

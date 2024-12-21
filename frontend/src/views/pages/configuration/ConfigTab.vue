@@ -1,6 +1,8 @@
 <script setup>
 import Roles from './roles/Roles.vue';
 import Users from './users/Users.vue';
+import ApplicationStatus from './application-status/ApplicationStatus.vue';
+import ApplicationOverall from './application-overall/ApplicationOverall.vue';
 // import Notification from './notification/Notification.vue';
 </script>
 
@@ -12,7 +14,6 @@ import Users from './users/Users.vue';
                 <Tab value="1">Users</Tab>
                 <Tab value="2">Application Status</Tab>
                 <Tab value="3">Application Overall</Tab>
-                <!-- <Tab value="4">Notifications</Tab> -->
             </TabList>
             <TabPanels>
                 <TabPanel value="0">
@@ -26,11 +27,6 @@ import Users from './users/Users.vue';
                 </TabPanel>
                 <TabPanel value="3">
                     <ApplicationOverall />
-                </TabPanel>
-                <TabPanel value="4">
-                    <p class="m-0">
-                      <Notification />
-                    </p>
                 </TabPanel>
             </TabPanels>
         </Tabs>

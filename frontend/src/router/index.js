@@ -25,6 +25,12 @@ const router = createRouter({
                         import("@/views/pages/configuration/ConfigTab.vue"),
                 },
                 {
+                    path: "/admin/notification",
+                    name: "admin-notification",
+                    component: () =>
+                        import("@/views/pages/notifications/Notifications.vue"),
+                },
+                {
                     path: "/account",
                     name: "account",
                     component: () => import("@/views/pages/Account.vue"),

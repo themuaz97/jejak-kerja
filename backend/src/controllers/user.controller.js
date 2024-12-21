@@ -178,7 +178,7 @@ export const activateUser = async (req, res) => {
 
     const updatedUser = await prisma.users.update({
       where: { id },
-      data: { is_active: true },
+      data: { is_active: true, updated_at: new Date() },
     });
 
     res.status(200).send({ message: "User activated successfully", user: updatedUser });

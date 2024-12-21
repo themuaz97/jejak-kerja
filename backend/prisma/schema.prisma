@@ -10,6 +10,7 @@ datasource db {
 model application_overall {
   id                       Int               @id @default(autoincrement())
   name                     String
+  color_code               String?          @default("")
   is_active                Boolean           @default(true)
   created_at               DateTime          @default(now())
   created_by               String?
@@ -23,6 +24,7 @@ model application_overall {
 model application_status {
   id                            Int               @id @default(autoincrement())
   name                          String
+  color_code                    String?
   is_active                     Boolean           @default(true)
   created_at                    DateTime          @default(now())
   created_by                    String?
