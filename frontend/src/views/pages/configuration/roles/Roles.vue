@@ -165,10 +165,6 @@ const fetchUpdateRole = async () => {
   }
 };
 
-const fetchDeleteRole = async (id) => { 
-  
-}
-
 onMounted(() => {
   fetchRoles();
 });
@@ -213,8 +209,8 @@ onMounted(() => {
     <!-- Dialog modal add -->
     <Dialog v-model:visible="btnAddModal" modal header="Add Role" :style="{ width: '25rem' }">
       <div class="flex items-center gap-4 mb-4">
-        <label for="roleName" class="font-semibold w-24">Role Name</label>
-        <InputText id="roleName" v-model="roleName" class="flex-auto" autocomplete="off" />
+        <label for="roleName" class="font-semibold w-24"><span class="text-red-600">*</span>Role Name</label>
+        <InputText id="roleName" v-model="roleName" class="flex-auto" autocomplete="off" placeholder="Role Name" />
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnAddModal = false"></Button>

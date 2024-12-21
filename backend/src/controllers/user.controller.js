@@ -5,51 +5,30 @@ import bcrypt from "bcrypt";
 
 export const getUsers = async (req, res) => {
   try {
-    const { page = 1, limit = 10 } = req.query;
+    const { page = 1 } = req.query;
 
     const pageNumber = parseInt(page, 10);
-    const pageSize = parseInt(limit, 10);
-    const skip = (pageNumber - 1) * pageSize;
 
     const users = await prisma.users.findMany({
-      select: {
-        id: true,
-        first_name: true,
-        last_name: true,
-        email: true,
-        username: true,
-        roles: true,
+      include: {
+        roles: true
       },
-      skip,
-      take: pageSize,
+      orderBy: {
+        created_at: "desc",
+      }
     });
 
-    const totalCount = await prisma.users.count({
-      where: {
-        is_active: true,
-      },
-    });
-
-    const totalPages = Math.ceil(totalCount / pageSize);
-
-    const hasPreviousPage = pageNumber > 1;
-    const hasNextPage = pageNumber < totalPages;
+    const totalCount = await prisma.users.count();
 
     res.status(200).send({
       users,
       meta: {
         page: pageNumber,
-        limit: pageSize,
         totalCount,
-        totalPages,
-        hasPreviousPage,
-        hasNextPage,
       }
     });
   } catch (error) {
-    res
-      .status(500)
-      .send({ message: "Internal server error", error: error.message });
+    res.status(500).send({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -82,7 +61,7 @@ export const addUser = async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).send({ message: "User already exists" });
+      return res.status(400).send({ message: "Email already exists" });
     }
 
     if (password !== confirmPassword) {
@@ -111,5 +90,99 @@ export const addUser = async (req, res) => {
     res
       .status(500)
       .send({ message: "Internal server error", error: error.message });
+  }
+};
+
+export const updateUser = async (req, res) => { 
+  try {
+    const { id } = req.params;
+    const { firstName, lastName, email, username, phoneNo, password, roleId } = req.body;
+
+    if (!firstName || !lastName || !email || !roleId) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
+
+    const existingRole = await prisma.roles.findUnique({
+      where: { id: roleId },
+    });
+
+    if (!existingRole) {
+      return res.status(404).send({ message: "Role doesn't exist" });
+    }
+
+    const profilePic = `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`;
+
+    // Prepare the update data
+    const updateData = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      username,
+      phone_no: phoneNo,
+      profile_img: profilePic,
+      roles: { connect: { id: roleId } },
+      updated_at: new Date(),
+    };
+
+    // If a new password is provided, hash and include it in the update
+    if (password) {
+      const salt = bcrypt.genSaltSync();
+      updateData.password = bcrypt.hashSync(password, salt);
+    }
+
+    // Update the user in the database
+    const user = await prisma.users.update({
+      where: { id },
+      data: updateData,
+    });
+
+    res.status(200).send({ message: "User updated successfully", user });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
+  }
+}
+
+export const deleteUser = async (req, res) => { 
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.users.update({
+      where: { id },
+      data: {
+        is_active: false,
+        updated_at: new Date(),
+      },
+    });
+
+    res.status(200).send({ message: "User deleted successfully", user });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
+  }
+}
+
+export const activateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const user = await prisma.users.findUnique({
+      where: { id },
+    });
+
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    if (user.is_active) {
+      return res.status(400).send({ message: "User is already active" });
+    }
+
+    const updatedUser = await prisma.users.update({
+      where: { id },
+      data: { is_active: true },
+    });
+
+    res.status(200).send({ message: "User activated successfully", user: updatedUser });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
   }
 };

@@ -21,17 +21,33 @@ export const updateRole = async (id, data) => {
 };
 
 export const deleteRole = async (id) => {
-  return await apiService(ENDPOINTS.ROLE_DELETE.replace(':id', id), METHOD.PUT);
+  return await apiService(ENDPOINTS.ROLE_DELETE.replace(':id', id), METHOD.PATCH);
 };
 
-export const getUsers = async () => {
-  return await apiService(ENDPOINTS.USERS, METHOD.GET);
+export const getUsers = async (params = {}) => {
+  return await apiService(ENDPOINTS.USERS, METHOD.GET, null, {}, params);
 };
 
-export const getApplicationStatus = async () => {
-  return await apiService(ENDPOINTS.APPLICATION_STATUS, METHOD.GET);
+export const addUser = async (data) => {
+  return await apiService(ENDPOINTS.USER_ADD, METHOD.POST, data);
 };
 
-export const getApplicationOverall = async () => {
-  return await apiService(ENDPOINTS.APPLICATION_OVERALL, METHOD.GET);
+export const updateUser = async (id, data) => {
+  return await apiService(ENDPOINTS.USER_UPDATE.replace(':id', id), METHOD.PUT, data);
+};
+
+export const deleteUser = async (id) => {
+  return await apiService(ENDPOINTS.USER_DELETE.replace(':id', id), METHOD.PATCH);
+};
+
+export const activateUser = async (id) => {
+  return await apiService(ENDPOINTS.USER_ACTIVATE.replace(':id', id), METHOD.PATCH);
+};
+
+export const getApplicationStatus = async (params = {}) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS, METHOD.GET, null, {}, params);
+};
+
+export const getApplicationOverall = async (params = {}) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL, METHOD.GET, null, {}, params);
 };

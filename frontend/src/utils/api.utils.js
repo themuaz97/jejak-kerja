@@ -70,7 +70,7 @@ export const apiService = async (
                 }
             } catch (error) {
                 // If refresh fails, logout the user
-                await logout();
+                // await logout();
                 return Promise.reject("Session expired. Please log in again.");
             }
         }

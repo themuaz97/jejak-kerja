@@ -111,7 +111,6 @@ onMounted(() => {
                     <button v-else-if="!isLoading && !profileImg" @click="toggleAccount" class="layout-topbar-action">
                         <i class="pi pi-user" />
                     </button>
-                    <!-- TODO: fix loading state, pi pi-user wont show up because of layout-topbar-action -->
                     <button v-else><i class="pi pi-spin pi-spinner"></i></button>
                     <Menu ref="menu" id="overlay_menu" :model="items" :popup="true" />
                 </div>

@@ -18,6 +18,10 @@ export const ENDPOINTS = {
 
   // users
   USERS: `/users`,
+  USER_ADD: `/user/add`,
+  USER_UPDATE: `/user/:id/update`,
+  USER_DELETE: `/user/:id/delete`,
+  USER_ACTIVATE: `/user/:id/activate`,
 
   // application status
   APPLICATION_STATUS: `/application-status`,

@@ -13,7 +13,6 @@ const checked = ref(false);
 
 const loading = ref(false);
 
-// TODO: set if accessToken expired, use refreshToken. if refreshToken expired, kick to landing page
 const handleLogin = async () => {
   loading.value = true;
   try {

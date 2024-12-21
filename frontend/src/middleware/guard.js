@@ -18,9 +18,12 @@ export const protectRoute = (router) => {
             return next();
         }
 
-        // Check if access token exists
         const accessToken = localStorage.getItem("accessToken");
-        if (!accessToken) {
+        const refreshTokenExists = document.cookie
+            .split("; ")
+            .some((cookie) => cookie.startsWith("refreshToken="));
+        
+        if (!accessToken || !refreshTokenExists) {
             return next({ name: "login" });
         }
 

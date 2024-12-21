@@ -14,6 +14,9 @@ export const getRoles = async (req, res) => {
       where: {
         is_active: true
       },
+      orderBy: {
+        created_at: "desc",
+      },
     });
 
     // Count total roles for pagination metadata
