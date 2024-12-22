@@ -85,7 +85,7 @@ model job_application {
   expected_salary     Float?
   offered_salary      Float?
   apply_status_id     Int
-  apply_overall_id    Int? // optional
+  apply_overall_id    Int?
   remarks             String?
   is_active           Boolean              @default(true)
   created_at          DateTime             @default(now())

@@ -19,6 +19,16 @@ const router = createRouter({
                     component: () => import("@/views/Dashboard.vue"),
                 },
                 {
+                    path: "/jobs",
+                    name: "job-applications",
+                    component: () => import("@/views/pages/job-applications/JobApplication.vue"),
+                },
+                {
+                    path: "/job/add",
+                    name: "job-application-add",
+                    component: () => import("@/views/pages/job-applications/AddJobApplication.vue"),
+                },
+                {
                     path: "/admin/configuration",
                     name: "config-general",
                     component: () =>

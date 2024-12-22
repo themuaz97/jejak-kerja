@@ -1,5 +1,6 @@
 /** @format */
 
+import { Provider } from "@prisma/client";
 import prisma from "../db/prisma.js";
 import bcrypt from "bcrypt";
 
@@ -84,6 +85,13 @@ export const addUser = async (req, res) => {
         profile_img: profilePic,
       },
     });
+
+    const provider = await prisma.sso_providers.create({
+      data: {
+        user_id: user.id,
+        provider: Provider.internal,
+      },
+    })
 
     res.status(201).send({ message: "User created successfully", user });
   } catch (error) {

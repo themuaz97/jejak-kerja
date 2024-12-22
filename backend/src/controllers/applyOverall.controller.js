@@ -87,7 +87,7 @@ export const activateApplyOverall = async (req, res) => {
     const { id } = req.params;
 
     const applyOverall = await prisma.application_overall.findUnique({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     if (!applyOverall) {
@@ -99,7 +99,7 @@ export const activateApplyOverall = async (req, res) => {
     }
 
     const updatedApplyOverall = await prisma.application_overall.update({
-      where: { id },
+      where: { id: Number(id) },
       data: { is_active: true, updated_at: new Date() },
     });
 

@@ -36,4 +36,10 @@ export const ENDPOINTS = {
   APPLICATION_OVERALL_UPDATE: `/application-overall/:id/update`,
   APPLICATION_OVERALL_DELETE: `/application-overall/:id/delete`,
   APPLICATION_OVERALL_ACTIVATE: `/application-overall/:id/activate`,
+
+  /* ------------------------ JOB APPLICATION ------------------------ */
+  JOB_APPLICATIONS: `/job-applications`,
+  JOB_APPLICATION_ADD: `/job-application/add`,
+  JOB_APPLICATION_UPDATE: `/job-application/:id/update`,
+  JOB_APPLICATION_DELETE: `/job-application/:id/delete`,
 };

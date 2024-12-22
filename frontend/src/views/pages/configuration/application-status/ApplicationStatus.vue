@@ -253,17 +253,18 @@ onMounted(() => {
       </Column>
       <Column field="is_active" header="Status">
         <template #body="slotProps">
-          <Tag :severity="getSeverity(slotProps.data.is_active)" :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
+          <Tag :severity="getSeverity(slotProps.data.is_active)"
+            :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
         </template>
       </Column>
       <Column header="Action" style="width: 10%;">
         <template #body="slotProps">
-          <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationStatusId(slotProps.data.id)" icon="pi pi-pencil"
-            class="p-button-sm p-button-primary mr-2" rounded />
+          <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationStatusId(slotProps.data.id)"
+            icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
           <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
             class="p-button-sm p-button-danger" rounded />
-          <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo" class="p-button-sm p-button-contrast"
-            rounded />
+          <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
+            class="p-button-sm p-button-contrast" rounded />
         </template>
       </Column>
     </DataTable>
@@ -278,10 +279,31 @@ onMounted(() => {
         <label for="applicationStatusName" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
         <InputText id="applicationStatusName" v-model="applicationStatusName" class="flex-auto" autocomplete="off"
           placeholder="Application Status Name" />
-        
-        <label for="applicationStatusColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color Code</label>
-        <Dropdown v-model="applicationStatusColorCode" :options="severities" optionLabel="name" optionValue="value"
-          placeholder="Select a color code" />
+
+        <label for="applicationStatusColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color
+          Code</label>
+        <Select v-model="applicationStatusColorCode" :options="severities" optionLabel="name"
+          placeholder="Select a severity">
+          <!-- Customize the dropdown items with PrimeVue's severity classes -->
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center">
+              <Badge :severity="slotProps.value.value" style="margin-right: 8px;">
+                {{ slotProps.value.name }}
+              </Badge>
+            </div>
+            <span v-else>
+              {{ slotProps.placeholder }}
+            </span>
+          </template>
+
+          <template #option="slotProps">
+            <div class="flex items-center">
+              <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
+                {{ slotProps.option.name }}
+              </Badge>
+            </div>
+          </template>
+        </Select>
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnAddModal = false"></Button>
@@ -293,11 +315,32 @@ onMounted(() => {
     <Dialog v-model:visible="btnEditModal" modal header="Edit Application Status" :style="{ width: '25rem' }">
       <div class="flex flex-col gap-4 mb-4">
         <label for="editApplicationStatusName" class="font-semibold w-24">Name</label>
-        <InputText id="editApplicationStatusName" v-model="viewApplicationStatusId.name" class="flex-auto" autocomplete="off" />
-        
+        <InputText id="editApplicationStatusName" v-model="viewApplicationStatusId.name" class="flex-auto"
+          autocomplete="off" />
+
         <label for="editApplicationStatusColorCode" class="font-semibold w-24">Color Code</label>
-        <Dropdown v-model="viewApplicationStatusId.color_code" :options="severities" optionLabel="name" optionValue="value"
-          placeholder="Select a color code" />
+        <Select v-model="viewApplicationStatusId.color_code" :options="severities" optionLabel="name" optionValue="value"
+          placeholder="Select a severity">
+          <!-- Customize the dropdown items with PrimeVue's severity classes -->
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center">
+              <Badge :severity="slotProps.value" style="margin-right: 8px;">
+                {{ slotProps.value }}
+              </Badge>
+            </div>
+            <span v-else>
+              {{ slotProps.placeholder }}
+            </span>
+          </template>
+
+          <template #option="slotProps">
+            <div class="flex items-center">
+              <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
+                {{ slotProps.option.name }}
+              </Badge>
+            </div>
+          </template>
+        </Select>
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>

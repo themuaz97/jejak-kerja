@@ -1,5 +1,5 @@
 <script setup>
-import { activateApplicationStatus, addApplicationStatus, deleteApplicationStatus, getApplicationStatus, updateApplicationStatus } from "@/services/configuration.service";
+import { activateApplicationOverall, addApplicationOverall, deleteApplicationOverall, getApplicationOverall, updateApplicationOverall } from "@/services/configuration.service";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
 import { ref, onMounted } from "vue";
@@ -7,7 +7,7 @@ import { ref, onMounted } from "vue";
 const toast = useToast();
 const confirm = useConfirm();
 
-const applicationStatuses = ref([]);
+const applicationOveralls = ref([]);
 const severities = ref([
   { name: "primary", value: "primary" },
   { name: "secondary", value: "secondary" },
@@ -27,10 +27,10 @@ const totalPages = ref(0);
 const btnAddModal = ref(false);
 
 const btnEditModal = ref(false);
-const viewApplicationStatusId = ref({ id: null, name: "", color_code: "", is_active: false });
+const viewApplicationOverallId = ref({ id: null, name: "", color_code: "", is_active: false });
 
-const applicationStatusName = ref('');
-const applicationStatusColorCode = ref('');
+const applicationOverallName = ref('');
+const applicationOverallColorCode = ref(null);
 
 const getSeverity = (status) => {
   switch (status) {
@@ -45,7 +45,7 @@ const getSeverity = (status) => {
 const confirmDelete = (event, id) => {
   confirm.require({
     target: event.currentTarget,
-    message: "Are you sure you want to delete this application status?",
+    message: "Are you sure you want to delete this application overall?",
     header: "Confirmation",
     icon: "pi pi-info-circle",
     rejectProps: {
@@ -59,7 +59,7 @@ const confirmDelete = (event, id) => {
     },
     accept: async () => {
       try {
-        const { data } = await deleteApplicationStatus(id)
+        const { data } = await deleteApplicationOverall(id)
 
         if (data.response.status === 200) {
           toast.add({
@@ -68,7 +68,7 @@ const confirmDelete = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchApplicationStatuses();
+          fetchApplicationOverall();
         } else {
           toast.add({
             severity: "error",
@@ -78,7 +78,7 @@ const confirmDelete = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error deleting application status:", error);
+        console.error("Error deleting application overall:", error);
       }
     },
   });
@@ -87,7 +87,7 @@ const confirmDelete = (event, id) => {
 const confirmActivate = (event, id) => {
   confirm.require({
     target: event.currentTarget,
-    message: "Are you sure you want to activate this application status?",
+    message: "Are you sure you want to activate this application overall?",
     header: "Confirmation",
     icon: "pi pi-info-circle",
     rejectProps: {
@@ -101,7 +101,7 @@ const confirmActivate = (event, id) => {
     },
     accept: async () => {
       try {
-        const { data } = await activateApplicationStatus(id);
+        const { data } = await activateApplicationOverall(id);
 
         if (data.response.status === 200) {
           toast.add({
@@ -110,7 +110,7 @@ const confirmActivate = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchApplicationStatuses();
+          fetchApplicationOverall();
         } else {
           toast.add({
             severity: "error",
@@ -120,17 +120,17 @@ const confirmActivate = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error activating application status:", error);
+        console.error("Error activating application overall:", error);
       }
     },
   });
 };
 
-const fetchApplicationStatuses = async () => {
+const fetchApplicationOverall = async () => {
   try {
-    const { data } = await getApplicationStatus({ page: currentPage.value });
+    const { data } = await getApplicationOverall({ page: currentPage.value });
 
-    applicationStatuses.value = data.resData.applyStatus;
+    applicationOveralls.value = data.resData.applyOverall;
     totalRecords.value = data.resData.meta.totalCount;
     totalPages.value = data.resData.meta.totalPages;
     currentPage.value = data.resData.meta.page;
@@ -145,10 +145,10 @@ const fetchApplicationStatuses = async () => {
   }
 };
 
-const fetchAddApplicationStatus = async () => {
+const fetchAddApplicationOverall = async () => {
   try {
-    const input = { name: applicationStatusName.value, colorCode: applicationStatusColorCode.value };
-    const { data } = await addApplicationStatus(input);
+    const input = { name: applicationOverallName.value, colorCode: applicationOverallColorCode.value };
+    const { data } = await addApplicationOverall(input);
 
     if (data.response.status === 201) {
       toast.add({
@@ -157,8 +157,8 @@ const fetchAddApplicationStatus = async () => {
         detail: data.resData.message,
         life: 3000,
       });
-      applicationStatusName.value = '';
-      applicationStatusColorCode.value = '';
+      applicationOverallName.value = '';
+      applicationOverallColorCode.value = null;
       btnAddModal.value = false;
     } else {
       toast.add({
@@ -168,26 +168,26 @@ const fetchAddApplicationStatus = async () => {
         life: 3000,
       })
     }
-    fetchApplicationStatuses();
+    fetchApplicationOverall();
   } catch (error) {
-    console.error("Error adding application status:", error.resData.message);
+    console.error("Error adding application overall:", error.resData.message);
   }
 };
 
-const viewSelectedApplicationStatusId = (applicationStatusId) => {
-  const applicationStatus = applicationStatuses.value.find((r) => r.id === applicationStatusId);
-  if (applicationStatus) {
-    viewApplicationStatusId.value = { ...applicationStatus };
+const viewSelectedApplicationOverallId = (applicationOverallId) => {
+  const applicationOverall = applicationOveralls.value.find((r) => r.id === applicationOverallId);
+  if (applicationOverall) {
+    viewApplicationOverallId.value = { ...applicationOverall };
     btnEditModal.value = true;
   }
 };
 
-const fetchUpdateApplicationStatus = async () => {
+const fetchUpdateApplicationOverall = async () => {
   try {
 
-    const { data } = await updateApplicationStatus(viewApplicationStatusId.value.id, {
-      name: viewApplicationStatusId.value.name,
-      colorCode: viewApplicationStatusId.value.color_code,
+    const { data } = await updateApplicationOverall(viewApplicationOverallId.value.id, {
+      name: viewApplicationOverallId.value.name,
+      colorCode: viewApplicationOverallId.value.color_code,
     });
 
     if (data.response.status === 200) {
@@ -198,8 +198,8 @@ const fetchUpdateApplicationStatus = async () => {
         life: 3000,
       });
 
-      // Refresh applicationStatuses and close modal
-      await fetchApplicationStatuses();
+      // Refresh applicationOveralls and close modal
+      await fetchApplicationOverall();
       btnEditModal.value = false;
     } else {
       toast.add({
@@ -210,7 +210,7 @@ const fetchUpdateApplicationStatus = async () => {
       });
     }
   } catch (error) {
-    console.error("Error updating application status:", error.resData.message);
+    console.error("Error updating application overall:", error.resData.message);
     toast.add({
       severity: "error",
       summary: "Error",
@@ -221,7 +221,7 @@ const fetchUpdateApplicationStatus = async () => {
 };
 
 onMounted(() => {
-  fetchApplicationStatuses();
+  fetchApplicationOverall();
 });
 </script>
 
@@ -230,9 +230,9 @@ onMounted(() => {
     <Toast />
     <ConfirmPopup />
     <div class="flex justify-end items-center mb-4">
-      <Button label="Add Application Status" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
+      <Button label="Add Application Overall" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
     </div>
-    <DataTable v-if="applicationStatuses.length > 0" :value="applicationStatuses" paginator :rows="rowsPerPage"
+    <DataTable v-if="applicationOveralls.length > 0" :value="applicationOveralls" paginator :rows="rowsPerPage"
       :totalRecords="totalRecords" :first="(currentPage - 1) * rowsPerPage"
       paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
@@ -247,7 +247,7 @@ onMounted(() => {
         <template #body="slotProps">
           <!-- Use the color_code directly for severity -->
           <Badge :severity="slotProps.data.color_code">
-            {{ slotProps.data.name }}
+            {{ slotProps.data.color_code }}
           </Badge>
         </template>
       </Column>
@@ -259,7 +259,7 @@ onMounted(() => {
       </Column>
       <Column header="Action" style="width: 10%;">
         <template #body="slotProps">
-          <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationStatusId(slotProps.data.id)"
+          <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationOverallId(slotProps.data.id)"
             icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
           <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
             class="p-button-sm p-button-danger" rounded />
@@ -270,40 +270,80 @@ onMounted(() => {
     </DataTable>
 
     <div v-else class="flex justify-center items-center">
-      <p class="text-xl">No application status found</p>
+      <p class="text-xl">No application overall found</p>
     </div>
 
     <!-- Dialog modal add -->
-    <Dialog v-model:visible="btnAddModal" modal header="Add Application Status" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="btnAddModal" modal header="Add Application Overall" :style="{ width: '25rem' }">
       <div class="flex flex-col gap-4 m-4">
-        <label for="applicationStatusName" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
-        <InputText id="applicationStatusName" v-model="applicationStatusName" class="flex-auto" autocomplete="off"
-          placeholder="Application Status Name" />
+        <label for="applicationOverallName" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
+        <InputText id="applicationOverallName" v-model="applicationOverallName" class="flex-auto" autocomplete="off"
+          placeholder="Application Overall Name" />
 
-        <label for="applicationStatusColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color
+        <label for="applicationOverallColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color
           Code</label>
-        <Dropdown v-model="applicationStatusColorCode" :options="severities" optionLabel="name" optionValue="value"
-          placeholder="Select a color code" />
+        <Select v-model="applicationOverallColorCode" :options="severities" optionLabel="name"
+          placeholder="Select a severity">
+          <!-- Customize the dropdown items with PrimeVue's severity classes -->
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center">
+              <Badge :severity="slotProps.value.value" style="margin-right: 8px;">
+                {{ slotProps.value.name }}
+              </Badge>
+            </div>
+            <span v-else>
+              {{ slotProps.placeholder }}
+            </span>
+          </template>
+
+          <template #option="slotProps">
+            <div class="flex items-center">
+              <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
+                {{ slotProps.option.name }}
+              </Badge>
+            </div>
+          </template>
+        </Select>
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnAddModal = false"></Button>
-        <Button type="button" label="Save" @click="fetchAddApplicationStatus"></Button>
+        <Button type="button" label="Save" @click="fetchAddApplicationOverall"></Button>
       </div>
     </Dialog>
 
     <!-- Dialog modal edit -->
-    <Dialog v-model:visible="btnEditModal" modal header="Edit Application Status" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="btnEditModal" modal header="Edit Application Overall" :style="{ width: '25rem' }">
       <div class="flex flex-col gap-4 mb-4">
         <label for="editRoleName" class="font-semibold w-24">Name</label>
-        <InputText id="editRoleName" v-model="viewApplicationStatusId.name" class="flex-auto" autocomplete="off" />
+        <InputText id="editRoleName" v-model="viewApplicationOverallId.name" class="flex-auto" autocomplete="off" />
 
         <label for="editRoleColorCode" class="font-semibold w-24">Color Code</label>
-        <Dropdown v-model="viewApplicationStatusId.color_code" :options="severities" optionLabel="name"
-          optionValue="value" placeholder="Select a color code" />
+        <Select v-model="viewApplicationOverallId.color_code" :options="severities" optionLabel="name" optionValue="value"
+          placeholder="Select a severity">
+          <!-- Customize the dropdown items with PrimeVue's severity classes -->
+          <template #value="slotProps">
+            <div v-if="slotProps.value" class="flex items-center">
+              <Badge :severity="slotProps.value" style="margin-right: 8px;">
+                {{ slotProps.value }}
+              </Badge>
+            </div>
+            <span v-else>
+              {{ slotProps.placeholder }}
+            </span>
+          </template>
+
+          <template #option="slotProps">
+            <div class="flex items-center">
+              <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
+                {{ slotProps.option.name }}
+              </Badge>
+            </div>
+          </template>
+        </Select>
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>
-        <Button type="button" label="Save" @click="fetchUpdateApplicationStatus"></Button>
+        <Button type="button" label="Save" @click="fetchUpdateApplicationOverall"></Button>
       </div>
     </Dialog>
   </div>

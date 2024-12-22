@@ -125,6 +125,7 @@ export const me = async (req, res) => {
   try {
     const user = await prisma.users.findFirst({
       where: { id: req.user.user_id },
+      include: { roles: true },
     })
 
     if (!user) {

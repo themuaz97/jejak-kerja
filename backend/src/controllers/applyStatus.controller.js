@@ -88,7 +88,7 @@ export const activateApplyStatus = async (req, res) => {
     const { id } = req.params;
 
     const applyStatus = await prisma.application_status.findUnique({
-      where: { id },
+      where: { id: Number(id) },
     });
 
     if (!applyStatus) {
@@ -100,7 +100,7 @@ export const activateApplyStatus = async (req, res) => {
     }
 
     const updatedApplyStatus = await prisma.application_status.update({
-      where: { id },
+      where: { id: Number(id) },
       data: {
         is_active: true,
         updated_at: new Date(),
