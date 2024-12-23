@@ -1,6 +1,6 @@
 <script setup>
-import { deleteApplicationOverall, getApplicationOverall, getApplicationStatus, updateApplicationOverall } from "@/services/configuration.service";
-import { addJobApplication, getJobApplications } from "@/services/jobApplication.service";
+import { getApplicationOverall, getApplicationStatus } from "@/services/configuration.service";
+import { addJobApplication, getJobApplications, updateJobApplication, deleteJobApplication } from "@/services/jobApplication.service";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
 import { ref, onMounted } from "vue";
@@ -33,17 +33,6 @@ const platforms = ref([
   { name: "Hiredly", value: "hiredly" },
 ])
 
-const severities = ref([
-  { name: "primary", value: "primary" },
-  { name: "secondary", value: "secondary" },
-  { name: "success", value: "success" },
-  { name: "info", value: "info" },
-  { name: "warn", value: "warn" },
-  { name: "help", value: "help" },
-  { name: "danger", value: "danger" },
-  { name: "contrast", value: "contrast" },
-]);
-
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
 const totalRecords = ref(0);
@@ -52,7 +41,7 @@ const totalPages = ref(0);
 const btnAddModal = ref(false);
 
 const btnEditModal = ref(false);
-const viewApplicationOverallId = ref({ id: null, name: "", color_code: "", is_active: false });
+const viewJobApplicationId = ref({ id: null, position: '', position_level: '', company: '', platform: '', expected_salary: '', offered_salary: '', location: '', apply_status_id: '', apply_overall_id: '', remarks: '' });
 
 const position = ref('');
 const positionLevel = ref();
@@ -64,16 +53,6 @@ const location = ref();
 const applyStatusId = ref(null);
 const applyOverallId = ref(null);
 const remarks = ref();
-
-const getSelectedStatusColor = (id) => {
-  const status = applicationStatuses.value.find(status => status.id === id);
-  return status ? status.color_code : '';
-};
-
-const getSelectedStatusName = (id) => {
-  const status = applicationStatuses.value.find(status => status.id === id);
-  return status ? status.name : '';
-};
 
 const confirmDelete = (event, id) => {
   confirm.require({
@@ -92,7 +71,7 @@ const confirmDelete = (event, id) => {
     },
     accept: async () => {
       try {
-        const { data } = await deleteApplicationOverall(id)
+        const { data } = await deleteJobApplication(id)
 
         if (data.response.status === 200) {
           toast.add({
@@ -127,12 +106,6 @@ const fetchJobApplication = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load application statuses",
-      life: 3000,
-    });
   }
 };
 
@@ -174,20 +147,27 @@ const fetchAddJobApplication = async () => {
   }
 };
 
-const viewSelectedApplicationOverallId = (applicationOverallId) => {
-  const applicationOverall = jobApplications.value.find((r) => r.id === applicationOverallId);
-  if (applicationOverall) {
-    viewApplicationOverallId.value = { ...applicationOverall };
+const viewSelectedJobApplicationId = (jobApplicationId) => {
+  const jobApplication = jobApplications.value.find((r) => r.id === jobApplicationId);
+  if (jobApplication) {
+    viewJobApplicationId.value = { ...jobApplication };
     btnEditModal.value = true;
   }
 };
 
-const fetchUpdateApplicationOverall = async () => {
+const fetchUpdateJobApplication = async () => {
   try {
-
-    const { data } = await updateApplicationOverall(viewApplicationOverallId.value.id, {
-      name: viewApplicationOverallId.value.name,
-      colorCode: viewApplicationOverallId.value.color_code,
+    const { data } = await updateJobApplication(viewJobApplicationId.value.id, {
+      position: viewJobApplicationId.value.position,
+      positionLevel: viewJobApplicationId.value.position_level,
+      company: viewJobApplicationId.value.company,
+      platform: viewJobApplicationId.value.platform,
+      expectedSalary: viewJobApplicationId.value.expected_salary,
+      offeredSalary: viewJobApplicationId.value.offered_salary,
+      location: viewJobApplicationId.value.location,
+      applyStatusId: viewJobApplicationId.value.apply_status_id,
+      applyOverallId: viewJobApplicationId.value.apply_overall_id,
+      remarks: viewJobApplicationId.value.remarks,
     });
 
     if (data.response.status === 200) {
@@ -230,12 +210,6 @@ const fetchApplicationStatuses = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load application statuses",
-      life: 3000,
-    });
   }
 };
 
@@ -249,12 +223,6 @@ const fetchApplicationOverall = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load application statuses",
-      life: 3000,
-    });
   }
 };
 
@@ -270,7 +238,7 @@ onMounted(() => {
     <Toast />
     <ConfirmPopup />
     <DataTable :value="jobApplications" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
-      :first="(currentPage - 1) * rowsPerPage" scrollable scrollHeight="400px"
+      :first="(currentPage - 1) * rowsPerPage"
       paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
       tableStyle="min-width: 50rem">
@@ -288,14 +256,21 @@ onMounted(() => {
           {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
         </template>
       </Column>
-      <Column field="position" header="Position"></Column>
-      <Column field="position_level" header="Position Level"></Column>
-      <Column field="company" header="Company Name"></Column>
+      <Column field="position" header="Position" sortable style="width: 10%;"></Column>
+      <Column field="position_level" header="Position Level" style="width: 10%;">
+        <template #body="slotProps">
+          {{
+            positionLevels.find(level => level.value === slotProps.data.position_level)?.name || slotProps.data.position_level
+          }}
+        </template>
+      </Column>
+      <Column field="company" header="Company Name" style="width: 15%;"></Column>
       <Column field="platform" header="Platform"></Column>
       <!-- <Column field="location" header="Location"></Column> -->
-      <Column field="expected_salary" header="Expected Salary"></Column>
+      <Column field="expected_salary" header="Expected Salary" sortable></Column>
       <!-- <Column field="offered_salary" header="Offered Salary"></Column> -->
-      <Column field="application_status.name" header="Status">
+      <Column field="application_status.name" header="Status" sortable
+        style="width: 7%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
         <template #body="slotProps">
           <Badge :severity="slotProps.data.application_status.color_code">
             {{ slotProps.data.application_status.name }}
@@ -304,13 +279,13 @@ onMounted(() => {
       </Column>
       <Column field="apply_overall_id" header="Company Review">
         <template #body="slotProps">
-          <Rating :modelValue="slotProps.data.application_overall.id" readonly />
+          <Rating :modelValue="slotProps.data.application_overall?.id" readonly />
         </template>
       </Column>
       <Column field="remarks" header="Remarks"></Column>
       <Column header="Action" style="width: 10%;" frozen alignFrozen="right">
         <template #body="slotProps">
-          <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationOverallId(slotProps.data.id)"
+          <Button v-if="slotProps.data.is_active" @click="viewSelectedJobApplicationId(slotProps.data.id)"
             icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
           <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
             class="p-button-sm p-button-danger" rounded />
@@ -358,8 +333,9 @@ onMounted(() => {
             placeholder="Select Job Status">
             <template #value="slotProps">
               <div v-if="slotProps.value" class="flex items-center">
-                <Badge :severity="getSelectedStatusColor(slotProps.value)" style="margin-right: 8px;">
-                  {{ getSelectedStatusName(slotProps.value) }}
+                <Badge :severity="applicationStatuses.find(status => status.id === slotProps.value)?.color_code"
+                  style="margin-right: 8px;">
+                  {{ applicationStatuses.find(status => status.id === slotProps.value)?.name }}
                 </Badge>
               </div>
               <span v-else>
@@ -396,38 +372,79 @@ onMounted(() => {
     </Dialog>
 
     <!-- Dialog modal edit -->
-    <Dialog v-model:visible="btnEditModal" modal header="Edit Job Application" :style="{ width: '25rem' }">
-      <div class="flex flex-col gap-4 mb-4">
-        <label for="editRoleName" class="font-semibold w-24">Name</label>
-        <InputText id="editRoleName" v-model="viewApplicationOverallId.name" class="flex-auto" autocomplete="off" />
+    <Dialog v-model:visible="btnEditModal" modal header="Edit Job Application" :style="{ width: '40rem' }">
+      <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="Position"><span class="text-red-600">*</span> Position</label>
+          <InputText v-model="viewJobApplicationId.position" id="Position" type="text" placeholder="Position" />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="position_level">Position Level</label>
+          <Select v-model="viewJobApplicationId.position_level" editable :options="positionLevels" optionLabel="name"
+            optionValue="value" placeholder="Select Position Level"
+            v-tooltip="'You may create a new position level if it does not exist'" fluid />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="Company"><span class="text-red-600">*</span> Company</label>
+          <InputText v-model="viewJobApplicationId.company" id="Company" type="text" placeholder="Company" />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="platform"><span class="text-red-600">*</span> Platform</label>
+          <Select v-model="viewJobApplicationId.platform" editable :options="platforms" optionLabel="name"
+            optionValue="value" placeholder="Select Platform"
+            v-tooltip="'You may create a new platform if it does not exist'" fluid />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="expected_salary"><span class="text-red-600">*</span> Expected Salary</label>
+          <InputNumber v-model="viewJobApplicationId.expected_salary" inputId="minmaxfraction" :minFractionDigits="2"
+            placeholder="Expected Salary" fluid />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="offered_salary">Offered Salary</label>
+          <InputNumber v-model="viewJobApplicationId.offered_salary" inputId="minmaxfraction" :minFractionDigits="2"
+            placeholder="Offered Salary" fluid />
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="job_status"><span class="text-red-600">*</span> Job Status</label>
+          <Select v-model="viewJobApplicationId.apply_status_id" :options="applicationStatuses" optionLabel="name"
+            optionValue="id" placeholder="Select Job Status">
+            <template #value="slotProps">
+              <div v-if="slotProps.value" class="flex items-center">
+                <Badge :severity="applicationStatuses.find(status => status.id === slotProps.value)?.color_code"
+                  style="margin-right: 8px;">
+                  {{ applicationStatuses.find(status => status.id === slotProps.value)?.name }}
+                </Badge>
+              </div>
+              <span v-else>
+                {{ slotProps.placeholder }}
+              </span>
+            </template>
 
-        <label for="editRoleColorCode" class="font-semibold w-24">Color Code</label>
-        <Select v-model="viewApplicationOverallId.color_code" :options="severities" optionLabel="name"
-          optionValue="value" placeholder="Select a severity">
-          <!-- Customize the dropdown items with PrimeVue's severity classes -->
-          <template #value="slotProps">
-            <div v-if="slotProps.value" class="flex items-center">
-              <Badge :severity="slotProps.value" style="margin-right: 8px;">
-                {{ slotProps.value }}
-              </Badge>
-            </div>
-            <span v-else>
-              {{ slotProps.placeholder }}
-            </span>
-          </template>
-
-          <template #option="slotProps">
-            <div class="flex items-center">
-              <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
-                {{ slotProps.option.name }}
-              </Badge>
-            </div>
-          </template>
-        </Select>
+            <template #option="slotProps">
+              <div class="flex items-center">
+                <Badge :severity="slotProps.option.color_code" style="margin-right: 8px;">
+                  {{ slotProps.option.name }}
+                </Badge>
+              </div>
+            </template>
+          </Select>
+        </div>
+        <div class="col-span-1 flex flex-col gap-4">
+          <label for="location">Location</label>
+          <InputText v-model="viewJobApplicationId.location" id="location" type="text" placeholder="Location" />
+        </div>
+        <div class="col-span-2 flex flex-col gap-4">
+          <label for="remarks">Remarks</label>
+          <Textarea v-model="viewJobApplicationId.remarks" rows="3" placeholder="Remarks" autoResize />
+        </div>
+        <div class="col-span-2 flex flex-col justify-center items-center gap-4 mb-4">
+          <label for="reviews">Company Reviews</label>
+          <Rating v-model="viewJobApplicationId.apply_overall_id" class="flex items-center h-full" />
+        </div>
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>
-        <Button type="button" label="Save" @click="fetchUpdateApplicationOverall"></Button>
+        <Button type="button" label="Save" @click="fetchUpdateJobApplication"></Button>
       </div>
     </Dialog>
   </div>

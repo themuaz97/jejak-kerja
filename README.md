@@ -4,15 +4,18 @@
 
 <ul>
   <li>Position</li>
+  <li>Position Level</li>
   <li>Company</li>
   <li>Platform</li>
   <li>Location</li>
   <li>Status (e.g., applied, interviewed, accepted)</li>
-  <li>Overall experience and feedback</li>
+  <li>Expected Salary</li>
+  <li>Company Review</li>
   <li>Remarks</li>
 </ul>
 
 <h2>Key Features</h2>
+  <li>Dashboard: show chart for job application, top jobs, top platform applied</li>
   <li>User Management: Supports both internal users and other platform sso.</li>
   <li>Job Application Tracking: Add, edit, and view job applications with comprehensive details.</li>
   <li>SSO Integration: Secure login with Google or other platforms.</li>

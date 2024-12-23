@@ -6,6 +6,7 @@ import ApplicationOverall from './application-overall/ApplicationOverall.vue';
 // import Notification from './notification/Notification.vue';
 </script>
 
+<!-- TODO: prevent all tabs fetched at once -->
 <template>
   <div class="card">
       <Tabs class="rounded-2xl" value="0">

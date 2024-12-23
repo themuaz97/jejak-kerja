@@ -1,4 +1,5 @@
 <template>
+  <!-- TODO: chart for job status count, total count job application, chart for platform count, top platform, top position dashboard topbar show interview tips -->
   <div class="card">
     <div class="font-semibold text-xl mb-4">Dashboard</div>
     <p>Use this page to manage your dashboard.</p>
