@@ -140,6 +140,7 @@ export const me = async (req, res) => {
         first_name: user.first_name,
         last_name: user.last_name,
         profile_img: user.profile_img,
+        phone_no: user.phone_no,
         role: user.roles
       }
     });

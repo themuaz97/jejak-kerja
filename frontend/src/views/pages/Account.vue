@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- TODO: styling account -->
     <Card>
       <template #title>
         Account

@@ -34,8 +34,13 @@ const form = multer()
 
 server.use(passport.initialize());
 
-// Routes
-server.use("/api/auth", form.none(), authRouter);
+// TODO: Routes refactor code if that endpoint requires to upload image
+server.use("/api/auth", (req, res, next) => {
+  if (req.path === '/account/update') {
+    return next();
+  }
+  form.none()(req, res, next);
+}, authRouter);
 server.use('/api/admin', form.none(), routerAdmin);
 server.use("/api", form.none(), router);
 
