@@ -8,6 +8,8 @@ import router from "./router/index.route.js";
 import authRouter from "./router/auth.route.js";
 import cookieParser from "cookie-parser";
 import prisma from "./db/prisma.js";
+import passport from "./config/passport.js";
+import routerAdmin from "./router/admin.route.js";
 
 dotenv.config();
 
@@ -30,8 +32,11 @@ server.get("/", (req, res) => {
 
 const form = multer()
 
+server.use(passport.initialize());
+
 // Routes
 server.use("/api/auth", form.none(), authRouter);
+server.use('/api/admin', form.none(), routerAdmin);
 server.use("/api", form.none(), router);
 
 // Start Server

@@ -2,6 +2,20 @@ import prisma from "../db/prisma.js";
 
 export const getApplyStatus = async (req, res) => {
   try {
+    const applyStatus = await prisma.application_status.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
+    res.status(200).send({ applyStatus });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
+  }
+}
+
+export const getApplyStatusAdmin = async (req, res) => {
+  try {
     const { page = 1 } = req.query;
 
     const pageNumber = parseInt(page, 10);
@@ -20,7 +34,6 @@ export const getApplyStatus = async (req, res) => {
   }
 }
 
-// TODO : add color to db applyStatus, applyOverall too
 export const addApplyStatus = async (req, res) => {
   try {
     const { name, colorCode } = req.body;

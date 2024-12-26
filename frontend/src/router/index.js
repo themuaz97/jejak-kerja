@@ -1,4 +1,5 @@
 import AppLayout from '@/layout/AppLayout.vue';
+import { protectRoute, protectRouteAdmin } from '@/middleware/guard';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const router = createRouter({
@@ -24,13 +25,8 @@ const router = createRouter({
                     component: () => import("@/views/pages/job-applications/JobApplication.vue"),
                 },
                 {
-                    path: "/job/add",
-                    name: "job-application-add",
-                    component: () => import("@/views/pages/job-applications/AddJobApplication.vue"),
-                },
-                {
                     path: "/admin/configuration",
-                    name: "config-general",
+                    name: "admin-configuration",
                     component: () =>
                         import("@/views/pages/configuration/ConfigTab.vue"),
                 },
@@ -73,6 +69,11 @@ const router = createRouter({
             component: () => import("@/views/pages/auth/Login.vue"),
         },
         {
+            path: "/auth/callback",
+            name: "callback",
+            component: () => import("@/views/pages/auth/Callback.vue"),
+        },
+        {
             path: "/auth/forgot-password",
             name: "forgot-password",
             component: () => import("@/views/pages/auth/ForgotPassword.vue"),
@@ -89,5 +90,8 @@ const router = createRouter({
         },
     ],
 });
+
+protectRoute(router);
+protectRouteAdmin(router);
 
 export default router;

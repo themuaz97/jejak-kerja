@@ -10,6 +10,8 @@ const confirm = useConfirm();
 const users = ref([]);
 const roles = ref([]);
 
+const loading = ref(false);
+
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
 const totalRecords = ref(0);
@@ -123,6 +125,7 @@ const confirmActivate = (event, id) => {
 }
 
 const fetchUsers = async () => {
+  loading.value = true;
   try {
     const { data } = await getUsers({ page: currentPage.value });
 
@@ -132,12 +135,8 @@ const fetchUsers = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching users:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load users",
-      life: 3000,
-    });
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -263,7 +262,7 @@ onMounted(() => {
     <div class="flex justify-end items-center mb-4">
       <Button label="Add User" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
     </div>
-    <DataTable v-if="users.length > 0" :value="users" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
+    <DataTable :value="users" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
       :first="(currentPage - 1) * rowsPerPage"
       paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
@@ -273,12 +272,15 @@ onMounted(() => {
           {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
         </template>
       </Column>
+      <template #empty> No users found. </template>
+      <template #loading> Loading users data. Please wait. </template>
       <Column field="email" header="Email"></Column>
       <Column field="username" header="Username"></Column>
       <Column field="roles.name" header="Roles"></Column>
       <Column field="is_active" header="Status">
         <template #body="slotProps">
-          <Tag :severity="getSeverity(slotProps.data.is_active)" :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
+          <Tag :severity="getSeverity(slotProps.data.is_active)"
+            :value="slotProps.data.is_active ? 'Active' : 'Inactive'" />
         </template>
       </Column>
       <Column header="Action" style="width: 10%;">
@@ -292,10 +294,6 @@ onMounted(() => {
         </template>
       </Column>
     </DataTable>
-
-    <div v-else class="flex justify-center items-center">
-      <p class="text-xl">No users found</p>
-    </div>
 
     <!-- Dialog modal add -->
     <Dialog v-model:visible="btnAddModal" modal header="Add User" :style="{ width: '35rem' }">

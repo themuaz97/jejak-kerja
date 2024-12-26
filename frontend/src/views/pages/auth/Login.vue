@@ -16,11 +16,15 @@ const loading = ref(false);
 const emailError = ref('');
 const passwordError = ref('');
 
+const googleLogin = async () => {
+    window.location.href = 'http://localhost:3000/api/auth/google';
+};
+
 const handleLogin = async () => {
     loading.value = true;
     try {
         const input = { email: email.value, password: password.value };
-        const { data } = await login(input); // Destructure response and input
+        const { data } = await login(input); 
         console.log('response login', data);
 
         // Save the token to localStorage
@@ -28,7 +32,6 @@ const handleLogin = async () => {
             localStorage.setItem('accessToken', data.resData.accessToken);
         }
 
-        // Ensure you're using the correct toast method and parameters
         if (data.response.status === 200) {
             toast.add({
                 severity: 'success',
@@ -69,11 +72,26 @@ const handleLogin = async () => {
             <div
                 style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33, 150, 243, 0) 30%)">
                 <div class="w-full bg-surface-0 dark:bg-surface-900 py-20 px-8 sm:px-20" style="border-radius: 53px">
-                    <div class="text-center mb-8">
+                    <div class="text-center mb-4">
                         <img src="/demo/images/logo.svg" alt="jejak kerja" class="mx-auto w-16 h-16 mb-4">
                         <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">Welcome to Jejak
                             Kerja!</div>
                         <span class="text-muted-color font-medium">Sign in to continue</span>
+
+                    </div>
+                    <div class="flex justify-center items-center gap-4 m-3 p-2 h-20">
+                        <button @click="googleLogin" v-tooltip.top="'Google'"
+                            class="h-full aspect-square flex items-center justify-center rounded-full text-white dark:text-black shadow-lg hover:shadow-xl bg-purple-400 hover:bg-purple-300 transition-all text-[6vw]">
+                            <i class="text-2xl pi pi-google" style="font-size: 1.7rem;"></i>
+                        </button>
+                    </div>
+
+
+                    <!-- Divider -->
+                    <div class="flex items-center justify-center my-4">
+                        <div class="border-t w-full"></div>
+                        <span class="px-4 font-medium">OR</span>
+                        <div class="border-t w-full"></div>
                     </div>
 
                     <div>
@@ -102,8 +120,8 @@ const handleLogin = async () => {
                             <Button label="Sign In" class="w-full" :loading="loading" @click="handleLogin" />
                             <div class="flex flex-row justify-center items-center gap-2">
                                 <span class="text-end">Don't have an account?</span>
-                                <Button label="Register here" link
-                                    @click="$router.push('/auth/register')" style="margin: 0; padding: 0;" />
+                                <Button label="Register here" link @click="$router.push('/auth/register')"
+                                    style="margin: 0; padding: 0;" />
                             </div>
                         </div>
                     </div>

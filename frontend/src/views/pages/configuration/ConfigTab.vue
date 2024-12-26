@@ -1,35 +1,44 @@
 <script setup>
+import { markRaw, ref } from 'vue';
 import Roles from './roles/Roles.vue';
 import Users from './users/Users.vue';
 import ApplicationStatus from './application-status/ApplicationStatus.vue';
 import ApplicationOverall from './application-overall/ApplicationOverall.vue';
-// import Notification from './notification/Notification.vue';
+
+const tabs = ref([
+    { title: 'Roles', value: '0', component: markRaw(Roles) },
+    { title: 'Users', value: '1', component: markRaw(Users) },
+    { title: 'Application Status', value: '2', component: markRaw(ApplicationStatus) },
+    { title: 'Application Overall', value: '3', component: markRaw(ApplicationOverall) },
+]);
+
+const activeTab = ref('0');
+
+// Track which components have been rendered
+const renderedComponents = ref(new Set(['0'])); 
+
+const handleTabChange = (newValue) => {
+    activeTab.value = newValue;
+    renderedComponents.value.add(newValue);
+};
 </script>
 
-<!-- TODO: prevent all tabs fetched at once -->
 <template>
-  <div class="card">
-      <Tabs class="rounded-2xl" value="0">
+    <div class="card">
+        <Tabs class="rounded-2xl" v-model:value="activeTab" @update:value="handleTabChange">
+            <!-- Dynamically render tab titles -->
             <TabList>
-                <Tab value="0">Roles</Tab>
-                <Tab value="1">Users</Tab>
-                <Tab value="2">Application Status</Tab>
-                <Tab value="3">Application Overall</Tab>
+                <Tab v-for="tab in tabs" :key="tab.title" :value="tab.value">
+                    {{ tab.title }}
+                </Tab>
             </TabList>
+
+            <!-- Maintain TabPanel structure while lazy loading components -->
             <TabPanels>
-                <TabPanel value="0">
-                    <Roles />
-                </TabPanel>
-                <TabPanel value="1">
-                    <Users />
-                </TabPanel>
-                <TabPanel value="2">
-                    <ApplicationStatus />
-                </TabPanel>
-                <TabPanel value="3">
-                    <ApplicationOverall />
+                <TabPanel v-for="tab in tabs" :key="tab.value" :value="tab.value">
+                    <component :is="tab.component" v-if="renderedComponents.has(tab.value)" />
                 </TabPanel>
             </TabPanels>
         </Tabs>
-  </div>
+    </div>
 </template>

@@ -113,7 +113,7 @@ export const login = async (req, res) => {
       return res.status(400).send({ message: "email or password is incorrect" });
     }
 
-    const { accessToken, refreshToken } = await generateToken(provider.id, user.id, res, Provider.internal, "auth");
+    const { accessToken, refreshToken } = await generateToken(provider.id, user.id, res, Provider.internal, "bearer");
 
     res.status(200).send({ message: "Login successful", user, accessToken, refreshToken });
   } catch (error) {

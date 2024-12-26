@@ -1,6 +1,5 @@
 import prisma from "../db/prisma.js";
 
-// TODO : add sortBy, filterBy
 export const getJobApplications = async (req, res) => {
   try {
     const { page = 1 } = req.query;

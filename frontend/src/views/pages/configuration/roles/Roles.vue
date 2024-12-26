@@ -9,6 +9,8 @@ const confirm = useConfirm();
 
 const roles = ref([]);
 
+const loading = ref(false);
+
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
 const totalRecords = ref(0);
@@ -20,16 +22,6 @@ const btnEditModal = ref(false);
 const viewRoleId = ref({ id: null, name: "" });
 
 const roleName = ref('');
-
-// const getSeverity = (status) => {
-//   switch (status) {
-//     case true:
-//       return 'success';
-
-//     case false:
-//       return 'danger';
-//   }
-// }
 
 const confirmDelete = (event, id) => {
   confirm.require({
@@ -74,6 +66,7 @@ const confirmDelete = (event, id) => {
 };
 
 const fetchRoles = async () => {
+  loading.value = true;
   try {
     const { data } = await getRoles({ page: currentPage.value });
 
@@ -83,12 +76,8 @@ const fetchRoles = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching roles:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load roles",
-      life: 3000,
-    });
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -177,7 +166,7 @@ onMounted(() => {
     <div class="flex justify-end items-center mb-4">
       <Button label="Add Role" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
     </div>
-    <DataTable v-if="roles.length > 0" :value="roles" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
+    <DataTable :value="roles" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
       :first="(currentPage - 1) * rowsPerPage"
       paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
@@ -187,24 +176,18 @@ onMounted(() => {
           {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
         </template>
       </Column>
+      <template #empty> No roles found. </template>
+      <template #loading> Loading roles data. Please wait. </template>
       <Column field="name" header="Name" style="width: 60%"></Column>
-      <!-- <Column field="is_active" header="Status" style="width: 20%;">
-        <template #body="slotProps">
-          <Tag :value="slotProps.data.is_active? 'Active' : 'Inactive'"
-            :severity="getSeverity(slotProps.data.is_active)" />
-        </template>
-      </Column> -->
       <Column header="Action" style="width: 10%;">
         <template #body="slotProps">
-          <Button @click="viewSelectedRoleId(slotProps.data.id)" icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
-          <Button @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash" class="p-button-sm p-button-danger" rounded />
+          <Button @click="viewSelectedRoleId(slotProps.data.id)" icon="pi pi-pencil"
+            class="p-button-sm p-button-primary mr-2" rounded />
+          <Button @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
+            class="p-button-sm p-button-danger" rounded />
         </template>
       </Column>
     </DataTable>
-
-    <div v-else class="flex justify-center items-center">
-      <p class="text-xl">No roles found</p>
-    </div>
 
     <!-- Dialog modal add -->
     <Dialog v-model:visible="btnAddModal" modal header="Add Role" :style="{ width: '25rem' }">
@@ -217,7 +200,7 @@ onMounted(() => {
         <Button type="button" label="Save" @click="fetchAddRole"></Button>
       </div>
     </Dialog>
-    
+
     <!-- Dialog modal edit -->
     <Dialog v-model:visible="btnEditModal" modal header="Edit Role" :style="{ width: '25rem' }">
       <div class="flex items-center gap-4 mb-4">

@@ -23,3 +23,11 @@ export const updateJobApplication = async (id, data) => {
 export const deleteJobApplication = async (id) => {
   return await apiService(ENDPOINTS.JOB_APPLICATION_DELETE.replace(':id', id), METHOD.PATCH);
 }
+
+export const getApplyStatus = async (params = {}) => {
+  return await apiService(ENDPOINTS.APPLICATION_STATUS, METHOD.GET, null, {}, params);
+}
+
+export const getApplyOverall = async (params = {}) => {
+  return await apiService(ENDPOINTS.APPLICATION_OVERALL, METHOD.GET, null, {}, params);
+}

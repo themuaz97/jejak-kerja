@@ -8,6 +8,9 @@ const toast = useToast();
 const confirm = useConfirm();
 
 const applicationOveralls = ref([]);
+
+const loading = ref(false);
+
 const severities = ref([
   { name: "primary", value: "primary" },
   { name: "secondary", value: "secondary" },
@@ -127,6 +130,7 @@ const confirmActivate = (event, id) => {
 };
 
 const fetchApplicationOverall = async () => {
+  loading.value = true;
   try {
     const { data } = await getApplicationOverall({ page: currentPage.value });
 
@@ -136,12 +140,8 @@ const fetchApplicationOverall = async () => {
     currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
-    toast.add({
-      severity: "error",
-      summary: "Error",
-      detail: "Failed to load application statuses",
-      life: 3000,
-    });
+  } finally {
+    loading.value = false;
   }
 };
 
@@ -232,7 +232,7 @@ onMounted(() => {
     <div class="flex justify-end items-center mb-4">
       <Button label="Add Application Overall" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
     </div>
-    <DataTable v-if="applicationOveralls.length > 0" :value="applicationOveralls" paginator :rows="rowsPerPage"
+    <DataTable :value="applicationOveralls" paginator :rows="rowsPerPage"
       :totalRecords="totalRecords" :first="(currentPage - 1) * rowsPerPage"
       paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
@@ -242,6 +242,8 @@ onMounted(() => {
           {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
         </template>
       </Column>
+      <template #empty> No application overall found. </template>
+      <template #loading> Loading application overall data. Please wait. </template>
       <Column field="name" header="Name"></Column>
       <Column field="color_code" header="Color Code">
         <template #body="slotProps">
@@ -268,10 +270,6 @@ onMounted(() => {
         </template>
       </Column>
     </DataTable>
-
-    <div v-else class="flex justify-center items-center">
-      <p class="text-xl">No application overall found</p>
-    </div>
 
     <!-- Dialog modal add -->
     <Dialog v-model:visible="btnAddModal" modal header="Add Application Overall" :style="{ width: '25rem' }">
@@ -318,8 +316,8 @@ onMounted(() => {
         <InputText id="editRoleName" v-model="viewApplicationOverallId.name" class="flex-auto" autocomplete="off" />
 
         <label for="editRoleColorCode" class="font-semibold w-24">Color Code</label>
-        <Select v-model="viewApplicationOverallId.color_code" :options="severities" optionLabel="name" optionValue="value"
-          placeholder="Select a severity">
+        <Select v-model="viewApplicationOverallId.color_code" :options="severities" optionLabel="name"
+          optionValue="value" placeholder="Select a severity">
           <!-- Customize the dropdown items with PrimeVue's severity classes -->
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center">

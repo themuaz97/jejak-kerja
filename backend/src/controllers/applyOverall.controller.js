@@ -2,6 +2,20 @@ import prisma from "../db/prisma.js";
 
 export const getApplyOverall = async (req, res) => {
   try {
+    const applyOverall = await prisma.application_overall.findMany({
+      orderBy: {
+        created_at: "desc",
+      },
+    });
+
+    res.status(200).send({ message: "Apply Overall fetched successfully", applyOverall });
+  } catch (error) {
+    res.status(500).send({ message: "Internal server error", error: error.message });
+  }
+}
+
+export const getApplyOverallAdmin = async (req, res) => {
+  try {
     const { page = 1 } = req.query;
 
     const pageNumber = parseInt(page, 10);

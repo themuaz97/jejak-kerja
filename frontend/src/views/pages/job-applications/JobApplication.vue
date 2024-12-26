@@ -1,6 +1,5 @@
 <script setup>
-import { getApplicationOverall, getApplicationStatus } from "@/services/configuration.service";
-import { addJobApplication, getJobApplications, updateJobApplication, deleteJobApplication } from "@/services/jobApplication.service";
+import { addJobApplication, getJobApplications, updateJobApplication, deleteJobApplication, getApplyStatus, getApplyOverall } from "@/services/jobApplication.service";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
 import { ref, onMounted } from "vue";
@@ -202,12 +201,9 @@ const fetchUpdateJobApplication = async () => {
 
 const fetchApplicationStatuses = async () => {
   try {
-    const { data } = await getApplicationStatus({ page: currentPage.value });
+    const { data } = await getApplyStatus({});
 
     applicationStatuses.value = data.resData.applyStatus;
-    totalRecords.value = data.resData.meta.totalCount;
-    totalPages.value = data.resData.meta.totalPages;
-    currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
   }
@@ -215,12 +211,9 @@ const fetchApplicationStatuses = async () => {
 
 const fetchApplicationOverall = async () => {
   try {
-    const { data } = await getApplicationOverall({ page: currentPage.value });
+    const { data } = await getApplyOverall({});
 
     applicationOveralls.value = data.resData.applyOverall;
-    totalRecords.value = data.resData.meta.totalCount;
-    totalPages.value = data.resData.meta.totalPages;
-    currentPage.value = data.resData.meta.page;
   } catch (error) {
     console.error("Error fetching application Statuses:", error);
   }

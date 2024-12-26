@@ -11,6 +11,7 @@ export const protectRoute = (router) => {
             "accessDenied",
             "error",
             "notfound",
+            "callback",
         ];
 
         // If the route is public, allow access
@@ -19,6 +20,7 @@ export const protectRoute = (router) => {
         }
 
         const accessToken = localStorage.getItem("accessToken");
+        
         const refreshTokenExists = document.cookie
             .split("; ")
             .some((cookie) => cookie.startsWith("refreshToken="));
@@ -38,6 +40,50 @@ export const protectRoute = (router) => {
                 next({ name: "login" });
             } else {
                 next(); // Proceed to other error handling if needed
+            }
+        }
+    });
+};
+
+export const protectRouteAdmin = (router) => {
+    router.beforeEach(async (to, from, next) => {
+        const adminRoutes = [
+            "admin-configuration",
+            "admin-notification",
+        ];
+
+        // If the route is not an admin route, allow access
+        if (!adminRoutes.includes(to.name)) {
+            return next();
+        }
+
+        const accessToken = localStorage.getItem("accessToken");
+        const refreshTokenExists = document.cookie
+            .split("; ")
+            .some((cookie) => cookie.startsWith("refreshToken="));
+
+        if (!accessToken || !refreshTokenExists) {
+            return next({ name: "login" });
+        }
+
+        try {
+            // Check session validity and user role
+            const response = await me();
+            const user = response.data.resData.user;
+
+            if (user.role?.name === "admin") {
+                next(); // User is an admin, proceed
+            } else {
+                console.warn("User does not have admin privileges. Redirecting to accessDenied.");
+                next({ name: "accessDenied" });
+            }
+        } catch (error) {
+            console.error("Error validating user role:", error.message);
+            if (error.response?.status === 401) {
+                console.warn("Session expired or invalid. Redirecting to login.");
+                next({ name: "login" });
+            } else {
+                next({ name: "error" }); 
             }
         }
     });
