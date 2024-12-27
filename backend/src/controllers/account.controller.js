@@ -1,11 +1,11 @@
-// account.controller.js
 import cloudinary from "../config/cloudinary.js";
 import prisma from "../db/prisma.js";
+import bcrypt from "bcrypt";
 
 export const updateMe = async (req, res) => {
   try {
     const userId = req.user.user_id;
-    const { firstName, lastName, username, phoneNo } = req.body;
+    const { firstName, lastName, username, phoneNo, birthAt } = req.body;
 
     // Create update data object
     const updateData = {
@@ -13,6 +13,7 @@ export const updateMe = async (req, res) => {
       last_name: lastName,
       username,
       phone_no: phoneNo,
+      birth_at: birthAt,
     };
 
     // Handle profile image if it exists in the request
@@ -22,15 +23,25 @@ export const updateMe = async (req, res) => {
         const fileStr = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
 
         // Upload to Cloudinary
-        const result = await cloudinary.uploader.upload(fileStr, {
+        const result = await cloudinary.uploader.upload(fileStr);
+
+        // Get URL of uploaded image with transformations
+        const url = cloudinary.url(result.public_id, {
           transformation: [
-            { quality: 'auto' },
-            { fetch_format: 'auto' },
+            {
+              quality: 'auto',
+              fetch_format: 'auto',
+            },
+            {
+              width: 500,
+              height: 500,
+              crop: 'fill',
+              gravity: 'auto',
+            },
           ],
         });
 
-        // Add profile image URL to update data
-        updateData.profile_img = result.secure_url;
+        updateData.profile_img = url;
       } catch (uploadError) {
         console.error('Cloudinary upload error:', uploadError);
         return res.status(400).json({
@@ -48,7 +59,7 @@ export const updateMe = async (req, res) => {
 
     // Return success response
     res.status(200).json({
-      message: 'User updated successfully',
+      message: 'account updated successfully',
       user
     });
 
@@ -60,3 +71,59 @@ export const updateMe = async (req, res) => {
     });
   }
 };
+
+export const updatePassword = async (req, res) => { 
+  try {
+    const userId = req.user.user_id;
+    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+
+    const user = await prisma.users.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: 'User not found',
+      });
+    }
+
+    if (newPassword.length || confirmNewPassword.length < 6) {
+      return res.status(400).json({
+        message: 'Password must be at least 6 characters long',
+      });
+    }
+
+    // Check if old password matches
+    const isPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+
+    if (!isPasswordValid) {
+      return res.status(400).json({
+        message: 'Old password is incorrect',
+      });
+    }
+
+    // Check if new password and confirm new password match
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).json({
+        message: 'New password and confirm new password do not match',
+      });
+    }
+
+    const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+    const updatedUser = await prisma.users.update({
+      where: { id: userId },
+      data: { password: hashedPassword },
+    })
+
+    res.status(200).json({
+      message: 'Password updated successfully',
+      updatedUser
+    })
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error updating password',
+      error: error.message
+    });
+  }
+}

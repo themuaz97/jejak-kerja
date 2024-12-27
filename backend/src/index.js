@@ -4,12 +4,13 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import multer from "multer";
-import router from "./router/index.route.js";
 import authRouter from "./router/auth.route.js";
+import router from "./router/index.route.js";
+import routerAdmin from "./router/admin.route.js";
+import fileRouter from "./router/file.route.js";
 import cookieParser from "cookie-parser";
 import prisma from "./db/prisma.js";
 import passport from "./config/passport.js";
-import routerAdmin from "./router/admin.route.js";
 
 dotenv.config();
 
@@ -34,13 +35,8 @@ const form = multer()
 
 server.use(passport.initialize());
 
-// TODO: Routes refactor code if that endpoint requires to upload image
-server.use("/api/auth", (req, res, next) => {
-  if (req.path === '/account/update') {
-    return next();
-  }
-  form.none()(req, res, next);
-}, authRouter);
+server.use("/api", fileRouter); // file router to stay first
+server.use("/api/auth", form.none(), authRouter);
 server.use('/api/admin', form.none(), routerAdmin);
 server.use("/api", form.none(), router);
 

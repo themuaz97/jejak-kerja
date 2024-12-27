@@ -7,8 +7,12 @@ export const ENDPOINTS = {
   REGISTER: `/auth/register`,
   LOGIN: `/auth/login`,
   LOGOUT: `/auth/logout`,
-  ME: `/auth/me`,
   REFRESH_TOKEN: `/auth/refresh-token`,
+  
+  // account
+  ME: `/me`,
+  ACCOUNT_PERSONAL_UPDATE: `/account/personal/update`,
+  ACCOUNT_PASSWORD_UPDATE: `/account/password/update`,
 
   // job applications
   JOB_APPLICATIONS: `/job-applications`,

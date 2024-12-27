@@ -39,7 +39,7 @@ const router = createRouter({
                 {
                     path: "/account",
                     name: "account",
-                    component: () => import("@/views/pages/Account.vue"),
+                    component: () => import("@/views/pages/account/Account.vue"),
                 },
                 {
                     path: "/uikit/button",

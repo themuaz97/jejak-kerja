@@ -7,10 +7,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model addresses {
+  id                 String    @id @default(uuid())
+  address_line_1     String
+  address_line_2     String?
+  city               String
+  state              String
+  country            String
+  postal_code        String
+  is_active          Boolean   @default(true)
+  created_at         DateTime  @default(now())
+  created_by         String?
+  updated_at         DateTime? @updatedAt
+  updated_by         String?
+  address_created_by users?    @relation("address_created_by", fields: [created_by], references: [id])
+  address_updated_by users?    @relation("address_updated_by", fields: [updated_by], references: [id])
+}
+
 model application_overall {
   id                       Int               @id @default(autoincrement())
   name                     String
-  color_code               String?          @default("")
+  color_code               String?           @default("")
   is_active                Boolean           @default(true)
   created_at               DateTime          @default(now())
   created_by               String?
@@ -137,6 +154,7 @@ model users {
   profile_img                   String?
   username                      String?
   phone_no                      String?
+  birth_at                      DateTime?
   is_active                     Boolean               @default(true)
   role_id                       String
   created_at                    DateTime              @default(now())
@@ -156,6 +174,8 @@ model users {
   faq_questions_updated_by      faq_questions[]       @relation("faq_questions_updated_by")
   faq_answers_created_by        faq_answers[]         @relation("faq_answers_created_by")
   faq_answers_updated_by        faq_answers[]         @relation("faq_answers_updated_by")
+  address_created_by            addresses[]           @relation("address_created_by")
+  address_updated_by            addresses[]           @relation("address_updated_by")
 }
 
 enum Provider {

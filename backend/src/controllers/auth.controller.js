@@ -141,6 +141,7 @@ export const me = async (req, res) => {
         last_name: user.last_name,
         profile_img: user.profile_img,
         phone_no: user.phone_no,
+        birth_at: user.birth_at,
         role: user.roles
       }
     });
