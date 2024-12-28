@@ -1,7 +1,8 @@
-import { me } from "@/services/auth.service";
+import { useUserStore } from "@/stores/user";
 
 export const protectRoute = (router) => {
     router.beforeEach(async (to, from, next) => {
+        const meStore = useUserStore();
         // List of public routes that don't require authentication
         const publicRoutes = [
             "landing",
@@ -30,8 +31,10 @@ export const protectRoute = (router) => {
         }
 
         try {
-            // Check session validity by calling me endpoint
-            await me();
+            // Use the store's fetchMe action to validate the session
+            if (!meStore.fetched) {
+                await meStore.fetchMe();
+            }
             next(); // Session is valid, proceed
         } catch (error) {
             console.error("Session validation failed:", error.message);
@@ -47,6 +50,8 @@ export const protectRoute = (router) => {
 
 export const protectRouteAdmin = (router) => {
     router.beforeEach(async (to, from, next) => {
+        const meStore = useUserStore();
+
         const adminRoutes = [
             "admin-configuration",
             "admin-notification",
@@ -68,10 +73,13 @@ export const protectRouteAdmin = (router) => {
 
         try {
             // Check session validity and user role
-            const response = await me();
-            const user = response.data.resData.user;
+            if (!meStore.fetched) {
+                await meStore.fetchMe();
+            }
 
-            if (user.role?.name === "admin") {
+            const user = meStore.user;
+
+            if (user?.role?.name === "admin") {
                 next(); // User is an admin, proceed
             } else {
                 console.warn("User does not have admin privileges. Redirecting to accessDenied.");

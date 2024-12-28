@@ -17,7 +17,7 @@ const emailError = ref('');
 const passwordError = ref('');
 
 const googleLogin = async () => {
-    window.location.href = 'http://localhost:3000/api/auth/google';
+    window.location.href = `${import.meta.env.VITE_BACKEND}/auth/google`;
 };
 
 const handleLogin = async () => {
@@ -88,11 +88,9 @@ const handleLogin = async () => {
 
 
                     <!-- Divider -->
-                    <div class="flex items-center justify-center my-4">
-                        <div class="border-t w-full"></div>
-                        <span class="px-4 font-medium">OR</span>
-                        <div class="border-t w-full"></div>
-                    </div>
+                    <Divider align="center">
+                        <b>OR</b>
+                    </Divider>
 
                     <div>
                         <Toast />

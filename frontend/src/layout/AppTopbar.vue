@@ -1,15 +1,16 @@
 <script setup>
 import { useLayout } from "@/layout/composables/layout";
-import { logout, me } from "@/services/auth.service";
-import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
+import { onMounted, ref, computed } from "vue";
+import { useUserStore } from "@/stores/user";
+import { logout } from "@/services/auth.service";
 
 const { onMenuToggle, toggleDarkMode, isDarkTheme } = useLayout();
-
 const router = useRouter();
 
-const profileImg = ref(null);
-const isLoading = ref(true);
+const userStore = useUserStore(); 
+const isLoading = computed(() => userStore.loading); 
+const profileImg = computed(() => userStore.user?.profile_img); 
 
 const menu = ref();
 const items = ref([
@@ -30,7 +31,7 @@ const items = ref([
                 console.error("Error during logout:", error);
             } finally {
                 localStorage.removeItem("accessToken");
-                router.push('/')
+                router.push("/");
             }
         },
     },
@@ -40,21 +41,8 @@ const toggleAccount = (event) => {
     menu.value.toggle(event);
 };
 
-const fetchMe = async () => {
-    try {
-        const {data} = await me();
-        console.log('response me', data);
-        
-        profileImg.value = data.resData.user.profile_img || null; // If profile_img is null, set to null
-    } catch (error) {
-        console.error(error);
-    } finally {
-        isLoading.value = false;
-    }
-};
-
 onMounted(() => {
-    fetchMe();
+    userStore.fetchMe();
 });
 </script>
 
@@ -79,21 +67,18 @@ onMounted(() => {
         <div class="layout-topbar-actions">
             <div class="layout-config-menu">
                 <button type="button" class="layout-topbar-action" @click="toggleDarkMode">
-                    <i :class="[
-                            'pi',
-                            { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme },
-                        ]"></i>
+                    <i :class="['pi', { 'pi-moon': isDarkTheme, 'pi-sun': !isDarkTheme }]"></i>
                 </button>
             </div>
 
             <button class="layout-topbar-menu-button layout-topbar-action" v-styleclass="{
-                    selector: '@next',
-                    enterFromClass: 'hidden',
-                    enterActiveClass: 'animate-scalein',
-                    leaveToClass: 'hidden',
-                    leaveActiveClass: 'animate-fadeout',
-                    hideOnOutsideClick: true,
-                }">
+                selector: '@next',
+                enterFromClass: 'hidden',
+                enterActiveClass: 'animate-scalein',
+                leaveToClass: 'hidden',
+                leaveActiveClass: 'animate-fadeout',
+                hideOnOutsideClick: true,
+            }">
                 <i class="pi pi-ellipsis-v"></i>
             </button>
 
@@ -107,6 +92,7 @@ onMounted(() => {
                     <!-- Avatar Component with Conditional Icon -->
                     <button v-if="!isLoading && profileImg" @click="toggleAccount" class="layout-topbar-action">
                         <Avatar :image="profileImg" shape="circle" :icon="!profileImg ? 'pi pi-user' : undefined" />
+                        <span class="ml-2">{{ userStore.user?.username }}</span>
                     </button>
                     <button v-else-if="!isLoading && !profileImg" @click="toggleAccount" class="layout-topbar-action">
                         <i class="pi pi-user" />

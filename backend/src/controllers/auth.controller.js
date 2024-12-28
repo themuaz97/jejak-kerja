@@ -103,6 +103,10 @@ export const login = async (req, res) => {
       return res.status(404).send({ message: "The email does not exist" });
     }
 
+    if (!user.is_active) {
+      return res.status(400).send({ message: "this account already deactivated" });
+    }
+
     const provider = await prisma.sso_providers.findFirst({
       where: { user_id: user.id },
     });
@@ -125,7 +129,10 @@ export const me = async (req, res) => {
   try {
     const user = await prisma.users.findFirst({
       where: { id: req.user.user_id },
-      include: { roles: true },
+      include: {
+        roles: true,
+        ssoProviders: true,
+      },
     })
 
     if (!user) {
@@ -142,7 +149,8 @@ export const me = async (req, res) => {
         profile_img: user.profile_img,
         phone_no: user.phone_no,
         birth_at: user.birth_at,
-        role: user.roles
+        role: user.roles,
+        sso_providers: user.ssoProviders,
       }
     });
   } catch (error) {

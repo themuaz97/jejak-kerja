@@ -21,3 +21,15 @@ export const refreshToken = async (data) => {
 export const logout = async () => {
     return await apiService(ENDPOINTS.LOGOUT, METHOD.POST);
 };
+
+export const forgotPassword = async (data) => {
+    return await apiService(ENDPOINTS.FORGOT_PASSWORD, METHOD.POST, data);
+};
+
+export const resetPassword = async (data) => {
+    return await apiService(ENDPOINTS.RESET_PASSWORD, METHOD.POST, data);
+};
+
+export const getGoogleLogin = async () => {
+    return await apiService(ENDPOINTS.GOOGLE_LOGIN, METHOD.GET);
+};

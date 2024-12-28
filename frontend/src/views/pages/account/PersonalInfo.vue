@@ -12,7 +12,7 @@ const toast = useToast();
 const previewImageUrl = ref(null);
 const profileImg = ref(null);
 
-const originalUser = ref(null);
+const unchangedData = ref(null);
 const loading = ref(false);
 
 const uploadImage = (event) => {
@@ -25,14 +25,14 @@ const uploadImage = (event) => {
 
 // Compare current user data with the original user data
 const isChanged = computed(() => {
-  if (!originalUser.value) return false;
+  if (!unchangedData.value) return false;
 
   return (
-    meStore.user.first_name !== originalUser.value.first_name ||
-    meStore.user.last_name !== originalUser.value.last_name ||
-    meStore.user.username !== originalUser.value.username ||
-    meStore.user.phone_no !== originalUser.value.phone_no ||
-    meStore.user.birth_at !== originalUser.value.birth_at ||
+    meStore.user.first_name !== unchangedData.value.first_name ||
+    meStore.user.last_name !== unchangedData.value.last_name ||
+    meStore.user.username !== unchangedData.value.username ||
+    meStore.user.phone_no !== unchangedData.value.phone_no ||
+    meStore.user.birth_at !== unchangedData.value.birth_at ||
     !!profileImg.value // Check if a new profile image is selected
   );
 });
@@ -64,7 +64,7 @@ const fetchUpdateMe = async () => {
       await meStore.fetchMe();
 
       // Update the original user data to the latest data
-      originalUser.value = { ...meStore.user };
+      unchangedData.value = { ...meStore.user };
     } else {
       toast.add({
         severity: 'error',
@@ -83,7 +83,7 @@ const fetchUpdateMe = async () => {
 onMounted(async () => {
   await meStore.fetchMe();
   // Set original user data after fetching
-  originalUser.value = { ...meStore.user };
+  unchangedData.value = { ...meStore.user };
 });
 </script>
 

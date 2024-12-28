@@ -75,10 +75,20 @@ export const updateMe = async (req, res) => {
 export const updatePassword = async (req, res) => { 
   try {
     const userId = req.user.user_id;
-    const { oldPassword, newPassword, confirmNewPassword } = req.body;
+    const { currentPassword, newPassword, confirmNewPassword } = req.body;
 
-    const user = await prisma.users.findUnique({
-      where: { id: userId },
+    const user = await prisma.users.findFirst({
+      where: {
+        id: userId,
+        ssoProviders: {
+          some: {
+            provider: "internal"
+          }
+        }
+      },
+      include: {
+        ssoProviders: true
+      }
     });
 
     if (!user) {
@@ -86,15 +96,15 @@ export const updatePassword = async (req, res) => {
         message: 'User not found',
       });
     }
-
-    if (newPassword.length || confirmNewPassword.length < 6) {
+    
+    if (newPassword.length < 6) {
       return res.status(400).json({
         message: 'Password must be at least 6 characters long',
       });
     }
 
     // Check if old password matches
-    const isPasswordValid = bcrypt.compareSync(oldPassword, user.password);
+    const isPasswordValid = bcrypt.compareSync(currentPassword, user.password);
 
     if (!isPasswordValid) {
       return res.status(400).json({

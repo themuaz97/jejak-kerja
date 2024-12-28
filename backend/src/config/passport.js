@@ -9,7 +9,7 @@ passport.use(new GoogleStrategy({
   callbackURL: process.env.GOOGLE_REDIRECT_URI,
   passReqToCallback: true
 },
-  async (request, accessToken, refreshToken, profile, done) => {
+  async (request, response, accessToken, refreshToken, profile, done) => {
     try {
       const userRole = await prisma.roles.findFirst({
         where: { name: "user" }
@@ -17,6 +17,20 @@ passport.use(new GoogleStrategy({
 
       if (!userRole) {
         throw new Error('Default user role not found');
+      }
+
+      // Check if user exists and is inactive
+      const existingUser = await prisma.users.findFirst({
+        where: {
+          email: profile.emails[0].value,
+        },
+      });
+
+      if (existingUser && !existingUser.is_active) {
+        // User exists but is inactive
+        return done(null, false, {
+          message: 'User account has been deleted',
+        });
       }
 
       // Check if user exists
@@ -54,7 +68,6 @@ passport.use(new GoogleStrategy({
           await prisma.sso_providers.create({
             data: {
               user_id: user.id,
-              provider: Provider.google,
               provider_id: profile.id
             }
           });

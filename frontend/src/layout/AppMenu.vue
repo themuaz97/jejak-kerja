@@ -2,7 +2,9 @@
 import { onMounted, ref } from 'vue';
 
 import AppMenuItem from './AppMenuItem.vue';
-import { me } from '@/services/auth.service';
+import { useUserStore } from '@/stores/user';
+
+const meStore = useUserStore();
 
 const model = ref([
     {
@@ -19,11 +21,15 @@ const model = ref([
 
 const protectRouteAdmin = async () => {
     try {
-        const response = await me();
-        const user = response.data.resData.user;
+        // Fetch user data if not already fetched
+        if (!meStore.fetched) {
+            await meStore.fetchMe();
+        }
+
+        const user = meStore.user;
 
         // If the user has an "admin" role, add the admin configuration menu
-        if (user.role?.name === 'admin') {
+        if (user?.role?.name === 'admin') {
             model.value.push({
                 label: 'Admin Configuration',
                 items: [
@@ -33,7 +39,7 @@ const protectRouteAdmin = async () => {
             });
         }
     } catch (error) {
-        console.error('Error fetching user data:', error);
+        console.error('Error checking admin role:', error);
     }
 };
 

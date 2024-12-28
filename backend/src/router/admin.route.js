@@ -1,7 +1,7 @@
 import express from "express";
 import { protectAdminRoute, protectRoute } from "../middleware/auth.middleware.js";
 import { addRole, deleteRole, getRoles, updateRole } from "../controllers/role.controller.js";
-import { activateUser, addUser, deleteUser, getUsers, updateUser } from "../controllers/user.controller.js";
+import { activateUser, addUser, getUsers, updateUser } from "../controllers/user.controller.js";
 import { activateApplyStatus, addApplyStatus, deleteApplyStatus, getApplyStatusAdmin, updateApplyStatus } from "../controllers/applyStatus.controller.js";
 import { activateApplyOverall, addApplyOverall, deleteApplyOverall, getApplyOverallAdmin, updateApplyOverall } from "../controllers/applyOverall.controller.js";
 
@@ -19,7 +19,6 @@ routerAdmin.patch("/role/:id/delete", deleteRole);
 routerAdmin.get("/users", getUsers);
 routerAdmin.post("/user/add", addUser);
 routerAdmin.put("/user/:id/update", updateUser);
-routerAdmin.patch("/user/:id/delete", deleteUser);
 routerAdmin.patch("/user/:id/activate", activateUser);
 
 // application status

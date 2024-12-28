@@ -1,6 +1,6 @@
 import { METHOD } from "@/constants/api-method.constant";
 import { base_url } from "@/constants/api.constant";
-import { logout, refreshToken } from "@/services/auth.service";
+import { refreshToken } from "@/services/auth.service";
 
 export const apiService = async (
     url,

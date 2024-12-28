@@ -7,6 +7,7 @@ import { getApplyOverall } from "../controllers/applyOverall.controller.js";
 import { addJobApplication, deleteJobApplication, getJobApplications, updateJobApplication } from "../controllers/jobApplication.controller.js";
 import { me } from "../controllers/auth.controller.js";
 import { updatePassword } from "../controllers/account.controller.js";
+import { deleteUser } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
@@ -15,6 +16,7 @@ router.use(protectRoute);
 // account
 router.get('/me', me)
 router.put('/account/password/update', updatePassword)
+router.patch("/user/:id/delete", deleteUser);
 
 // job application
 router.get('/job-applications', getJobApplications)

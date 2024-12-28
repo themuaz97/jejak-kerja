@@ -4,15 +4,19 @@ export const base_url = import.meta.env.VITE_BACKEND;
 export const ENDPOINTS = {
   /* ---------------------------- USERS ----------------------------- */
   // auth
+  GOOGLE_LOGIN: `/auth/google`,
   REGISTER: `/auth/register`,
   LOGIN: `/auth/login`,
   LOGOUT: `/auth/logout`,
   REFRESH_TOKEN: `/auth/refresh-token`,
+  FORGOT_PASSWORD: `/auth/forgot-password`,
+  RESET_PASSWORD: `/auth/reset-password`,
   
   // account
   ME: `/me`,
   ACCOUNT_PERSONAL_UPDATE: `/account/personal/update`,
   ACCOUNT_PASSWORD_UPDATE: `/account/password/update`,
+  ADMIN_USER_DELETE: `/user/:id/delete`,
 
   // job applications
   JOB_APPLICATIONS: `/job-applications`,
@@ -38,7 +42,6 @@ export const ENDPOINTS = {
   ADMIN_USERS: `/admin/users`,
   ADMIN_USER_ADD: `/admin/user/add`,
   ADMIN_USER_UPDATE: `/admin/user/:id/update`,
-  ADMIN_USER_DELETE: `/admin/user/:id/delete`,
   ADMIN_USER_ACTIVATE: `/admin/user/:id/activate`,
 
   // application status
