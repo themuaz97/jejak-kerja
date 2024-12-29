@@ -6,7 +6,7 @@ function smoothScroll(id) {
     });
 }
 </script>
-
+<!-- TODO: Replace landing page -->
 <template>
     <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">

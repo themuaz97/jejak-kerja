@@ -13,7 +13,7 @@ export const updateMe = async (req, res) => {
       last_name: lastName,
       username,
       phone_no: phoneNo,
-      birth_at: birthAt,
+      birth_at: birthAt === "null" || !birthAt ? null : new Date(birthAt),
     };
 
     // Handle profile image if it exists in the request

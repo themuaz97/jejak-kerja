@@ -18,6 +18,11 @@ export const ENDPOINTS = {
   ACCOUNT_PASSWORD_UPDATE: `/account/password/update`,
   ADMIN_USER_DELETE: `/user/:id/delete`,
 
+  // dashboard
+  DASHBOARD_COUNT: `/dashboard/count`,
+  DASHBOARD_JOBS_BY_STATUS: `/dashboard/jobs-by-status`,
+  DASHBOARD_JOBS_BY_PLATFORM: `/dashboard/jobs-by-platform`,
+
   // job applications
   JOB_APPLICATIONS: `/job-applications`,
   JOB_APPLICATION_ADD: `/job-application/add`,

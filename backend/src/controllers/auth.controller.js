@@ -186,7 +186,7 @@ export const forgotPassword = async (req, res) => {
       "reset"
     );
 
-    const resetLink = `${process.env.FRONTEND_URL}/user/forgot-password?token=${accessToken}`;
+    const resetLink = `${process.env.FRONTEND_URL}/auth/reset-password?resetPasswordToken=${accessToken}`;
 
     // Email options
     const mailOptions = {
@@ -205,8 +205,8 @@ export const forgotPassword = async (req, res) => {
     await transporter.sendMail(mailOptions);
 
     res.status(200).send({
+      message: "Password reset link has been sent to your email. Please check your inbox",
       email: user.email,
-      message: "Check your email for the reset link",
     });
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
@@ -215,16 +215,20 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
-    const { token, newPassword } = req.body;
+    const { resetPasswordToken, newPassword, confirmNewPassword } = req.body;
 
-    if (!token || !newPassword) {
+    if (!resetPasswordToken || !newPassword || !confirmNewPassword) {
       return res.status(400).send({ message: "Token and new password are required" });
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      return res.status(400).send({ message: "New password and confirm new password do not match" });
     }
 
     // Verify the token and extract the user ID
     let decoded;
     try {
-      decoded = jwt.verify(token, process.env.SECRET_KEY);
+      decoded = jwt.verify(resetPasswordToken, process.env.SECRET_KEY);
     } catch (error) {
       return res.status(400).send({ message: "Invalid or expired token", error: error.message });
     }
@@ -243,7 +247,7 @@ export const resetPassword = async (req, res) => {
     // Check if the token exists in the database and has not expired
     const tokenRecord = await prisma.tokens.findFirst({
       where: {
-        token: token,
+        token: resetPasswordToken,
         user_id: userId,
         token_type: "reset",
         expired_at: {
@@ -253,7 +257,7 @@ export const resetPassword = async (req, res) => {
     });
 
     if (!tokenRecord) {
-      return res.status(401).send({ error: "Invalid or expired token" });
+      return res.status(401).send({ message: "Invalid or expired token" });
     }
 
     // Hash the new password

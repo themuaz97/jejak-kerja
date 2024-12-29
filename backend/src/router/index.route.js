@@ -8,6 +8,7 @@ import { addJobApplication, deleteJobApplication, getJobApplications, updateJobA
 import { me } from "../controllers/auth.controller.js";
 import { updatePassword } from "../controllers/account.controller.js";
 import { deleteUser } from "../controllers/user.controller.js";
+import { getDataJobApplications, getJobApplicationByPlatform, getJobApplicationByStatus } from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
@@ -17,6 +18,11 @@ router.use(protectRoute);
 router.get('/me', me)
 router.put('/account/password/update', updatePassword)
 router.patch("/user/:id/delete", deleteUser);
+
+// dashboard
+router.get('/dashboard/count', getDataJobApplications)
+router.get('/dashboard/jobs-by-status', getJobApplicationByStatus)
+router.get('/dashboard/jobs-by-platform', getJobApplicationByPlatform)
 
 // job application
 router.get('/job-applications', getJobApplications)

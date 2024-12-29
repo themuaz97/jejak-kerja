@@ -2,35 +2,44 @@
 import { addJobApplication, getJobApplications, updateJobApplication, deleteJobApplication, getApplyStatus, getApplyOverall } from "@/services/jobApplication.service";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 
 const toast = useToast();
 const confirm = useConfirm();
+
+const currentMonth = new Date();
+currentMonth.setDate(1);
+
+const filterDate = ref(currentMonth);
 
 const jobApplications = ref([]);
 const applicationStatuses = ref([]);
 const applicationOveralls = ref([]);
 
-const positionLevels = ref([
-  { name: "Intern", value: "intern" },
-  { name: "Non Executive", value: "non-executive" },
-  { name: "Entry Level", value: "entry" },
-  { name: "Mid Level", value: "mid" },
-  { name: "Senior Level", value: "senior" },
-  { name: "First Level Management", value: "manager" },
-  { name: "Senior Level Management", value: "director" },
-  { name: "Executive Management", value: "executive" },
-  { name: "Board of Directors", value: "board" },
-]);
+const positionLevels = ref(
+  [
+    { name: "Intern" },
+    { name: "Non Executive" },
+    { name: "Entry Level" },
+    { name: "Mid Level" },
+    { name: "Senior Level" },
+    { name: "First Level Management" },
+    { name: "Senior Level Management" },
+    { name: "Executive Management" },
+    { name: "Board of Directors" },
+  ].map((item, index) => ({ id: index + 1, name: item.name }))
+);
 
-const platforms = ref([
-  { name: "Linkedin", value: "linkedin" },
-  { name: "JobStreet", value: "jobstreet" },
-  { name: "Indeed", value: "indeed" },
-  { name: "Glassdoor", value: "glassdoor" },
-  { name: "Foundit", value: "foundit" },
-  { name: "Hiredly", value: "hiredly" },
-])
+const platforms = ref(
+  [
+    { name: "LinkedIn" },
+    { name: "JobStreet" },
+    { name: "Indeed" },
+    { name: "Glassdoor" },
+    { name: "Foundit" },
+    { name: "Hiredly" },
+  ].map((item, index) => ({ id: index + 1, name: item.name }))
+);
 
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
@@ -52,6 +61,26 @@ const location = ref();
 const applyStatusId = ref(null);
 const applyOverallId = ref(null);
 const remarks = ref();
+
+const filteredApplications = computed(() => {
+  if (!filterDate.value) {
+    return jobApplications.value;
+  }
+
+  const selectedDate = new Date(filterDate.value);
+
+  return jobApplications.value.filter((app) => {
+    const appDate = new Date(app.created_at);
+    return (
+      appDate.getFullYear() === selectedDate.getFullYear() &&
+      appDate.getMonth() === selectedDate.getMonth()
+    );
+  });
+});
+
+const formatCurrency = (value) => {
+  return value.toLocaleString('en-US', { style: 'currency', currency: 'MYR' });
+};
 
 const confirmDelete = (event, id) => {
   confirm.require({
@@ -228,65 +257,82 @@ onMounted(() => {
 
 <template>
   <div class="card">
-    <Toast />
-    <ConfirmPopup />
-    <DataTable :value="jobApplications" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
-      :first="(currentPage - 1) * rowsPerPage"
-      paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-      currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
-      tableStyle="min-width: 50rem">
-      <template #header>
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <span class="text-xl font-bold">Job Application</span>
-          <Button label="Add" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
-        </div>
-      </template>
-      <template #empty>
-        <div class="text-center py-4 text-gray-500">No Job Application found!</div>
-      </template>
-      <Column header="#" style="width: 3%">
-        <template #body="slotProps">
-          {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
+    <div class="flex justify-between gap-4">
+      <div class="flex flex-col gap-2">
+        <label for="date">Date</label>
+        <DatePicker v-model="filterDate" view="month" placeholder="Select a date" showIcon
+          iconDisplay="input" dateFormat="mm/yy" variant="filled" />
+      </div>
+    </div>
+    <div class="my-2 py-2">
+      <Divider />
+    </div>
+    <div>
+      <Toast />
+      <ConfirmPopup />
+      <DataTable :value="filteredApplications" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
+        :first="(currentPage - 1) * rowsPerPage"
+        paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1"
+        stripedRows tableStyle="min-width: 50rem">
+        <template #header>
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-xl font-bold">Job Application</span>
+            <Button label="Add" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
+          </div>
         </template>
-      </Column>
-      <Column field="position" header="Position" sortable style="width: 10%;"></Column>
-      <Column field="position_level" header="Position Level" style="width: 10%;">
-        <template #body="slotProps">
-          {{
-            positionLevels.find(level => level.value === slotProps.data.position_level)?.name || slotProps.data.position_level
-          }}
+        <template #empty>
+          <div class="text-center py-4 text-gray-500">No Job Application found!</div>
         </template>
-      </Column>
-      <Column field="company" header="Company Name" style="width: 15%;"></Column>
-      <Column field="platform" header="Platform"></Column>
-      <!-- <Column field="location" header="Location"></Column> -->
-      <Column field="expected_salary" header="Expected Salary" sortable></Column>
-      <!-- <Column field="offered_salary" header="Offered Salary"></Column> -->
-      <Column field="application_status.name" header="Status" sortable
-        style="width: 7%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-        <template #body="slotProps">
-          <Badge :severity="slotProps.data.application_status.color_code">
-            {{ slotProps.data.application_status.name }}
-          </Badge>
-        </template>
-      </Column>
-      <Column field="apply_overall_id" header="Company Review">
-        <template #body="slotProps">
-          <Rating :modelValue="slotProps.data.application_overall?.id" readonly />
-        </template>
-      </Column>
-      <Column field="remarks" header="Remarks"></Column>
-      <Column header="Action" style="width: 10%;" frozen alignFrozen="right">
-        <template #body="slotProps">
-          <Button v-if="slotProps.data.is_active" @click="viewSelectedJobApplicationId(slotProps.data.id)"
-            icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
-          <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
-            class="p-button-sm p-button-danger" rounded />
-          <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
-            class="p-button-sm p-button-contrast" rounded />
-        </template>
-      </Column>
-    </DataTable>
+        <Column header="#" style="width: 3%">
+          <template #body="slotProps">
+            {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
+          </template>
+        </Column>
+        <Column field="position" header="Position" sortable style="width: 10%;"></Column>
+        <Column field="position_level" header="Position Level" style="width: 10%;">
+          <template #body="slotProps">
+            {{
+            positionLevels.find(level => level.value === slotProps.data.position_level)?.name ||
+            slotProps.data.position_level
+            }}
+          </template>
+        </Column>
+        <Column field="company" header="Company Name" style="width: 15%;"></Column>
+        <Column field="platform" header="Platform"></Column>
+        <!-- <Column field="location" header="Location"></Column> -->
+        <Column field="expected_salary" header="Expected Salary" sortable>
+          <template #body="slotProps">
+            {{ formatCurrency(slotProps.data.expected_salary) }}
+          </template>
+        </Column>
+        <!-- <Column field="offered_salary" header="Offered Salary"></Column> -->
+        <Column field="application_status.name" header="Status" sortable
+          style="width: 7%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          <template #body="slotProps">
+            <Badge :severity="slotProps.data.application_status.color_code">
+              {{ slotProps.data.application_status.name }}
+            </Badge>
+          </template>
+        </Column>
+        <Column field="apply_overall_id" header="Company Review">
+          <template #body="slotProps">
+            <Rating :modelValue="slotProps.data.application_overall?.id" readonly />
+          </template>
+        </Column>
+        <Column field="remarks" header="Remarks"></Column>
+        <Column header="Action" style="width: 10%;" frozen alignFrozen="right">
+          <template #body="slotProps">
+            <Button v-if="slotProps.data.is_active" @click="viewSelectedJobApplicationId(slotProps.data.id)"
+              icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
+            <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
+              class="p-button-sm p-button-danger" rounded />
+            <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
+              class="p-button-sm p-button-contrast" rounded />
+          </template>
+        </Column>
+      </DataTable>
+    </div>
 
     <!-- Dialog modal add -->
     <Dialog v-model:visible="btnAddModal" modal header="Add Job Application" :style="{ width: '40rem' }">
@@ -297,7 +343,7 @@ onMounted(() => {
         </div>
         <div class="col-span-1 flex flex-col gap-4">
           <label for="position_level">Position Level</label>
-          <Select v-model="positionLevel" editable :options="positionLevels" optionLabel="name" optionValue="value"
+          <Select v-model="positionLevel" editable :options="positionLevels" optionLabel="name" optionValue="name"
             placeholder="Select Position Level" v-tooltip="'You may create a new position level if it does not exist'"
             fluid />
         </div>
@@ -307,7 +353,7 @@ onMounted(() => {
         </div>
         <div class="col-span-1 flex flex-col gap-4">
           <label for="platform"><span class="text-red-600">*</span> Platform</label>
-          <Select v-model="platform" editable :options="platforms" optionLabel="name" optionValue="value"
+          <Select v-model="platform" editable :options="platforms" optionLabel="name" optionValue="name"
             placeholder="Select Platform" v-tooltip="'You may create a new platform if it does not exist'" fluid />
         </div>
         <div class="col-span-1 flex flex-col gap-4">
@@ -374,7 +420,7 @@ onMounted(() => {
         <div class="col-span-1 flex flex-col gap-4">
           <label for="position_level">Position Level</label>
           <Select v-model="viewJobApplicationId.position_level" editable :options="positionLevels" optionLabel="name"
-            optionValue="value" placeholder="Select Position Level"
+            optionValue="name" placeholder="Select Position Level"
             v-tooltip="'You may create a new position level if it does not exist'" fluid />
         </div>
         <div class="col-span-1 flex flex-col gap-4">
@@ -384,7 +430,7 @@ onMounted(() => {
         <div class="col-span-1 flex flex-col gap-4">
           <label for="platform"><span class="text-red-600">*</span> Platform</label>
           <Select v-model="viewJobApplicationId.platform" editable :options="platforms" optionLabel="name"
-            optionValue="value" placeholder="Select Platform"
+            optionValue="name" placeholder="Select Platform"
             v-tooltip="'You may create a new platform if it does not exist'" fluid />
         </div>
         <div class="col-span-1 flex flex-col gap-4">

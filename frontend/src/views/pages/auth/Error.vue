@@ -3,7 +3,6 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
 </script>
 
 <template>
-    <FloatingConfigurator />
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
         <div class="flex flex-col items-center justify-center">
             <div style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, rgba(233, 30, 99, 0.4) 10%, rgba(33, 150, 243, 0) 30%)">
@@ -16,7 +15,7 @@ import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
                         <span class="text-muted-color mb-8">Requested resource is not available.</span>
                         <img src="/demo/images/error/asset-error.svg" alt="Error" class="mb-8" width="80%" />
                         <div class="col-span-12 mt-8 text-center">
-                            <Button as="router-link" label="Go to Dashboard" to="/" severity="danger" />
+                            <Button as="router-link" label="Go to Dashboard" to="/dashboard" severity="danger" />
                         </div>
                     </div>
                 </div>

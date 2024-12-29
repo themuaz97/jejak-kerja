@@ -1,50 +1,48 @@
 <script setup>
-import { login } from '@/services/auth.service';
+import { resetPassword } from '@/services/auth.service';
 import { useToast } from 'primevue/usetoast';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 
 const toast = useToast();
+const route = useRoute();
 const router = useRouter();
 
-const email = ref('');
-const password = ref('');
-const checked = ref(false);
+const resetPasswordToken = ref('');
+const newPassword = ref('');
+const confirmNewPassword = ref('');
 
 const loading = ref(false);
 
-const handleLogin = async () => {
+onMounted(() => {
+  resetPasswordToken.value = route.query.resetPasswordToken;
+})
+
+const handleReset = async () => {
   loading.value = true;
   try {
-    const input = { email: email.value, password: password.value };
-    const { data } = await login(input); // Destructure response and input
-    console.log('response login', data);
+    const input = { resetPasswordToken: resetPasswordToken.value, newPassword: newPassword.value, confirmNewPassword: confirmNewPassword.value };
+    const { data } = await resetPassword(input); 
 
-    // Save the token to localStorage
-    if (data && data.response.accessToken) {
-      localStorage.setItem('accessToken', data.response.accessToken);
-    }
-
-    // Ensure you're using the correct toast method and parameters
     if (data.response.status === 200) {
       toast.add({
         severity: 'success',
         summary: 'Success',
-        detail: data.message || 'Login successful',
+        detail: data.resData.message,
         life: 3000
       });
-      router.push('/dashboard');
+      router.push('/auth/login');
     } else {
       toast.add({
         severity: 'error',
         summary: 'Error',
-        detail: data.message || 'Login failed',
+        detail: data.resData.message,
         life: 3000
       });
     }
 
   } catch (error) {
-    console.error('Login Failed:', error);
+    console.error('reset password Failed:', error);
 
     toast.add({
       severity: 'error',
@@ -56,9 +54,7 @@ const handleLogin = async () => {
     loading.value = false;
   }
 };
-
 </script>
-<!-- TODO: invalid, reset password api -->
 <template>
   <div
     class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw] overflow-hidden">
@@ -70,18 +66,22 @@ const handleLogin = async () => {
             <div class="text-surface-900 dark:text-surface-0 text-3xl font-medium mb-4">
               Reset Password
             </div>
-            <span class="font-medium text-lg">Enter the email address associated with your account and we'll send you a
-              link to reset your password</span>
+            <span class="font-medium text-lg">Fill in the form to reset your password</span>
           </div>
 
           <div class="flex flex-col">
             <Toast />
-            <label for="email1"
-              class="block text-surface-900 dark:text-surface-0 text-xl font-medium mb-2">Email</label>
-            <InputText id="email1" type="text" placeholder="Email address" class="w-full md:w-[30rem] mb-6"
-              v-model="email" />
+            <label for="newPassword"
+              class="text-surface-900 dark:text-surface-0 font-medium mb-2">New Password</label>
+            <Password id="newPassword" placeholder="New Password" class="w-full md:w-[30rem] mb-6"
+              v-model="newPassword" fluid toggleMask />
+            
+              <label for="confirmNewPassword"
+              class="text-surface-900 dark:text-surface-0 font-medium mb-2">Confirm New Password</label>
+            <Password id="confirmNewPassword" placeholder="Confirm New Password" class="w-full md:w-[30rem] mb-6"
+              v-model="confirmNewPassword" fluid toggleMask />
 
-            <Button label="Forgot Password" class="w-full" :loading="loading" @click="handleLogin" />
+            <Button label="Reset Password" class="w-full" :loading="loading" @click="handleReset" />
           </div>
         </div>
       </div>

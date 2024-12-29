@@ -9,6 +9,7 @@ export const protectRoute = (router) => {
             "login",
             "register",
             "forgot-password",
+            "reset-password",
             "accessDenied",
             "error",
             "notfound",

@@ -52,7 +52,7 @@ onMounted(() => {
             <button class="layout-menu-button layout-topbar-action" @click="onMenuToggle">
                 <i class="pi pi-bars"></i>
             </button>
-            <router-link to="/" class="layout-topbar-logo">
+            <router-link to="/dashboard" class="layout-topbar-logo">
                 <div v-if="!isDarkTheme">
                     <img src="/demo/images/logo.svg" class="rounded-xl" alt="" height="35px" width="35px" />
                 </div>

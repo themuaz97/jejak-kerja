@@ -2,7 +2,7 @@
   <div class="flex flex-col gap-4">
     <div class="flex justify-between items-center">
       <label for="deleteAccount">Once you delete your account, it will be hard to recover. Please be certain.</label>
-      <Button @click="confirmDelete()" label="Delete" icon="pi pi-trash" severity="danger" text />
+      <Button @click="confirmDelete()" label="Delete" icon="pi pi-trash" severity="danger" />
     </div>
   </div>
 </template>
