@@ -68,7 +68,7 @@ function smoothScroll(id) {
                         class="!text-xl mt-8 !px-4"></Button>
                 </div>
                 <div class="flex justify-center md:justify-end">
-                    <img src="/demo/images/landing/screen-1.png" alt="Hero Image" class="w-9/12 md:w-auto" />
+                    <img src="/demo/images/landing/jejak-kerja.png" alt="Hero Image" class="w-9/12 md:w-auto" />
                 </div>
             </div>
 
@@ -89,8 +89,7 @@ function smoothScroll(id) {
                                     <i class="pi pi-fw pi-users !text-2xl text-yellow-700"></i>
                                 </div>
                                 <h5 class="mb-2 text-surface-900 dark:text-surface-0">Easy to Use</h5>
-                                <span class="text-surface-600 dark:text-surface-200">Posuere morbi leo urna
-                                    molestie.</span>
+                                <span class="text-surface-600 dark:text-surface-200">Simple and intuitive.</span>
                             </div>
                         </div>
                     </div>
@@ -104,12 +103,13 @@ function smoothScroll(id) {
                                     <i class="pi pi-fw pi-palette !text-2xl text-cyan-700"></i>
                                 </div>
                                 <h5 class="mb-2 text-surface-900 dark:text-surface-0">Fresh Design</h5>
-                                <span class="text-surface-600 dark:text-surface-200">Semper risus in hendrerit.</span>
+                                <span class="text-surface-600 dark:text-surface-200">Clean, modern interface & organized
+                                    layout</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pb-8 mt-6 lg:mt-0">
+                    <!-- <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pb-8 mt-6 lg:mt-0">
                         <div
                             style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(172, 180, 223, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(246, 158, 188, 0.2))">
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
@@ -123,86 +123,7 @@ function smoothScroll(id) {
                                     quisque.</span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(145, 210, 204, 0.2))">
-                            <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-slate-200 mb-4"
-                                    style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-id-card !text-2xl text-slate-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">
-                                    Responsive Layout</div>
-                                <span class="text-surface-600 dark:text-surface-200">Nulla malesuada pellentesque
-                                    elit.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(187, 199, 205, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(145, 226, 237, 0.2), rgba(160, 210, 250, 0.2))">
-                            <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-orange-200 mb-4"
-                                    style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-star !text-2xl text-orange-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Clean
-                                    Code</div>
-                                <span class="text-surface-600 dark:text-surface-200">Condimentum lacinia quis vel
-                                    eros.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pb-8 mt-6 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(251, 199, 145, 0.2), rgba(246, 158, 188, 0.2)), linear-gradient(180deg, rgba(172, 180, 223, 0.2), rgba(212, 162, 221, 0.2))">
-                            <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-pink-200 mb-4"
-                                    style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-moon !text-2xl text-pink-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Dark
-                                    Mode</div>
-                                <span class="text-surface-600 dark:text-surface-200">Convallis tellus id interdum velit
-                                    laoreet.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 mt-6 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(160, 210, 250, 0.2)), linear-gradient(180deg, rgba(187, 199, 205, 0.2), rgba(145, 210, 204, 0.2))">
-                            <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-teal-200 mb-4"
-                                    style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-shopping-cart !text-2xl text-teal-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Ready
-                                    to Use</div>
-                                <span class="text-surface-600 dark:text-surface-200">Mauris sit amet massa vitae.</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 mt-6 lg:mt-0">
-                        <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 210, 204, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(251, 199, 145, 0.2), rgba(160, 210, 250, 0.2))">
-                            <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
-                                <div class="flex items-center justify-center bg-blue-200 mb-4"
-                                    style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
-                                    <i class="pi pi-fw pi-globe !text-2xl text-blue-700"></i>
-                                </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">Modern
-                                    Practices</div>
-                                <span class="text-surface-600 dark:text-surface-200">Elementum nibh tellus molestie nunc
-                                    non.</span>
-                            </div>
-                        </div>
-                    </div>
+                    </div> -->
 
                     <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg-4 mt-6 lg:mt-0">
                         <div
@@ -214,13 +135,14 @@ function smoothScroll(id) {
                                 </div>
                                 <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">
                                     Privacy</div>
-                                <span class="text-surface-600 dark:text-surface-200">Neque egestas congue
-                                    quisque.</span>
+                                <span class="text-surface-600 dark:text-surface-200">Your data is protected with robust
+                                    security measures.</span>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-span-12 mt-20 mb-20 p-2 md:p-20"
+                    <!-- Reviews -->
+                    <!-- <div class="col-span-12 mt-20 mb-20 p-2 md:p-20"
                         style="border-radius: 20px; background: linear-gradient(0deg, rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, #efe1af 0%, #c3dcfa 100%)">
                         <div class="flex flex-col justify-center items-center text-center px-4 py-4 md:py-0">
                             <div class="text-gray-900 mb-2 text-3xl font-semibold">Joséphine Miller</div>
@@ -233,7 +155,7 @@ function smoothScroll(id) {
                             </p>
                             <img src="/demo/images/landing/peak-logo.svg" class="mt-6" alt="Company logo" />
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 
@@ -245,23 +167,24 @@ function smoothScroll(id) {
                 </div>
 
                 <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
-                    <div class="flex justify-center col-span-12 lg:col-span-6 bg-purple-100 p-0 order-1 lg:order-none"
+                    <div class="flex justify-center col-span-12 lg:col-span-6 p-0 order-1 lg:order-none"
                         style="border-radius: 8px">
-                        <img src="/demo/images/landing/mockup.svg" class="w-11/12" alt="mockup mobile" />
+                        <img src="/demo/images/landing/checklist.svg" class="w-11/12" alt="mockup mobile" />
                     </div>
 
                     <div
                         class="col-span-12 lg:col-span-6 my-auto flex flex-col lg:items-end text-center lg:text-right gap-4">
                         <div class="flex items-center justify-center bg-purple-200 self-center lg:self-end"
                             style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-mobile !text-4xl text-purple-700"></i>
+                            <i class="pi pi-fw pi-list !text-4xl text-purple-700"></i>
                         </div>
-                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Congue
-                            Quisque Egestas</div>
+                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Centralized
+                            Job Tracker</div>
                         <span class="text-surface-700 dark:text-surface-100 text-2xl leading-normal ml-0 md:ml-2"
-                            style="max-width: 650px">Lectus arcu bibendum at varius vel pharetra vel turpis nunc. Eget
-                            aliquet nibh praesent tristique magna sit amet purus gravida. Sit amet mattis vulputate enim
-                            nulla aliquet.</span>
+                            style="max-width: 650px">Our job application tracker simplifies your job search by
+                            centralizing all your applications from any platform in one place. With an intuitive design,
+                            a modern interface, and robust privacy features, it helps you stay organized and secure
+                            throughout your job hunt.</span>
                     </div>
                 </div>
 
@@ -270,23 +193,24 @@ function smoothScroll(id) {
                         class="col-span-12 lg:col-span-6 my-auto flex flex-col text-center lg:text-left lg:items-start gap-4">
                         <div class="flex items-center justify-center bg-yellow-200 self-center lg:self-start"
                             style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
-                            <i class="pi pi-fw pi-desktop !text-3xl text-yellow-700"></i>
+                            <i class="pi pi-fw pi-question !text-3xl text-yellow-700"></i>
                         </div>
-                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Celerisque
-                            Eu Ultrices</div>
+                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Frequently
+                            Asked Questions</div>
                         <span class="text-surface-700 dark:text-surface-100 text-2xl leading-normal mr-0 md:mr-2"
                             style="max-width: 650px">Adipiscing commodo elit at imperdiet dui. Viverra nibh cras
                             pulvinar mattis nunc sed blandit libero. Suspendisse in est ante in. Mauris pharetra et
                             ultrices neque ornare aenean euismod elementum nisi.</span>
                     </div>
 
-                    <div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 bg-yellow-100 p-0"
+                    <div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 p-0"
                         style="border-radius: 8px">
-                        <img src="/demo/images/landing/mockup-desktop.svg" class="w-11/12" alt="mockup" />
+                        <img src="/demo/images/landing/question.svg" class="w-11/12" alt="mockup" />
                     </div>
                 </div>
             </div>
 
+            <!-- TODO: FAQ integration -->
             <!-- <div id="pricing" class="py-6 px-6 lg:px-20 my-2 md:my-6">
                 <div class="text-center mb-6">
                     <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Matchless Pricing</div>
@@ -397,7 +321,7 @@ function smoothScroll(id) {
 
             <div class="py-6 px-6 mx-0 mt-20 lg:mx-20">
                 <div class="grid grid-cols-12 gap-4">
-                    <div class="col-span-12 md:col-span-2">
+                    <div class="col-span-12 md:col-span-12">
                         <a @click="smoothScroll('#home')"
                             class="flex flex-wrap items-center justify-center md:justify-start md:mb-0 mb-4 cursor-pointer">
                             <img src="/demo/images/logo.svg" class="rounded-xl w-9 h-9 mr-2" alt="Jejak Kerja" />
@@ -405,10 +329,18 @@ function smoothScroll(id) {
                                 Kerja</h4>
                         </a>
                     </div>
+                    <div class="flex flex-row gap-4">
+                        <a href="https://github.com/themuaz97" target="_blank">
+                            <i class="pi pi-github text-2xl text-surface-900 dark:text-surface-0"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/muazazmen/" target="_blank">
+                            <i class="pi pi-linkedin text-2xl text-blue-400"></i>
+                        </a>
+                    </div>
 
                     <div class="col-span-12 md:col-span-10">
                         <div class="grid grid-cols-12 gap-8 text-center md:text-left">
-                            <div class="col-span-12 md:col-span-3">
+                            <!-- <div class="col-span-12 md:col-span-3">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
                                     Company</h4>
@@ -425,9 +357,9 @@ function smoothScroll(id) {
                                 <a
                                     class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Media
                                     Kit</a>
-                            </div>
+                            </div> -->
 
-                            <div class="col-span-12 md:col-span-3">
+                            <!-- <div class="col-span-12 md:col-span-3">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
                                     Resources</h4>
@@ -439,9 +371,9 @@ function smoothScroll(id) {
                                 <a
                                     class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Case
                                     Studies</a>
-                            </div>
+                            </div> -->
 
-                            <div class="col-span-12 md:col-span-3">
+                            <!-- <div class="col-span-12 md:col-span-3">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
                                     Community</h4>
@@ -454,9 +386,9 @@ function smoothScroll(id) {
                                     class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">FAQ</a>
                                 <a
                                     class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Blog</a>
-                            </div>
+                            </div> -->
 
-                            <div class="col-span-12 md:col-span-3">
+                            <!-- <div class="col-span-12 md:col-span-3">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
                                     Legal</h4>
@@ -469,11 +401,15 @@ function smoothScroll(id) {
                                 <a
                                     class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Terms
                                     of Service</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <Divider />
+        <div class="flex justify-center items-center pb-4">
+            <span>Copyright &copy; 2025 Jejak Kerja. All Rights Reserved.</span>
         </div>
     </div>
 </template>

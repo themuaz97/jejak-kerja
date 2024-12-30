@@ -84,10 +84,10 @@ onMounted(() => {
 
             <div class="layout-topbar-menu hidden lg:block">
                 <div class="layout-topbar-menu-content">
-                    <button type="button" class="layout-topbar-action">
+                    <!-- <button type="button" class="layout-topbar-action">
                         <i class="pi pi-bell"></i>
                         <span>Messages</span>
-                    </button>
+                    </button> -->
 
                     <!-- Avatar Component with Conditional Icon -->
                     <button v-if="!isLoading && profileImg" @click="toggleAccount" class="layout-topbar-action">

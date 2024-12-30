@@ -9,8 +9,15 @@ import { me } from "../controllers/auth.controller.js";
 import { updatePassword } from "../controllers/account.controller.js";
 import { deleteUser } from "../controllers/user.controller.js";
 import { getDataJobApplications, getJobApplicationByPlatform, getJobApplicationByStatus } from "../controllers/dashboard.controller.js";
+import { getFaqAnswers, getFaqCategories, getFaqQuestions } from "../controllers/faq.controller.js";
 
 const router = express.Router();
+
+/* ----------------------- Landing ----------------------- */
+
+router.get('/faq/categories', getFaqCategories);
+router.get('/faq/questions', getFaqQuestions);
+router.get('/faq/answers', getFaqAnswers);
 
 router.use(protectRoute);
 

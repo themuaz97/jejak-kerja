@@ -4,6 +4,7 @@ import { addRole, deleteRole, getRoles, updateRole } from "../controllers/role.c
 import { activateUser, addUser, getUsers, updateUser } from "../controllers/user.controller.js";
 import { activateApplyStatus, addApplyStatus, deleteApplyStatus, getApplyStatusAdmin, updateApplyStatus } from "../controllers/applyStatus.controller.js";
 import { activateApplyOverall, addApplyOverall, deleteApplyOverall, getApplyOverallAdmin, updateApplyOverall } from "../controllers/applyOverall.controller.js";
+import { activateFaqAnswer, activateFaqCategory, activateFaqQuestion, addFaqAnswer, addFaqCategory, addFaqQuestion, deleteFaqAnswer, deleteFaqCategory, deleteFaqQuestion, editFaqAnswer, editFaqCategory, editFaqQuestion, getFaqAnswersAdmin, getFaqCategoriesAdmin, getFaqQuestionsAdmin } from "../controllers/faq.controller.js";
 
 const routerAdmin = express.Router();
 
@@ -34,5 +35,27 @@ routerAdmin.post('/application-overall/add', addApplyOverall)
 routerAdmin.put('/application-overall/:id/update', updateApplyOverall)
 routerAdmin.patch('/application-overall/:id/delete', deleteApplyOverall)
 routerAdmin.patch('/application-overall/:id/activate', activateApplyOverall)
+
+// FAQs
+// faq categories
+routerAdmin.get('/faq/categories', getFaqCategoriesAdmin);
+routerAdmin.post('/faq/category/add', addFaqCategory)	// for BE 
+routerAdmin.put('/faq/category/:id/update', editFaqCategory)	// for BE 
+routerAdmin.patch('/faq/category/:id/delete', deleteFaqCategory)// for BE
+routerAdmin.patch('/faq/category/:id/activate', activateFaqCategory)// for BE
+
+// faq questions
+routerAdmin.get('/faq/questions', getFaqQuestionsAdmin);
+routerAdmin.post('/faq/question/add', addFaqQuestion)	// for BE 
+routerAdmin.put('/faq/question/:id/update', editFaqQuestion)	// for BE 
+routerAdmin.patch('/faq/question/:id/delete', deleteFaqQuestion)	// for BE
+routerAdmin.patch('/faq/question/:id/activate', activateFaqQuestion)	// for BE
+
+// faq answers
+routerAdmin.get('/faq/answers', getFaqAnswersAdmin);
+routerAdmin.post('/faq/answer/add', addFaqAnswer)	// for BE 
+routerAdmin.put('/faq/answer/:id/update', editFaqAnswer)	// for BE 
+routerAdmin.patch('/faq/answer/:id/delete', deleteFaqAnswer)	// for BE 
+routerAdmin.patch('/faq/answer/:id/activate', activateFaqAnswer)	// for BE 
 
 export default routerAdmin;
