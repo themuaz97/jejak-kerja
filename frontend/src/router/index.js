@@ -25,16 +25,22 @@ const router = createRouter({
                     component: () => import("@/views/pages/job-applications/JobApplication.vue"),
                 },
                 {
-                    path: "/admin/configuration",
+                    path: "/admin",
                     name: "admin-configuration",
                     component: () =>
                         import("@/views/pages/configuration/ConfigTab.vue"),
                 },
                 {
+                    path: "/admin/landing",
+                    name: "admin-landing",
+                    component: () =>
+                        import("@/views/pages/configuration-landing/LandingConfigTab.vue"),
+                },
+                {
                     path: "/admin/notification",
                     name: "admin-notification",
                     component: () =>
-                        import("@/views/pages/notifications/Notifications.vue"),
+                        import("@/views/pages/configuration-notifications/Notifications.vue"),
                 },
                 {
                     path: "/account",

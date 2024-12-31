@@ -31,9 +31,10 @@ const protectRouteAdmin = async () => {
         // If the user has an "admin" role, add the admin configuration menu
         if (user?.role?.name === 'admin') {
             model.value.push({
-                label: 'Admin Configuration',
+                label: 'Configuration',
                 items: [
-                    { label: 'Configuration', icon: 'pi pi-fw pi-cog', to: '/admin/configuration' },
+                    { label: 'Admin Config', icon: 'pi pi-fw pi-cog', to: '/admin' },
+                    { label: 'Landing Config', icon: 'pi pi-fw pi-cog', to: '/admin/landing' },
                     { label: 'Notification', icon: 'pi pi-fw pi-cog', to: '/admin/notification' },
                 ],
             });

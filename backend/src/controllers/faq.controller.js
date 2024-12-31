@@ -1,5 +1,6 @@
 import prisma from "../db/prisma.js"
 
+// TODO: fix the array of objects to be returned
 export const getFaqCategoriesAdmin = async (req, res) => {
   try {
     const { page = 1 } = req.query;
@@ -40,11 +41,15 @@ export const getFaqCategories = async (req, res) => {
 
 export const addFaqCategory = async (req, res) => {
   try {
-    const { category_name } = req.body
+    const { categoryName } = req.body
+
+    if (!categoryName) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_categories.create({
       data: {
-        category_name,
+        category_name: categoryName,
         created_by: req.user.user_id,
       },
     })
@@ -58,12 +63,16 @@ export const addFaqCategory = async (req, res) => {
 export const editFaqCategory = async (req, res) => {
   try {
     const { id } = req.params
-    const { category_name } = req.body
+    const { categoryName } = req.body
+
+    if (!categoryName) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_categories.update({
       where: { id: Number(id) },
       data: {
-        category_name,
+        category_name: categoryName,
         updated_by: req.user.user_id,
         updated_at: new Date(),
       },
@@ -159,12 +168,16 @@ export const getFaqQuestions = async (req, res) => {
 
 export const addFaqQuestion = async (req, res) => {
   try {
-    const { question, faq_category_id } = req.body
+    const { question, faqCategoryId } = req.body
+
+    if (!question || !faqCategoryId) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_questions.create({
       data: {
         question,
-        faq_category_id,
+        faq_category_id: Number(faqCategoryId),
         created_by: req.user.user_id,
       },
     })
@@ -178,13 +191,17 @@ export const addFaqQuestion = async (req, res) => {
 export const editFaqQuestion = async (req, res) => {
   try {
     const { id } = req.params
-    const { question, faq_category_id } = req.body
+    const { question, faqCategoryId } = req.body
+
+    if (!question || !faqCategoryId) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_questions.update({
       where: { id: Number(id) },
       data: {
         question,
-        faq_category_id,
+        faq_category_id: Number(faqCategoryId),
         updated_by: req.user.user_id,
         updated_at: new Date(),
       },
@@ -280,12 +297,16 @@ export const getFaqAnswers = async (req, res) => {
 
 export const addFaqAnswer = async (req, res) => {
   try {
-    const { answer, faq_question_id } = req.body
+    const { answer, faqQuestionId } = req.body
+
+    if (!answer || !faqQuestionId) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_answers.create({
       data: {
         answer,
-        faq_question_id,
+        faq_question_id: Number(faqQuestionId),
         created_by: req.user.user_id,
       },
     })
@@ -299,13 +320,17 @@ export const addFaqAnswer = async (req, res) => {
 export const editFaqAnswer = async (req, res) => {
   try {
     const { id } = req.params
-    const { answer, faq_question_id } = req.body
+    const { answer, faqQuestionId } = req.body
+
+    if (!answer || !faqQuestionId) {
+      return res.status(400).send({ message: "Missing required fields" });
+    }
 
     const data = await prisma.faq_answers.update({
       where: { id: Number(id) },
       data: {
         answer,
-        faq_question_id,
+        faq_question_id: Number(faqQuestionId),
         updated_by: req.user.user_id,
         updated_at: new Date(),
       }

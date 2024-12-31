@@ -67,28 +67,30 @@ model faq_answers {
 }
 
 model faq_categories {
-  id               Int       @id @default(autoincrement())
+  id               Int             @id @default(autoincrement())
   category_name    String
-  is_active        Boolean   @default(true)
-  created_at       DateTime  @default(now())
+  is_active        Boolean         @default(true)
+  created_at       DateTime        @default(now())
   created_by       String?
-  updated_at       DateTime? @updatedAt
+  updated_at       DateTime?       @updatedAt
   updated_by       String?
-  users_created_by users?    @relation("faq_categories_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
-  users_updated_by users?    @relation("faq_categories_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
+  faq_questions    faq_questions[]
+  users_created_by users?          @relation("faq_categories_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
+  users_updated_by users?          @relation("faq_categories_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
 }
 
 model faq_questions {
-  id               Int           @id @default(autoincrement())
+  id               Int            @id @default(autoincrement())
   question         String
   faq_category_id  Int
-  is_active        Boolean       @default(true)
-  created_at       DateTime      @default(now())
+  is_active        Boolean        @default(true)
+  created_at       DateTime       @default(now())
   created_by       String?
-  updated_at       DateTime?     @updatedAt
+  updated_at       DateTime?      @updatedAt
   updated_by       String?
-  users_created_by users?        @relation("faq_questions_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
-  users_updated_by users?        @relation("faq_questions_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
+  faq_categories   faq_categories @relation(fields: [faq_category_id], references: [id], onDelete: Cascade)
+  users_created_by users?         @relation("faq_questions_created_by", fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_created")
+  users_updated_by users?         @relation("faq_questions_updated_by", fields: [updated_by], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_user_updated")
   faq_answers      faq_answers[]
 }
 

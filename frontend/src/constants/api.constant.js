@@ -62,4 +62,25 @@ export const ENDPOINTS = {
   ADMIN_APPLICATION_OVERALL_UPDATE: `/admin/application-overall/:id/update`,
   ADMIN_APPLICATION_OVERALL_DELETE: `/admin/application-overall/:id/delete`,
   ADMIN_APPLICATION_OVERALL_ACTIVATE: `/admin/application-overall/:id/activate`,
+
+  /* ------------------------ LANDING ------------------------ */
+
+  // FAQs
+  ADMIN_FAQ_CATEGORIES: `/admin/faq/categories`,
+  ADMIN_FAQ_CATEGORY_ADD: `/admin/faq/category/add`,
+  ADMIN_FAQ_CATEGORY_UPDATE: `/admin/faq/category/:id/update`,
+  ADMIN_FAQ_CATEGORY_DELETE: `/admin/faq/category/:id/delete`,
+  ADMIN_FAQ_CATEGORY_ACTIVATE: `/admin/faq/category/:id/activate`,
+
+  ADMIN_FAQ_QUESTIONS: `/admin/faq/questions`,
+  ADMIN_FAQ_QUESTION_ADD: `/admin/faq/question/add`,
+  ADMIN_FAQ_QUESTION_UPDATE: `/admin/faq/question/:id/update`,
+  ADMIN_FAQ_QUESTION_DELETE: `/admin/faq/question/:id/delete`,
+  ADMIN_FAQ_QUESTION_ACTIVATE: `/admin/faq/question/:id/activate`,
+
+  ADMIN_FAQ_ANSWERS: `/admin/faq/answers`,
+  ADMIN_FAQ_ANSWER_ADD: `/admin/faq/answer/add`,
+  ADMIN_FAQ_ANSWER_UPDATE: `/admin/faq/answer/:id/update`,
+  ADMIN_FAQ_ANSWER_DELETE: `/admin/faq/answer/:id/delete`,
+  ADMIN_FAQ_ANSWER_ACTIVATE: `/admin/faq/answer/:id/activate`,
 };

@@ -1,4 +1,11 @@
 <script setup>
+import { ref } from 'vue';
+
+const tabs = ref([
+    { title: 'Title 1', content: 'Content 1', value: '0' },
+    { title: 'Title 2', content: 'Content 2', value: '1' },
+    { title: 'Title 3', content: 'Content 3', value: '2' }
+]);
 function smoothScroll(id) {
     document.body.click();
     document.querySelector(id).scrollIntoView({
@@ -163,7 +170,6 @@ function smoothScroll(id) {
                 <div class="text-center">
                     <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Powerful Everywhere
                     </div>
-                    <span class="text-muted-color text-2xl">Amet consectetur adipiscing elit...</span>
                 </div>
 
                 <div class="grid grid-cols-12 gap-4 mt-20 pb-2 md:pb-20">
@@ -195,12 +201,19 @@ function smoothScroll(id) {
                             style="width: 4.2rem; height: 4.2rem; border-radius: 10px">
                             <i class="pi pi-fw pi-question !text-3xl text-yellow-700"></i>
                         </div>
-                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal">Frequently
+                        <div class="leading-none text-surface-900 dark:text-surface-0 text-3xl font-normal mb-4">
+                            Frequently
                             Asked Questions</div>
-                        <span class="text-surface-700 dark:text-surface-100 text-2xl leading-normal mr-0 md:mr-2"
-                            style="max-width: 650px">Adipiscing commodo elit at imperdiet dui. Viverra nibh cras
-                            pulvinar mattis nunc sed blandit libero. Suspendisse in est ante in. Mauris pharetra et
-                            ultrices neque ornare aenean euismod elementum nisi.</span>
+                        <div class="w-full">
+                            <Accordion value="0">
+                                <AccordionPanel v-for="tab in tabs" :key="tab.title" :value="tab.value">
+                                    <AccordionHeader class="accordion-header">{{ tab.title }}</AccordionHeader>
+                                    <AccordionContent class="accordion-content">
+                                        <p class="m-0">{{ tab.content }}</p>
+                                    </AccordionContent>
+                                </AccordionPanel>
+                            </Accordion>
+                        </div>
                     </div>
 
                     <div class="flex justify-end order-1 sm:order-2 col-span-12 lg:col-span-6 p-0"
@@ -210,7 +223,6 @@ function smoothScroll(id) {
                 </div>
             </div>
 
-            <!-- TODO: FAQ integration -->
             <!-- <div id="pricing" class="py-6 px-6 lg:px-20 my-2 md:my-6">
                 <div class="text-center mb-6">
                     <div class="text-surface-900 dark:text-surface-0 font-normal mb-2 text-4xl">Matchless Pricing</div>
@@ -413,3 +425,24 @@ function smoothScroll(id) {
         </div>
     </div>
 </template>
+<style scoped>
+.accordion-header {
+    color: var(--code-background);
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+:root[class*=app-dark] .accordion-header {
+    color: var(--code-color);
+}
+
+.accordion-content {
+    color: var(--code-background);
+    font-size: 1.2rem;
+}
+
+:root[class*=app-dark] .accordion-content {
+    color: var(--code-color);
+}
+
+</style>
