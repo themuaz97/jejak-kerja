@@ -2,6 +2,12 @@ export const base_url = import.meta.env.VITE_BACKEND;
 
 // Example usage
 export const ENDPOINTS = {
+  /* --------------------------- LANDING ---------------------------- */
+  // FAQs
+  FAQ_CATEGORIES: `/faq/categories`,
+  FAQ_QUESTIONS: `/faq/questions`,
+  FAQ_ANSWERS: `/faq/answers`,
+
   /* ---------------------------- USERS ----------------------------- */
   // auth
   GOOGLE_LOGIN: `/auth/google`,

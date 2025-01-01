@@ -1,11 +1,10 @@
 import prisma from "../db/prisma.js"
 
-// TODO: fix the array of objects to be returned
 export const getFaqCategoriesAdmin = async (req, res) => {
   try {
     const { page = 1 } = req.query;
 
-    const pageNumber = parseInt(page, 10);
+    const pageNumber = parseInt(page, 5);
     
     const data = await prisma.faq_categories.findMany({
       orderBy: {
@@ -126,11 +125,12 @@ export const getFaqQuestionsAdmin = async (req, res) => {
   try {
     const { page = 1 } = req.query;
 
-    const pageNumber = parseInt(page, 10);
+    const pageNumber = parseInt(page, 5);
 
     const data = await prisma.faq_questions.findMany({
       include: {
         faq_answers: true,
+        faq_categories: true
       },
       orderBy: {
         created_at: "desc",
@@ -255,7 +255,7 @@ export const getFaqAnswersAdmin = async (req, res) => {
   try {
     const { page = 1 } = req.query;
 
-    const pageNumber = parseInt(page, 10);
+    const pageNumber = parseInt(page, 5);
 
     const data = await prisma.faq_answers.findMany({
       include: {
