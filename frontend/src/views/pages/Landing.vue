@@ -1,19 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { getFaqQuestions } from '@/services/faq.service';
+import { onMounted, ref } from 'vue';
 
-const tabs = ref([
-    { title: 'Title 1', content: 'Content 1', value: '0' },
-    { title: 'Title 2', content: 'Content 2', value: '1' },
-    { title: 'Title 3', content: 'Content 3', value: '2' }
-]);
+const faqs = ref([]);
+
+const fetchFaqQuestions = async () => {
+    const { data } = await getFaqQuestions();
+    faqs.value = data.resData.data
+}
 function smoothScroll(id) {
     document.body.click();
     document.querySelector(id).scrollIntoView({
         behavior: 'smooth'
     });
 }
+
+onMounted(() => {
+    fetchFaqQuestions();
+});
 </script>
-<!-- TODO: Replace landing page -->
 <template>
     <div class="bg-surface-0 dark:bg-surface-900">
         <div id="home" class="landing-wrapper overflow-hidden">
@@ -206,10 +211,10 @@ function smoothScroll(id) {
                             Asked Questions</div>
                         <div class="w-full">
                             <Accordion value="0">
-                                <AccordionPanel v-for="tab in tabs" :key="tab.title" :value="tab.value">
-                                    <AccordionHeader class="accordion-header">{{ tab.title }}</AccordionHeader>
+                                <AccordionPanel v-for="faq in faqs" :key="faq.question" :value="faq.id">
+                                    <AccordionHeader class="accordion-header">{{ faq.question }}</AccordionHeader>
                                     <AccordionContent class="accordion-content">
-                                        <p class="m-0">{{ tab.content }}</p>
+                                        <p class="m-0">{{ faq.faq_answers[0].answer }}</p>
                                     </AccordionContent>
                                 </AccordionPanel>
                             </Accordion>

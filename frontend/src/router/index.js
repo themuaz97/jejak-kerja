@@ -47,16 +47,6 @@ const router = createRouter({
                     name: "account",
                     component: () => import("@/views/pages/account/Account.vue"),
                 },
-                {
-                    path: "/uikit/button",
-                    name: "button",
-                    component: () => import("@/views/uikit/ButtonDoc.vue"),
-                },
-                {
-                    path: "/uikit/table",
-                    name: "table",
-                    component: () => import("@/views/uikit/TableDoc.vue"),
-                },
             ],
         },
         {
@@ -73,6 +63,11 @@ const router = createRouter({
             path: "/auth/login",
             name: "login",
             component: () => import("@/views/pages/auth/Login.vue"),
+        },
+        {
+            path: "/auth/login2",
+            name: "login2",
+            component: () => import("@/views/pages/auth/Login2.vue"),
         },
         {
             path: "/auth/callback",

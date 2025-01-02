@@ -117,22 +117,6 @@ const confirmActivate = (event, id) => {
   });
 };
 
-// const fetchFaqCategories = async () => {
-//   loading.value = true;
-//   try {
-//     const { data } = await getFaqCategoriesAdmin({ page: currentPage.value });
-
-//     faqCategories.value = data.resData.data;
-//     totalRecords.value = data.resData.meta.totalCount;
-//     totalPages.value = data.resData.meta.totalPages;
-//     currentPage.value = data.resData.meta.page;
-//   } catch (error) {
-//     console.error("Error fetching application Statuses:", error);
-//   } finally {
-//     loading.value = false;
-//   }
-// };
-
 const fetchAddFaqCategory = async () => {
   try {
     const input = { categoryName: categoryName.value };
@@ -171,7 +155,6 @@ const viewSelectedFaqCategoryId = (faqCategoryId) => {
 
 const fetchUpdateFaqCategory = async () => {
   try {
-
     const { data } = await updateFaqCategory(viewFaqCategoryId.value.id, {
       categoryName: viewFaqCategoryId.value.category_name,
     });
@@ -224,7 +207,7 @@ onMounted(async() => {
             @click="btnAddModal = true" />
         </div>
       </template>
-      <Column header="#" style="width: 10%">
+      <Column header="#" style="width: 4%">
         <template #body="slotProps">
           {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
         </template>
@@ -251,7 +234,7 @@ onMounted(async() => {
     </DataTable>
 
     <!-- Dialog modal add -->
-    <Dialog v-model:visible="btnAddModal" modal header="Add Category" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="btnAddModal" modal header="Add Category" :style="{ width: '35rem' }">
       <div class="flex flex-col gap-4 m-4">
         <label for="categoryName" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
         <InputText id="categoryName" v-model="categoryName" class="flex-auto" autocomplete="off"
@@ -264,7 +247,7 @@ onMounted(async() => {
     </Dialog>
 
     <!-- Dialog modal edit -->
-    <Dialog v-model:visible="btnEditModal" modal header="Edit Category" :style="{ width: '25rem' }">
+    <Dialog v-model:visible="btnEditModal" modal header="Edit Category" :style="{ width: '35rem' }">
       <div class="flex flex-col gap-4 mb-4">
         <label for="editCategoryName" class="font-semibold w-24">Name</label>
         <InputText id="editCategoryName" v-model="viewFaqCategoryId.category_name" class="flex-auto"

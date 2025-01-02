@@ -7,6 +7,7 @@ export const protectRoute = (router) => {
         const publicRoutes = [
             "landing",
             "login",
+            "login2",
             "register",
             "forgot-password",
             "reset-password",

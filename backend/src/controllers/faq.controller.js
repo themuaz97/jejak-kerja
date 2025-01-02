@@ -115,7 +115,7 @@ export const activateFaqCategory = async (req, res) => {
       },
     })
 
-    res.status(200).send({ message: "Category deleted successfully", data })
+    res.status(200).send({ message: "Category reactivated successfully", data })
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -245,7 +245,7 @@ export const activateFaqQuestion = async (req, res) => {
       },
     })
 
-    res.status(200).send({ message: "Question deleted successfully", data })
+    res.status(200).send({ message: "Question reactivated successfully", data })
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }
@@ -374,7 +374,7 @@ export const activateFaqAnswer = async (req, res) => {
       },
     })
 
-    res.status(200).send({ message: "Answer deleted successfully", data })
+    res.status(200).send({ message: "Answer reactivated successfully", data })
   } catch (error) {
     res.status(500).send({ message: "Internal server error", error: error.message });
   }

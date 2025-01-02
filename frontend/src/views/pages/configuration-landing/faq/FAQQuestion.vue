@@ -1,21 +1,26 @@
 <script setup>
 import { activateFaqQuestion, addFaqQuestion, deleteFaqQuestion, getFaqQuestionsAdmin, updateFaqQuestion } from "@/services/faq.service";
+import { useFaqCategoryStore, useFaqQuestionStore } from "@/stores/faq";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+
+const faqCategoryStore = useFaqCategoryStore(); 
+const faqQuestionStore = useFaqQuestionStore();
 
 const toast = useToast();
 const confirm = useConfirm();
 
-const faqQuestions = ref([]);
-const faqAnswers = ref({});
+const faqCategories = computed(() => faqCategoryStore.faqCategory);
+const faqQuestions = computed(() => faqQuestionStore.faqQuestion);
+const faqAnswers = ref([]);
 
-const loading = ref(false);
+const loading = computed(() => faqQuestionStore.loading);
 
-const currentPage = ref(1);
-const rowsPerPage = ref(10);
-const totalRecords = ref(0);
-const totalPages = ref(0);
+const currentPage = computed(() => faqCategoryStore.currentPage);
+const rowsPerPage = ref(5);
+const totalRecords = computed(() => faqCategoryStore.totalRecords);
+const totalPages = computed(() => faqCategoryStore.totalPages);
 
 const btnAddModal = ref(false);
 
@@ -61,7 +66,7 @@ const confirmDelete = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchFaqQuestions();
+          await faqQuestionStore.fetchFaqQuestions(true);
         } else {
           toast.add({
             severity: "error",
@@ -71,7 +76,7 @@ const confirmDelete = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error deleting question:", error);
+        console.error("Error deleting question:", error.message);
       }
     },
   });
@@ -103,7 +108,7 @@ const confirmActivate = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchFaqQuestions();
+          await faqQuestionStore.fetchFaqQuestions(true);
         } else {
           toast.add({
             severity: "error",
@@ -113,27 +118,10 @@ const confirmActivate = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error activating question:", error);
+        console.error("Error activating question:", error.message);
       }
     },
   });
-};
-
-const fetchFaqQuestions = async () => {
-  loading.value = true;
-  try {
-    const { data } = await getFaqQuestionsAdmin({ page: currentPage.value });
-
-    faqQuestions.value = data.resData.data;
-    faqAnswers.value = data.resData.data.faq_answers;
-    totalRecords.value = data.resData.meta.totalCount;
-    totalPages.value = data.resData.meta.totalPages;
-    currentPage.value = data.resData.meta.page;
-  } catch (error) {
-    console.error("Error fetching application Statuses:", error);
-  } finally {
-    loading.value = false;
-  }
 };
 
 const fetchAddFaqQuestion = async () => {
@@ -152,6 +140,7 @@ const fetchAddFaqQuestion = async () => {
       faqCategoryId.value = '';
 
       btnAddModal.value = false;
+      await faqQuestionStore.fetchFaqQuestions(true);
     } else {
       toast.add({
         severity: "error",
@@ -160,9 +149,8 @@ const fetchAddFaqQuestion = async () => {
         life: 3000,
       })
     }
-    fetchFaqQuestions();
   } catch (error) {
-    console.error("Error adding question:", error.resData.message);
+    console.error("Error adding question:", error.message);
   }
 };
 
@@ -170,16 +158,16 @@ const viewSelectedFaqQuestionId = (questionId) => {
   const question = faqQuestions.value.find((r) => r.id === questionId);
   if (question) {
     viewFaqQuestionId.value = { ...question };
+    faqCategoryId.value = question.faq_category_id;
     btnEditModal.value = true;
   }
 };
 
 const fetchUpdateQuestion = async () => {
   try {
-
     const { data } = await updateFaqQuestion(viewFaqQuestionId.value.id, {
       question: viewFaqQuestionId.value.question,
-      faqCategoryId: faqCategoryId.value.faq_category_id,
+      faqCategoryId: viewFaqQuestionId.value.faq_category_id,
     });
 
     if (data.response.status === 200) {
@@ -191,7 +179,7 @@ const fetchUpdateQuestion = async () => {
       });
 
       // Refresh faqQuestions and close modal
-      await fetchFaqQuestions();
+      await faqQuestionStore.fetchFaqQuestions(true);
       btnEditModal.value = false;
     } else {
       toast.add({
@@ -202,18 +190,20 @@ const fetchUpdateQuestion = async () => {
       });
     }
   } catch (error) {
-    console.error("Error updating question:", error.resData.message);
+    console.error("Error updating question:", error.message);
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: error.resData.message,
+      detail: error.message,
       life: 3000,
     });
   }
 };
 
-onMounted(() => {
-  fetchFaqQuestions();
+onMounted(async () => {
+  await faqQuestionStore.fetchFaqQuestions();
+  await faqCategoryStore.fetchFaqCategories();
+  faqAnswers.value = faqQuestionStore.faqAnswer
 });
 </script>
 
@@ -230,7 +220,7 @@ onMounted(() => {
       </div>
     </template>
     <Column expander style="width: 5%" />
-    <Column header="#" style="width: 10%">
+    <Column header="#" style="width: 4%">
       <template #body="slotProps">
         {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
       </template>
@@ -257,6 +247,7 @@ onMounted(() => {
     </Column>
     <template #expansion="slotProps">
       <div class="p-4">
+        <!-- ENHANCE: lazy loading for answers datatable -->
         <DataTable :value="slotProps.data.faq_answers">
           <Column header="#">
             <template #body="slotProps">
@@ -277,36 +268,14 @@ onMounted(() => {
   </DataTable>
 
   <!-- Dialog modal add -->
-  <Dialog v-model:visible="btnAddModal" modal header="Add Question" :style="{ width: '25rem' }">
-    <div class="flex flex-col gap-4 m-4">
-      <label for="question" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
-      <InputText id="question" v-model="question" class="flex-auto" autocomplete="off"
-        placeholder="Question Name" />
+  <Dialog v-model:visible="btnAddModal" modal header="Add Question" :style="{ width: '35rem' }">
+    <div class="flex flex-col gap-4 mb-8">
+      <label for="question" class="font-semibold w-24"><span class="text-red-600">*</span> Name</label>
+      <InputText id="question" v-model="question" class="flex-auto" autocomplete="off" placeholder="Question" />
 
-      <label for="faqCategories" class="font-semibold w-24"><span class="text-red-600">*</span>Color
-        Code</label>
-      <Select v-model="faqCategories" :options="severities" optionLabel="name"
-        placeholder="Select a severity">
-        <!-- Customize the dropdown items with PrimeVue's severity classes -->
-        <template #value="slotProps">
-          <div v-if="slotProps.value" class="flex items-center">
-            <Badge :severity="slotProps.value.value" style="margin-right: 8px;">
-              {{ slotProps.value.name }}
-            </Badge>
-          </div>
-          <span v-else>
-            {{ slotProps.placeholder }}
-          </span>
-        </template>
-
-        <template #option="slotProps">
-          <div class="flex items-center">
-            <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
-              {{ slotProps.option.name }}
-            </Badge>
-          </div>
-        </template>
-      </Select>
+      <label for="faqCategories" class="font-semibold"><span class="text-red-600">*</span> FAQ Categories</label>
+      <Select v-model="faqCategoryId" :options="faqCategories" optionLabel="category_name" optionValue="id"
+        placeholder="FAQ Category" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="btnAddModal = false"></Button>
@@ -315,34 +284,15 @@ onMounted(() => {
   </Dialog>
 
   <!-- Dialog modal edit -->
-  <Dialog v-model:visible="btnEditModal" modal header="Edit Question" :style="{ width: '25rem' }">
+  <Dialog v-model:visible="btnEditModal" modal header="Edit Question" :style="{ width: '35rem' }">
     <div class="flex flex-col gap-4 mb-4">
-      <label for="editApplicationStatusName" class="font-semibold w-24">Name</label>
-      <InputText id="editApplicationStatusName" v-model="viewFaqQuestionId.name" class="flex-auto" autocomplete="off" />
+      <label for="editApplicationStatusName" class="font-semibold w-24"><span class="text-red-600">*</span> Name</label>
+      <InputText id="editApplicationStatusName" v-model="viewFaqQuestionId.question" class="flex-auto"
+        autocomplete="off" variant="filled" />
 
-      <label for="editApplicationStatusColorCode" class="font-semibold w-24">Color Code</label>
-      <Select v-model="viewFaqQuestionId.color_code" :options="severities" optionLabel="name" optionValue="value"
-        placeholder="Select a severity">
-        <!-- Customize the dropdown items with PrimeVue's severity classes -->
-        <template #value="slotProps">
-          <div v-if="slotProps.value" class="flex items-center">
-            <Badge :severity="slotProps.value" style="margin-right: 8px;">
-              {{ slotProps.value }}
-            </Badge>
-          </div>
-          <span v-else>
-            {{ slotProps.placeholder }}
-          </span>
-        </template>
-
-        <template #option="slotProps">
-          <div class="flex items-center">
-            <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
-              {{ slotProps.option.name }}
-            </Badge>
-          </div>
-        </template>
-      </Select>
+      <label for="viewFaqQuestionId" class="font-semibold"><span class="text-red-600">*</span> FAQ Categories</label>
+      <Select v-model="viewFaqQuestionId.faq_category_id" :options="faqCategories" optionLabel="category_name"
+        optionValue="id" placeholder="FAQ Category" variant="filled" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>

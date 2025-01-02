@@ -1,26 +1,19 @@
 <script setup>
-import { activateApplicationStatus, addApplicationStatus, deleteApplicationStatus, getApplicationStatus, updateApplicationStatus } from "@/services/configuration.service";
+import { activateFaqAnswer, addFaqAnswer, deleteFaqAnswer, getFaqAnswersAdmin, updateFaqAnswer } from "@/services/faq.service";
+import { useFaqQuestionStore } from "@/stores/faq";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
+
+const faqQuestionStore = useFaqQuestionStore();
 
 const toast = useToast();
 const confirm = useConfirm();
 
-const applicationStatuses = ref([]);
+const faqQuestions = computed(() => faqQuestionStore.faqQuestion);
+const faqAnswers = ref([]);
 
 const loading = ref(false);
-
-const severities = ref([
-  { name: "primary", value: "primary" },
-  { name: "secondary", value: "secondary" },
-  { name: "success", value: "success" },
-  { name: "info", value: "info" },
-  { name: "warn", value: "warn" },
-  { name: "help", value: "help" },
-  { name: "danger", value: "danger" },
-  { name: "contrast", value: "contrast" },
-]);
 
 const currentPage = ref(1);
 const rowsPerPage = ref(10);
@@ -30,10 +23,10 @@ const totalPages = ref(0);
 const btnAddModal = ref(false);
 
 const btnEditModal = ref(false);
-const viewApplicationStatusId = ref({ id: null, name: "", color_code: "", is_active: false });
+const viewFaqAnswerId = ref({ id: null, answer: "", faq_question_id: null });
 
-const applicationStatusName = ref('');
-const applicationStatusColorCode = ref('');
+const answer = ref('');
+const faqQuestionId = ref('');
 
 const getSeverity = (status) => {
   switch (status) {
@@ -48,7 +41,7 @@ const getSeverity = (status) => {
 const confirmDelete = (event, id) => {
   confirm.require({
     target: event.currentTarget,
-    message: "Are you sure you want to delete this application status?",
+    message: "Are you sure you want to delete this answer?",
     header: "Confirmation",
     icon: "pi pi-info-circle",
     rejectProps: {
@@ -62,7 +55,7 @@ const confirmDelete = (event, id) => {
     },
     accept: async () => {
       try {
-        const { data } = await deleteApplicationStatus(id)
+        const { data } = await deleteFaqAnswer(id)
 
         if (data.response.status === 200) {
           toast.add({
@@ -71,7 +64,7 @@ const confirmDelete = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchApplicationStatuses();
+          fetchFaqAnswers();
         } else {
           toast.add({
             severity: "error",
@@ -81,7 +74,7 @@ const confirmDelete = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error deleting application status:", error);
+        console.error("Error deleting answer:", error.message);
       }
     },
   });
@@ -90,7 +83,7 @@ const confirmDelete = (event, id) => {
 const confirmActivate = (event, id) => {
   confirm.require({
     target: event.currentTarget,
-    message: "Are you sure you want to activate this application status?",
+    message: "Are you sure you want to activate this answer?",
     header: "Confirmation",
     icon: "pi pi-info-circle",
     rejectProps: {
@@ -104,7 +97,7 @@ const confirmActivate = (event, id) => {
     },
     accept: async () => {
       try {
-        const { data } = await activateApplicationStatus(id);
+        const { data } = await activateFaqAnswer(id);
 
         if (data.response.status === 200) {
           toast.add({
@@ -113,7 +106,7 @@ const confirmActivate = (event, id) => {
             detail: data.resData.message,
             life: 3000,
           });
-          fetchApplicationStatuses();
+          fetchFaqAnswers();
         } else {
           toast.add({
             severity: "error",
@@ -123,32 +116,32 @@ const confirmActivate = (event, id) => {
           });
         }
       } catch (error) {
-        console.error("Error activating application status:", error);
+        console.error("Error activating answer:", error.message);
       }
     },
   });
 };
 
-const fetchApplicationStatuses = async () => {
+const fetchFaqAnswers = async () => {
   loading.value = true;
   try {
-    const { data } = await getApplicationStatus({ page: currentPage.value });
+    const { data } = await getFaqAnswersAdmin({ page: currentPage.value });
 
-    applicationStatuses.value = data.resData.applyStatus;
+    faqAnswers.value = data.resData.data;
     totalRecords.value = data.resData.meta.totalCount;
     totalPages.value = data.resData.meta.totalPages;
     currentPage.value = data.resData.meta.page;
   } catch (error) {
-    console.error("Error fetching application Statuses:", error);
+    console.error("Error fetching application Statuses:", error.message);
   } finally {
     loading.value = false;
   }
 };
 
-const fetchAddApplicationStatus = async () => {
+const fetchAddFaqAnswer = async () => {
   try {
-    const input = { name: applicationStatusName.value, colorCode: applicationStatusColorCode.value };
-    const { data } = await addApplicationStatus(input);
+    const input = { answer: answer.value, faqQuestionId: faqQuestionId.value };
+    const { data } = await addFaqAnswer(input);
 
     if (data.response.status === 201) {
       toast.add({
@@ -157,8 +150,8 @@ const fetchAddApplicationStatus = async () => {
         detail: data.resData.message,
         life: 3000,
       });
-      applicationStatusName.value = '';
-      applicationStatusColorCode.value = '';
+      answer.value = '';
+      faqQuestionId.value = '';
       btnAddModal.value = false;
     } else {
       toast.add({
@@ -168,26 +161,27 @@ const fetchAddApplicationStatus = async () => {
         life: 3000,
       })
     }
-    fetchApplicationStatuses();
+    fetchFaqAnswers();
   } catch (error) {
-    console.error("Error adding application status:", error.resData.message);
+    console.error("Error adding answer:", error.message);
   }
 };
 
-const viewSelectedApplicationStatusId = (applicationStatusId) => {
-  const applicationStatus = applicationStatuses.value.find((r) => r.id === applicationStatusId);
-  if (applicationStatus) {
-    viewApplicationStatusId.value = { ...applicationStatus };
+const viewSelectedFaqAnswerId = (answerId) => {
+  const answer = faqAnswers.value.find((r) => r.id === answerId);
+  if (answer) {
+    viewFaqAnswerId.value = { ...answer };
+    faqQuestionId.value = answer.faq_question_id;
     btnEditModal.value = true;
   }
 };
 
-const fetchUpdateApplicationStatus = async () => {
+const fetchUpdateFaqAnswer = async () => {
   try {
 
-    const { data } = await updateApplicationStatus(viewApplicationStatusId.value.id, {
-      name: viewApplicationStatusId.value.name,
-      colorCode: viewApplicationStatusId.value.color_code,
+    const { data } = await updateFaqAnswer(viewFaqAnswerId.value.id, {
+      answer: viewFaqAnswerId.value.answer,
+      faqQuestionId: viewFaqAnswerId.value.faq_question_id,
     });
 
     if (data.response.status === 200) {
@@ -198,8 +192,8 @@ const fetchUpdateApplicationStatus = async () => {
         life: 3000,
       });
 
-      // Refresh applicationStatuses and close modal
-      await fetchApplicationStatuses();
+      // Refresh faqAnswers and close modal
+      await fetchFaqAnswers();
       btnEditModal.value = false;
     } else {
       toast.add({
@@ -210,23 +204,24 @@ const fetchUpdateApplicationStatus = async () => {
       });
     }
   } catch (error) {
-    console.error("Error updating application status:", error.resData.message);
+    console.error("Error updating answer:", error.message);
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: error.resData.message,
+      detail: error.message,
       life: 3000,
     });
   }
 };
 
-onMounted(() => {
-  fetchApplicationStatuses();
+onMounted(async () => {
+  await fetchFaqAnswers();
+  await faqQuestionStore.fetchFaqQuestions();
 });
 </script>
 
 <template>
-  <DataTable :value="applicationStatuses" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
+  <DataTable :value="faqAnswers" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
     :first="(currentPage - 1) * rowsPerPage"
     paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords}" :currentPage="currentPage - 1" stripedRows
@@ -237,22 +232,15 @@ onMounted(() => {
         <Button label="Add Answer" icon="pi pi-plus" class="p-button-primary" @click="btnAddModal = true" />
       </div>
     </template>
-    <Column header="#" style="width: 10%">
+    <Column header="#" style="width: 4%">
       <template #body="slotProps">
         {{ slotProps.index + 1 + (currentPage - 1) * rowsPerPage }}
       </template>
     </Column>
-    <template #empty> No application status found. </template>
-    <template #loading> Loading application status data. Please wait. </template>
-    <Column field="name" header="Name"></Column>
-    <Column field="color_code" header="Color Code">
-      <template #body="slotProps">
-        <!-- Use the color_code directly for severity -->
-        <Badge :severity="slotProps.data.color_code">
-          {{ slotProps.data.color_code }}
-        </Badge>
-      </template>
-    </Column>
+    <template #empty> No answer found. </template>
+    <template #loading> Loading answer data. Please wait. </template>
+    <Column field="answer" header="Answers" style="width: 40%"></Column>
+    <Column field="faq_questions.question" header="Questions" style="width: 40%"></Column>
     <Column field="is_active" header="Status">
       <template #body="slotProps">
         <Tag :severity="getSeverity(slotProps.data.is_active)"
@@ -261,8 +249,8 @@ onMounted(() => {
     </Column>
     <Column header="Action" style="width: 10%;">
       <template #body="slotProps">
-        <Button v-if="slotProps.data.is_active" @click="viewSelectedApplicationStatusId(slotProps.data.id)"
-          icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
+        <Button v-if="slotProps.data.is_active" @click="viewSelectedFaqAnswerId(slotProps.data.id)" icon="pi pi-pencil"
+          class="p-button-sm p-button-primary mr-2" rounded />
         <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
           class="p-button-sm p-button-danger" rounded />
         <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
@@ -272,77 +260,35 @@ onMounted(() => {
   </DataTable>
 
   <!-- Dialog modal add -->
-  <Dialog v-model:visible="btnAddModal" modal header="Add Application Status" :style="{ width: '25rem' }">
+  <Dialog v-model:visible="btnAddModal" modal header="Add Answer" :style="{ width: '35rem' }">
     <div class="flex flex-col gap-4 m-4">
-      <label for="applicationStatusName" class="font-semibold w-24"><span class="text-red-600">*</span>Name</label>
-      <InputText id="applicationStatusName" v-model="applicationStatusName" class="flex-auto" autocomplete="off"
-        placeholder="Application Status Name" />
+      <label for="answer" class="font-semibold w-24"><span class="text-red-600">*</span> Name</label>
+      <TextArea v-model="answer" class="flex-auto" autocomplete="off" placeholder="Answer" autoResize />
 
-      <label for="applicationStatusColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color
-        Code</label>
-      <Select v-model="applicationStatusColorCode" :options="severities" optionLabel="name"
-        placeholder="Select a severity">
-        <!-- Customize the dropdown items with PrimeVue's severity classes -->
-        <template #value="slotProps">
-          <div v-if="slotProps.value" class="flex items-center">
-            <Badge :severity="slotProps.value.value" style="margin-right: 8px;">
-              {{ slotProps.value.name }}
-            </Badge>
-          </div>
-          <span v-else>
-            {{ slotProps.placeholder }}
-          </span>
-        </template>
-
-        <template #option="slotProps">
-          <div class="flex items-center">
-            <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
-              {{ slotProps.option.name }}
-            </Badge>
-          </div>
-        </template>
-      </Select>
+      <label for="faqQuestionId" class="font-semibold"><span class="text-red-600">*</span> FAQ Questions</label>
+      <Select v-model="faqQuestionId" :options="faqQuestions" optionLabel="question" optionValue="id"
+        placeholder="Select question" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="btnAddModal = false"></Button>
-      <Button type="button" label="Save" @click="fetchAddApplicationStatus"></Button>
+      <Button type="button" label="Save" @click="fetchAddFaqAnswer"></Button>
     </div>
   </Dialog>
 
   <!-- Dialog modal edit -->
-  <Dialog v-model:visible="btnEditModal" modal header="Edit Application Status" :style="{ width: '25rem' }">
+  <Dialog v-model:visible="btnEditModal" modal header="Edit Answer" :style="{ width: '35rem' }">
     <div class="flex flex-col gap-4 mb-4">
-      <label for="editApplicationStatusName" class="font-semibold w-24">Name</label>
-      <InputText id="editApplicationStatusName" v-model="viewApplicationStatusId.name" class="flex-auto"
-        autocomplete="off" />
+      <label for="editAnswer" class="font-semibold w-24"><span class="text-red-600">*</span> Answer</label>
+      <TextArea v-model="viewFaqAnswerId.answer" class="flex-auto" autocomplete="off" variant="filled" autoResize />
 
-      <label for="editApplicationStatusColorCode" class="font-semibold w-24">Color Code</label>
-      <Select v-model="viewApplicationStatusId.color_code" :options="severities" optionLabel="name" optionValue="value"
-        placeholder="Select a severity">
-        <!-- Customize the dropdown items with PrimeVue's severity classes -->
-        <template #value="slotProps">
-          <div v-if="slotProps.value" class="flex items-center">
-            <Badge :severity="slotProps.value" style="margin-right: 8px;">
-              {{ slotProps.value }}
-            </Badge>
-          </div>
-          <span v-else>
-            {{ slotProps.placeholder }}
-          </span>
-        </template>
-
-        <template #option="slotProps">
-          <div class="flex items-center">
-            <Badge :severity="slotProps.option.value" style="margin-right: 8px;">
-              {{ slotProps.option.name }}
-            </Badge>
-          </div>
-        </template>
-      </Select>
+      <label for="editQuestionId" class="font-semibold"><span class="text-red-600">*</span>
+        FAQ Questions</label>
+      <Select v-model="viewFaqAnswerId.faq_question_id" :options="faqQuestions" optionLabel="question" optionValue="id"
+        placeholder="Select question" variant="filled" />
     </div>
     <div class="flex justify-end gap-2">
       <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>
-      <Button type="button" label="Save" @click="fetchUpdateApplicationStatus"></Button>
+      <Button type="button" label="Save" @click="fetchUpdateFaqAnswer"></Button>
     </div>
   </Dialog>
 </template>
