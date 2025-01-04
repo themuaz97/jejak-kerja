@@ -25,6 +25,11 @@ const router = createRouter({
                     component: () => import("@/views/pages/job-applications/JobApplication.vue"),
                 },
                 {
+                    path: "/jobs/search",
+                    name: "job-search",
+                    component: () => import("@/views/pages/job-search/JobSearch.vue"),
+                },
+                {
                     path: "/admin",
                     name: "admin-configuration",
                     component: () =>
@@ -63,11 +68,6 @@ const router = createRouter({
             path: "/auth/login",
             name: "login",
             component: () => import("@/views/pages/auth/Login.vue"),
-        },
-        {
-            path: "/auth/login2",
-            name: "login2",
-            component: () => import("@/views/pages/auth/Login2.vue"),
         },
         {
             path: "/auth/callback",

@@ -9,7 +9,10 @@ const meStore = useUserStore();
 const model = ref([
     {
         label: 'Home',
-        items: [{ label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' }],
+        items: [
+            { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
+            { label: 'Job Search', icon: 'pi pi-fw pi-search', to: '/jobs/search' },
+        ],
     },
     {
         label: 'Job Tracker',
