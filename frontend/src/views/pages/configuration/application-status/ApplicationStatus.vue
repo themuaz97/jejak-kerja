@@ -314,11 +314,11 @@ onMounted(() => {
       <div class="flex flex-col gap-4 mb-4">
         <label for="editApplicationStatusName" class="font-semibold w-24">Name</label>
         <InputText id="editApplicationStatusName" v-model="viewApplicationStatusId.name" class="flex-auto"
-          autocomplete="off" />
+          autocomplete="off" variant="filled" />
 
         <label for="editApplicationStatusColorCode" class="font-semibold w-24">Color Code</label>
         <Select v-model="viewApplicationStatusId.color_code" :options="severities" optionLabel="name"
-          optionValue="value" placeholder="Select a severity">
+          optionValue="value" placeholder="Select a severity" variant="filled">
           <!-- Customize the dropdown items with PrimeVue's severity classes -->
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center">

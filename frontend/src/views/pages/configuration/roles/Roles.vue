@@ -205,7 +205,7 @@ onMounted(() => {
     <Dialog v-model:visible="btnEditModal" modal header="Edit Role" :style="{ width: '25rem' }">
       <div class="flex items-center gap-4 mb-4">
         <label for="editRoleName" class="font-semibold w-24">Role Name</label>
-        <InputText id="editRoleName" v-model="viewRoleId.name" class="flex-auto" autocomplete="off" />
+        <InputText id="editRoleName" v-model="viewRoleId.name" class="flex-auto" autocomplete="off" variant="filled" />
       </div>
       <div class="flex justify-end gap-2">
         <Button type="button" label="Cancel" severity="secondary" @click="btnEditModal = false"></Button>

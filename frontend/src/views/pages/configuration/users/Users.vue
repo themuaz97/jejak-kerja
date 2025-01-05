@@ -223,11 +223,11 @@ const fetchUpdateUser = async () => {
       });
     }
   } catch (error) {
-    console.error("Error updating user:", error);
+    console.error("Error updating user:", error.message);
     toast.add({
       severity: "error",
       summary: "Error",
-      detail: "An error occurred while updating the user.",
+      detail: error.message,
       life: 3000,
     });
   }
@@ -340,28 +340,30 @@ onMounted(() => {
       <div class="flex flex-col gap-4 m-4">
         <label for="firstName" class="font-semibold w-24"><span class="text-red-600">*</span>First Name</label>
         <InputText id="firstName" v-model="viewUserId.first_name" class="flex-auto" autocomplete="off"
-          placeholder="First Name" />
+          placeholder="First Name" variant="filled" />
 
         <label for="lastName" class="font-semibold w-24"><span class="text-red-600">*</span>Last Name</label>
         <InputText id="lastName" v-model="viewUserId.last_name" class="flex-auto" autocomplete="off"
-          placeholder="Last Name" />
+          placeholder="Last Name" variant="filled" />
 
         <label for="email" class="font-semibold w-24"><span class="text-red-600">*</span>Email</label>
-        <InputText id="email" v-model="viewUserId.email" class="flex-auto" autocomplete="off" placeholder="Email" />
+        <InputText id="email" v-model="viewUserId.email" class="flex-auto" autocomplete="off" placeholder="Email" variant="filled" />
 
         <label for="username" class="font-semibold w-24">Username</label>
         <InputText id="username" v-model="viewUserId.username" class="flex-auto" autocomplete="off"
-          placeholder="Username(Optional)" />
+          placeholder="Username(Optional)" variant="filled" />
 
-        <label for="password" class="font-semibold w-24"><span class="text-red-600">*</span>Password</label>
-        <Password id="password" promptLabel="Choose a password" weakLabel="Too simple" mediumLabel="Average complexity"
-          strongLabel="Strong" v-model="viewUserId.password" class="flex-auto" autocomplete="off" fluid toggleMask
-          placeholder="Password" />
+        <div v-if="viewUserId.password !== null">
+          <label for="password" class="font-semibold w-24"><span class="text-red-600">*</span>Password</label>
+          <Password id="password" promptLabel="Choose a password" weakLabel="Too simple"
+            mediumLabel="Average complexity" strongLabel="Strong" v-model="viewUserId.password" class="flex-auto"
+            autocomplete="off" fluid toggleMask placeholder="Password" variant="filled" />
 
-        <label for="confirmPassword" class="font-semibold"><span class="text-red-600">*</span>Confirm Password</label>
-        <Password id="confirmPassword" promptLabel="Choose a password" weakLabel="Too simple"
-          mediumLabel="Average complexity" strongLabel="Strong" v-model="confirmPassword" class="flex-auto"
-          autocomplete="off" fluid toggleMask placeholder="Confirm Password" />
+          <label for="confirmPassword" class="font-semibold"><span class="text-red-600">*</span>Confirm Password</label>
+          <Password id="confirmPassword" promptLabel="Choose a password" weakLabel="Too simple"
+            mediumLabel="Average complexity" strongLabel="Strong" v-model="confirmPassword" class="flex-auto"
+            autocomplete="off" fluid toggleMask placeholder="Confirm Password" variant="filled" />
+        </div>
 
         <label for="roleId" class="font-semibold"><span class="text-red-600">*</span>Role</label>
         <div class="flex items-center gap-2">

@@ -313,11 +313,11 @@ onMounted(() => {
     <Dialog v-model:visible="btnEditModal" modal header="Edit Application Overall" :style="{ width: '25rem' }">
       <div class="flex flex-col gap-4 mb-4">
         <label for="editRoleName" class="font-semibold w-24">Name</label>
-        <InputText id="editRoleName" v-model="viewApplicationOverallId.name" class="flex-auto" autocomplete="off" />
+        <InputText id="editRoleName" v-model="viewApplicationOverallId.name" class="flex-auto" autocomplete="off" variant="filled" />
 
         <label for="editRoleColorCode" class="font-semibold w-24">Color Code</label>
         <Select v-model="viewApplicationOverallId.color_code" :options="severities" optionLabel="name"
-          optionValue="value" placeholder="Select a severity">
+          optionValue="value" placeholder="Select a severity" variant="filled">
           <!-- Customize the dropdown items with PrimeVue's severity classes -->
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center">

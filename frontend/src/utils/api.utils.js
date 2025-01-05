@@ -1,5 +1,5 @@
 import { METHOD } from "@/constants/api-method.constant";
-import { base_url } from "@/constants/api.constant";
+import { base_url, jsearch_url, rapidApiKey } from "@/constants/api.constant";
 import { refreshToken } from "@/services/auth.service";
 
 export const apiService = async (
@@ -79,5 +79,53 @@ export const apiService = async (
     } catch (error) {
         console.error("API Error:", error.message);
         throw error;
+    }
+};
+
+export const apiKeyService = async (
+    url,
+    method = METHOD.GET,
+    body = null,
+    headers = {},
+    params = null,
+    apiKey,
+    apiKeyHeader = "x-rapidapi-key",
+    apiHost = "jsearch.p.rapidapi.com",
+) => {
+    const options = {
+        method,
+        headers: {
+            "Content-Type": "application/json",
+            [apiKeyHeader]: apiKey, // Add the API key header
+            "x-rapidapi-host": apiHost, // Add the API host header
+            ...headers, // Merge additional headers
+        },
+    };
+
+    if (body) {
+        if (headers["Content-Type"] === "multipart/form-data") {
+            options.body = body;
+            delete options.headers["Content-Type"];
+        } else {
+            options.body = JSON.stringify(body);
+        }
+    }
+
+    // Convert params to query string
+    let fullUrl = `${jsearch_url}${url}`;
+
+    if (params) {
+        const queryString = new URLSearchParams(params).toString();
+        fullUrl = `${fullUrl}?${queryString}`;
+    }
+
+    try {
+        const response = await fetch(fullUrl, options)
+        const data = await response.json();
+
+        return { data: { response, resData: data } };
+    } catch (error) {
+        console.error("API Error:", error);
+        return { error }
     }
 };

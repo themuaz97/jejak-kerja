@@ -1,4 +1,6 @@
 export const base_url = import.meta.env.VITE_BACKEND;
+export const jsearch_url = import.meta.env.VITE_JSEARCH_URL;
+export const rapidApiKey = import.meta.env.VITE_RAPID_API_KEY;
 
 // Example usage
 export const ENDPOINTS = {
@@ -28,6 +30,9 @@ export const ENDPOINTS = {
   DASHBOARD_COUNT: `/dashboard/count`,
   DASHBOARD_JOBS_BY_STATUS: `/dashboard/jobs-by-status`,
   DASHBOARD_JOBS_BY_PLATFORM: `/dashboard/jobs-by-platform`,
+  
+  // job search
+  JOB_SEARCH: `/search`,
 
   // job applications
   JOB_APPLICATIONS: `/job-applications`,
