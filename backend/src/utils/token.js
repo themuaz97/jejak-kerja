@@ -56,7 +56,7 @@ export const generateToken = async (ssoId, userId, res, provider, token_type) =>
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    domain: process.env.FRONTEND_URL,
+    domain: process.env.NODE_ENV === "production" ? ".darkslategray-louse-361374.hostingersite.com" : undefined,
   });
 
   return { accessToken, refreshToken };
