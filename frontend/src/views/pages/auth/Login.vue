@@ -24,30 +24,33 @@
             <Divider align="center">
               <span>or continue with email</span>
             </Divider>
-            <div class="flex flex-col gap-2">
-              <label for="email">Email</label>
-              <InputText v-model="email" placeholder="Email" fluid />
-            </div>
-            <div class="flex flex-col gap-2">
-              <label for="password">Password</label>
-              <Password v-model="password" placeholder="Password" fluid toggleMask />
-            </div>
-            <div class="flex items-center justify-between mb-8 gap-4">
-              <div class="flex items-center">
-                <Checkbox v-model="checked" id="rememberme" binary class="mr-2"></Checkbox>
-                <label for="rememberme">Remember me</label>
+
+            <form @submit.prevent="handleLogin">
+              <div class="flex flex-col gap-2">
+                <label for="email">Email</label>
+                <InputText v-model="email" placeholder="Email" required fluid />
               </div>
-              <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
-                @click="$router.push('/auth/forgot-password')">
-                Forgot password?
-              </span>
-            </div>
-            <Button :loading="loading" @click="handleLogin" label="Login" class="w-full" />
-            <div class="flex flex-row justify-center items-center gap-2">
-              <span class="text-end">Don't have an account?</span>
-              <Button label="Register here" link @click="$router.push('/auth/register')"
-                style="margin: 0; padding: 0;" />
-            </div>
+              <div class="flex flex-col gap-2">
+                <label for="password">Password</label>
+                <Password v-model="password" placeholder="Password" required fluid toggleMask />
+              </div>
+              <div class="flex items-center justify-between mb-8 gap-4">
+                <div class="flex items-center">
+                  <Checkbox v-model="checked" id="rememberme" binary class="mr-2"></Checkbox>
+                  <label for="rememberme">Remember me</label>
+                </div>
+                <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary"
+                  @click="$router.push('/auth/forgot-password')">
+                  Forgot password?
+                </span>
+              </div>
+              <Button type="submit" :loading="loading" label="Login" class="w-full" />
+            </form>
+              <div class="flex flex-row justify-center items-center gap-2">
+                <span class="text-end">Don't have an account?</span>
+                <Button label="Register here" link @click="$router.push('/auth/register')"
+                  style="margin: 0; padding: 0;" />
+              </div>
           </div>
         </div>
       </div>

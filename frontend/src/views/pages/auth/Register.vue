@@ -19,6 +19,8 @@
             <Divider align="center">
               <span>or continue with email</span>
             </Divider>
+
+            <form class="flex flex-col gap-4 w-full" @submit.prevent="handleRegister">
             <div class="grid grid-cols-2 gap-4 w-full">
               <div class="flex flex-col">
                 <label for="firstname">First Name</label>
@@ -52,7 +54,7 @@
                   :class="{ 'p-invalid': !passwordsMatch }" />
               </div>
               <div class="flex flex-col gap-4 col-span-2">
-                <Button label="Register" :loading="loading" @click="handleRegister" />
+                <Button label="Register" :loading="loading" />
                 <div class="flex flex-row justify-center items-center gap-2">
                   <span class="text-end">Already have an account?</span>
                   <Button label="Login here" link @click="$router.push('/auth/login')"
@@ -60,6 +62,7 @@
                 </div>
               </div>
             </div>
+            </form>
           </div>
         </div>
       </div>

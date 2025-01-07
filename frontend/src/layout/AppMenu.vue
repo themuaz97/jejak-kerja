@@ -11,7 +11,7 @@ const model = ref([
         label: 'Home',
         items: [
             { label: 'Dashboard', icon: 'pi pi-fw pi-home', to: '/dashboard' },
-            { label: 'Job Search', icon: 'pi pi-fw pi-search', to: '/jobs/search' },
+            // { label: 'Job Search', icon: 'pi pi-fw pi-search', to: '/jobs/search' },
         ],
     },
     {
@@ -33,14 +33,22 @@ const protectRouteAdmin = async () => {
 
         // If the user has an "admin" role, add the admin configuration menu
         if (user?.role?.name === 'admin') {
-            model.value.push({
+            const homeSection = model.value.find(section => section.label === 'Home');
+            if (homeSection) {
+                homeSection.items.push(
+                    { label: 'Job Search', icon: 'pi pi-fw pi-search', to: '/jobs/search' }
+                );
+            }
+            model.value.push(
+                {
                 label: 'Configuration',
                 items: [
                     { label: 'Admin Config', icon: 'pi pi-fw pi-cog', to: '/admin' },
                     { label: 'Landing Config', icon: 'pi pi-fw pi-cog', to: '/admin/landing' },
                     { label: 'Notification', icon: 'pi pi-fw pi-cog', to: '/admin/notification' },
                 ],
-            });
+                }
+            );
         }
     } catch (error) {
         console.error('Error checking admin role:', error);
