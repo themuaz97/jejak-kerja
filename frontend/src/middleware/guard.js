@@ -23,11 +23,7 @@ export const protectRoute = (router) => {
 
         const accessToken = localStorage.getItem("accessToken");
         
-        const refreshTokenExists = document.cookie
-            .split("; ")
-            .some((cookie) => cookie.startsWith("refreshToken="));
-        
-        if (!accessToken || !refreshTokenExists) {
+        if (!accessToken) {
             return next({ name: "login" });
         }
 
@@ -65,11 +61,8 @@ export const protectRouteAdmin = (router) => {
         }
 
         const accessToken = localStorage.getItem("accessToken");
-        const refreshTokenExists = document.cookie
-            .split("; ")
-            .some((cookie) => cookie.startsWith("refreshToken="));
 
-        if (!accessToken || !refreshTokenExists) {
+        if (!accessToken) {
             return next({ name: "login" });
         }
 
