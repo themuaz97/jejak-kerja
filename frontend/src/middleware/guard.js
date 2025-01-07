@@ -46,6 +46,7 @@ export const protectRoute = (router) => {
                 next(); // Proceed to other error handling if needed
             }
         }
+        console.log(`Navigating from ${from.path} to ${to.path}`);
     });
 };
 

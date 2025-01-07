@@ -99,7 +99,6 @@ const handleLogin = async () => {
         detail: data.resData.message,
         life: 3000
       });
-      router.push('/dashboard');
     } else {
       toast.add({
         severity: 'error',
@@ -108,6 +107,7 @@ const handleLogin = async () => {
         life: 3000
       });
     }
+    router.push('/dashboard');
 
   } catch (error) {
     console.error('Login Failed:', error);
