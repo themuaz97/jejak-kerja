@@ -52,7 +52,7 @@ export const generateToken = async (ssoId, userId, res, provider, token_type) =>
 
   // 4. Set the access accessToken as an HTTP-only cookie
   res.cookie("refreshToken", refreshToken, {
-    httpOnly: process.env.NODE_ENV === "production",
+    httpOnly: process.env.NODE_ENV === "development",
     secure: process.env.NODE_ENV === "development",
     sameSite: process.env.NODE_ENV === "production" ? "lax" : "none",
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
