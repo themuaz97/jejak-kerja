@@ -1,0 +1,68 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main  # Run this workflow when code is pushed to the "main" branch
+
+jobs:
+  deploy-backend:
+    runs-on: ubuntu-latest
+    name: Deploy Backend
+    steps:
+      # Step 1: Check out your code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js (use the version you need, e.g., 20.14)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.14
+
+      # Step 3: Navigate to the backend folder
+      - name: Navigate to backend
+        run: cd backend
+
+      # Step 4: Build the backend
+      - name: Build backend
+        run: npm run build
+
+      # Step 5: Start the backend (or deploy it to your server)
+      - name: Start backend
+        run: |
+          npm install -g pm2
+          pm2 start src/index.js --name "backend"
+
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    name: Deploy Frontend
+    needs: deploy-backend  # Wait for the backend to finish deploying
+    steps:
+      # Step 1: Check out your code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20.14
+
+      # Step 3: Navigate to the frontend folder
+      - name: Navigate to frontend
+        run: cd frontend
+
+      # Step 4: Install frontend dependencies
+      - name: Install frontend dependencies
+        run: npm install
+
+      # Step 5: Build the frontend
+      - name: Build frontend
+        run: npm run build
+
+      # Step 6: Start the frontend (or deploy it to your server)
+      - name: Start frontend
+        run: |
+          npm install -g pm2
+          pm2 start src/index.js --name "frontend"

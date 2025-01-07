@@ -1,8 +1,7 @@
 /** @format */
 
 import express from "express";
-import { forgotPassword, login, logout, me, refreshToken, register, resetPassword } from "../controllers/auth.controller.js";
-import { protectRoute } from "../middleware/auth.middleware.js";
+import { forgotPassword, login, logout, refreshToken, register, resetPassword } from "../controllers/auth.controller.js";
 import { googleCallback, googleLogin } from "../controllers/authGoogle.controller.js";
 
 const authRouter = express.Router();
