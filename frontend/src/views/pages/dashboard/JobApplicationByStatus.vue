@@ -1,7 +1,7 @@
 <template>
   <div class="card flex justify-center">
     <div v-if="chartData && chartData.datasets[0].data.length > 0">
-      <Chart type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-[30rem] sm:w-[20rem]" />
+      <Chart type="doughnut" :data="chartData" :options="chartOptions" class="w-full md:w-[20rem] sm:w-[20rem]" />
     </div>
     <div v-else>
       <p class="text-center py-44">No data available</p>
