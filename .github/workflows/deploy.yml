@@ -29,10 +29,10 @@ jobs:
         run: npm run build
 
       # Step 5: Start the backend (or deploy it to your server)
-      - name: Start backend
-        run: |
-          npm install -g pm2
-          pm2 start src/index.js --name "backend"
+      # - name: Start backend
+      #   run: |
+      #     npm install -g pm2
+      #     pm2 start src/index.js --name "backend"
 
   deploy-frontend:
     runs-on: ubuntu-latest
@@ -60,9 +60,3 @@ jobs:
       # Step 5: Build the frontend
       - name: Build frontend
         run: npm run build
-
-      # Step 6: Start the frontend (or deploy it to your server)
-      - name: Start frontend
-        run: |
-          npm install -g pm2
-          pm2 start src/index.js --name "frontend"

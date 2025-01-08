@@ -357,38 +357,26 @@ onMounted(() => {
 
                     <div class="col-span-12 md:col-span-10">
                         <div class="grid grid-cols-12 gap-8 text-center md:text-left">
-                            <!-- <div class="col-span-12 md:col-span-3">
+                            <div class="col-span-12 md:col-span-3 ml-32">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
-                                    Company</h4>
-                                <a
+                                    Myself</h4>
+                                <a href="https://read.cv/themuaz97" target="_blank"
                                     class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">About
-                                    Us</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">News</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Investor
-                                    Relations</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Careers</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Media
-                                    Kit</a>
-                            </div> -->
+                                    me</a>
+                            </div>
 
-                            <!-- <div class="col-span-12 md:col-span-3">
+                            <div class="col-span-12 md:col-span-3">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
-                                    Resources</h4>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Get
-                                    Started</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100">Learn</a>
-                                <a
-                                    class="leading-normal text-xl block cursor-pointer text-surface-700 dark:text-surface-100">Case
-                                    Studies</a>
-                            </div> -->
+                                    My Products</h4>
+                                <a href="https://cakap-chat.onrender.com" target="_blank"
+                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100 hover:underline hover:text-blue-400">Cakap
+                                    chat</a>
+                                <a href="https://github.com/themuaz97/muaz-movie" target="_blank"
+                                    class="leading-normal text-xl block cursor-pointer mb-2 text-surface-700 dark:text-surface-100 hover:underline hover:text-blue-400">Movie
+                                    Directory</a>
+                            </div>
 
                             <!-- <div class="col-span-12 md:col-span-3">
                                 <h4

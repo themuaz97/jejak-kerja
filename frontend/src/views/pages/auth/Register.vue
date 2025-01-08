@@ -1,9 +1,9 @@
 <template>
   <Toast position="top-left" />
-  <div class="absolute flex justify-start gap-4 pl-6 pt-6 w-full">
+  <a href="/" class="absolute flex justify-start gap-4 pl-6 pt-6 w-full">
     <img src="/demo/images/logo.svg" alt="jejak kerja" class="w-8 h-8">
     <span class="font-medium text-2xl">Jejak Kerja</span>
-  </div>
+  </a>
   <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw]">
     <div class="grid grid-cols-2 w-full h-screen">
       <div class="flex justify-center items-center w-full">
@@ -24,7 +24,7 @@
             <div class="grid grid-cols-2 gap-4 w-full">
               <div class="flex flex-col">
                 <label for="firstname">First Name</label>
-                <InputText id="firstname" v-model="firstName" placeholder="First Name" pe="text" />
+                <InputText id="firstname" v-model="firstName" placeholder="First Name" type="text" />
               </div>
               <div class="flex flex-col">
                 <label for="lastname">Last Name</label>
@@ -54,7 +54,7 @@
                   :class="{ 'p-invalid': !passwordsMatch }" />
               </div>
               <div class="flex flex-col gap-4 col-span-2">
-                <Button label="Register" :loading="loading" />
+                <Button type="submit" label="Register" :loading="loading" />
                 <div class="flex flex-row justify-center items-center gap-2">
                   <span class="text-end">Already have an account?</span>
                   <Button label="Login here" link @click="$router.push('/auth/login')"
@@ -94,6 +94,10 @@ const confirmPassword = ref('');
 const loading = ref(false);
 
 const passwordsMatch = computed(() => password.value === confirmPassword.value);
+
+const googleLogin = async () => {
+  window.location.href = `${import.meta.env.VITE_BACKEND}/auth/google`;
+};
 
 const handleRegister = async () => {
   loading.value = true;
