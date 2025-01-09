@@ -46,7 +46,7 @@ export const apiService = async (
         const data = await response.json();
 
         // If unauthorized and we haven't retried yet
-        if (response.status === 401 && retryCount < 1) {
+        if (response.status === 401 && retryCount < 2) {
             try {
                 // Attempt to refresh the token
                 const refreshResponse = await refreshToken();

@@ -20,12 +20,30 @@ jobs:
         with:
           node-version: 20.14
 
-      # Step 3: Build the backend
+      # Step 3: Create .env file for backend
+      - name: Create .env file for backend
+        run: |
+          echo "PORT=${{ secrets.PORT }}" > ./backend/.env
+          echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> ./backend/.env
+          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> ./backend/.env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> ./backend/.env
+          echo "REFRESH_SECRET_KEY=${{ secrets.REFRESH_SECRET_KEY }}" >> ./backend/.env
+          echo "MAIL_HOST=${{ secrets.MAIL_HOST }}" >> ./backend/.env
+          echo "MAIL_PORT=${{ secrets.MAIL_PORT }}" >> ./backend/.env
+          echo "MAIL_USER=${{ secrets.MAIL_USER }}" >> ./backend/.env
+          echo "MAIL_PASS=${{ secrets.MAIL_PASS }}" >> ./backend/.env
+          echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> ./backend/.env
+          echo "GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }}" >> ./backend/.env
+          echo "GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }}" >> ./backend/.env
+          echo "GOOGLE_REDIRECT_URI=${{ secrets.GOOGLE_REDIRECT_URI }}" >> ./backend/.env
+          echo "CLOUDINARY_URL=${{ secrets.CLOUDINARY_URL }}" >> ./backend/.env
+
+      # Step 4: Build the backend
       - name: Build backend
         run: npm run build
         working-directory: ./backend
 
-      # Step 4: Start the backend (or deploy it to your server)
+      # Step 5: Start the backend (or deploy it to your server)
       # - name: Start backend
       #   run: |
       #     npm install -g pm2
@@ -46,12 +64,19 @@ jobs:
         with:
           node-version: 20.14
 
-      # Step 3: Install frontend dependencies
+      # Step 3: Create .env file for frontend
+      - name: Create .env file for frontend
+        run: |
+          echo "VITE_BACKEND=${{ secrets.VITE_BACKEND }}" > ./frontend/.env
+          echo "VITE_RAPID_API_KEY=${{ secrets.VITE_RAPID_API_KEY }}" >> ./frontend/.env
+          echo "VITE_JSEARCH_URL=${{ secrets.VITE_JSEARCH_URL }}" >> ./frontend/.env
+
+      # Step 4: Install frontend dependencies
       - name: Install frontend dependencies
         run: npm install
         working-directory: ./frontend
 
-      # Step 4: Build the frontend
+      # Step 5: Build the frontend
       - name: Build frontend
         run: npm run build
         working-directory: ./frontend
