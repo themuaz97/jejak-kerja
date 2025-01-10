@@ -3,11 +3,12 @@
   <div v-animateonscroll="{ enterClass: 'animate-fadeinleft', leaveClass: 'animate-fadeoutleft' }" class="animate-duration-500">
     <a href="/" class="absolute flex justify-end gap-4 pr-6 pt-6 w-full">
       <img src="/demo/images/logo.svg" alt="jejak kerja" class="w-8 h-8">
-      <span class="font-medium text-2xl">Jejak Kerja</span>
+      <span class="font-medium text-2xl hidden lg:block">Jejak Kerja</span>
     </a>
+    <!-- TODO: enhance for mobile view also with register -->
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw]">
-      <div class="grid grid-cols-2 w-full h-screen">
-        <div class="relative bg-purple-400">
+      <div class="grid md:grid-cols-2 sm:grid-cols-1 w-full h-screen">
+        <div class="hidden md:block relative bg-purple-400">
           <div class="flex justify-center items-center h-full">
             <img src="/demo/images/auth/login.svg" alt="Login" class="w-1/2 h-1/2">
           </div>

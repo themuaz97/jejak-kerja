@@ -1,12 +1,13 @@
 <template>
-  <div v-animateonscroll="{ enterClass: 'animate-fadeinright', leaveClass: 'animate-fadeoutright' }" class="animate-duration-500">
+  <div v-animateonscroll="{ enterClass: 'animate-fadeinright', leaveClass: 'animate-fadeoutright' }"
+    class="animate-duration-500">
     <Toast position="top-left" />
     <a href="/" class="absolute flex justify-start gap-4 pl-6 pt-6 w-full">
       <img src="/demo/images/logo.svg" alt="jejak kerja" class="w-8 h-8">
-      <span class="font-medium text-2xl">Jejak Kerja</span>
+      <span class="font-medium sm:text-lg md:text-xl lg:text-2xl hidden lg:block">Jejak Kerja</span>
     </a>
     <div class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-[100vw]">
-      <div class="grid grid-cols-2 w-full h-screen">
+      <div class="grid md:grid-cols-2 sm:grid-cols-1 w-full h-screen">
         <div class="flex justify-center items-center w-full">
           <div class="flex flex-col items-center gap-4 w-full">
             <div class="flex flex-col gap-4 w-1/2">
@@ -22,12 +23,12 @@
               </Divider>
 
               <form class="flex flex-col gap-4 w-full" @submit.prevent="handleRegister">
-                <div class="grid grid-cols-2 gap-4 w-full">
-                  <div class="flex flex-col">
+                <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4 w-full">
+                  <div class="flex flex-col col-span-2 sm:col-span-1">
                     <label for="firstname">First Name</label>
                     <InputText id="firstname" v-model="firstName" placeholder="First Name" type="text" />
                   </div>
-                  <div class="flex flex-col">
+                  <div class="flex flex-col col-span-2 sm:col-span-1">
                     <label for="lastname">Last Name</label>
                     <InputText id="lastname" v-model="lastName" placeholder="Last Name" type="text" />
                   </div>
@@ -67,7 +68,7 @@
             </div>
           </div>
         </div>
-        <div class="relative bg-purple-400">
+        <div class="hidden md:block relative bg-purple-400">
           <div class="flex justify-center items-center h-full">
             <img src="/demo/images/auth/register.svg" alt="Login" class="w-1/2 h-1/2">
           </div>

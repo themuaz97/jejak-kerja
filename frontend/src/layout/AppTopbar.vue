@@ -40,10 +40,6 @@ const items = ref([
 const toggleAccount = (event) => {
     menu.value.toggle(event);
 };
-
-onMounted(() => {
-    userStore.fetchMe();
-});
 </script>
 
 <template>

@@ -1,8 +1,15 @@
 <script setup>
 import { addJobApplication, getJobApplications, updateJobApplication, deleteJobApplication, getApplyStatus, getApplyOverall } from "@/services/jobApplication.service";
+import JobApplication from "@/views/mobiles/job-applications/JobApplication.vue";
 import { useConfirm } from "primevue";
 import { useToast } from "primevue/usetoast";
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, onUnmounted } from "vue";
+
+const isMobileView = ref(window.innerWidth <= 768);
+
+const checkMobileView = () => {
+  isMobileView.value = window.innerWidth <= 768; // Update the mobile view state
+};
 
 const toast = useToast();
 const confirm = useConfirm();
@@ -252,24 +259,27 @@ onMounted(() => {
   fetchJobApplication();
   fetchApplicationStatuses();
   fetchApplicationOverall();
+  window.addEventListener("resize", checkMobileView);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", checkMobileView); // Clean up the event listener
 });
 </script>
 
 <template>
-  <div class="card">
+  <div v-if="!isMobileView" class="card">
     <div class="flex justify-between gap-4">
       <div class="flex flex-col gap-2">
         <label for="date">Date</label>
-        <DatePicker v-model="filterDate" view="month" placeholder="Select a date" showIcon
-          iconDisplay="input" dateFormat="mm/yy" variant="filled" />
+        <DatePicker v-model="filterDate" view="month" placeholder="Select a date" showIcon iconDisplay="input"
+          dateFormat="mm/yy" variant="filled" />
       </div>
     </div>
     <div class="my-2 py-2">
       <Divider />
     </div>
     <div>
-      <Toast />
-      <ConfirmPopup />
       <DataTable :value="filteredApplications" paginator :rows="rowsPerPage" :totalRecords="totalRecords"
         :first="(currentPage - 1) * rowsPerPage"
         paginatorTemplate="FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
@@ -486,5 +496,10 @@ onMounted(() => {
         <Button type="button" label="Save" @click="fetchUpdateJobApplication"></Button>
       </div>
     </Dialog>
+  </div>
+
+  <!-- Mobile View -->
+  <div v-else class="flex flex-col gap-4">
+    <JobApplication :jobApplications="filteredApplications" />
   </div>
 </template>
