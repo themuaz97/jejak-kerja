@@ -2,6 +2,7 @@
 import { getFaqQuestions } from '@/services/faq.service';
 import { onMounted, ref } from 'vue';
 
+const currentYear = ref(new Date().getFullYear());
 const faqs = ref([]);
 
 const fetchFaqQuestions = async () => {
@@ -433,7 +434,7 @@ onMounted(() => {
         </div>
         <Divider />
         <div class="flex justify-center items-center pb-4">
-            <span>Copyright &copy; 2025 Jejak Kerja. All Rights Reserved.</span>
+            <span>Copyright &copy; {{  currentYear }} Jejak Kerja. All Rights Reserved.</span>
         </div>
     </div>
 </template>

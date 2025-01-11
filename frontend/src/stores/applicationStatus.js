@@ -9,9 +9,9 @@ export const useApplicationStatusStore = defineStore("applicationStatus", {
     fetched: false, // Indicates if the applicationStatus data has already been fetched
   }),
   actions: {
-    async fetchApplicationStatus() {
+    async fetchApplicationStatus(forceRefresh = false) {
       // If data is already fetched, return early
-      if (this.fetched) {
+      if (this.fetched && !forceRefresh) {
         return this.applicationStatus;
       }
 

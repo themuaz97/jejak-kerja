@@ -333,12 +333,14 @@ onUnmounted(() => {
         <Column field="remarks" header="Remarks"></Column>
         <Column header="Action" style="width: 10%;" frozen alignFrozen="right">
           <template #body="slotProps">
-            <Button v-if="slotProps.data.is_active" @click="viewSelectedJobApplicationId(slotProps.data.id)"
-              icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
-            <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
-              class="p-button-sm p-button-danger" rounded />
-            <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
-              class="p-button-sm p-button-contrast" rounded />
+            <div class="flex">
+              <Button v-if="slotProps.data.is_active" @click="viewSelectedJobApplicationId(slotProps.data.id)"
+                icon="pi pi-pencil" class="p-button-sm p-button-primary mr-2" rounded />
+              <Button v-if="slotProps.data.is_active" @click="confirmDelete($event, slotProps.data.id)" icon="pi pi-trash"
+                class="p-button-sm p-button-danger" rounded />
+              <Button v-else @click="confirmActivate($event, slotProps.data.id)" icon="pi pi-undo"
+                class="p-button-sm p-button-contrast" rounded />
+            </div>
           </template>
         </Column>
       </DataTable>
@@ -500,6 +502,7 @@ onUnmounted(() => {
 
   <!-- Mobile View -->
   <div v-else class="flex flex-col gap-4">
-    <JobApplication :jobApplications="filteredApplications" />
+    <JobApplication :jobApplications="filteredApplications" :filterDate="filterDate"
+      @update:filterDate="(newDate) => filterDate = newDate" @refreshData="fetchJobApplication" />
   </div>
 </template>

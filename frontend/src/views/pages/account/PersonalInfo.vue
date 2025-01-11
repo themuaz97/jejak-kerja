@@ -88,17 +88,17 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div v-if="meStore.user" class="grid grid-cols-2 m-4 gap-4">
-    <div class="col-span-2 flex flex-col justify-center items-center gap-4 mb-4">
+  <div v-if="meStore.user" class="grid md:grid-cols-2 sm:grid-cols-1 m-4 gap-4">
+    <div class="md:col-span-2 sm:col-span-1 flex flex-col justify-center items-center gap-4 mb-4">
       <label
-        class="absolute top-28 flex items-center justify-center w-36 h-36 bg-gray-200 rounded-full cursor-pointer overflow-hidden group">
+        class="absolute top-32 md:top-28 flex items-center justify-center md:w-36 md:h-36 w-24 h-24 bg-gray-200 rounded-full cursor-pointer overflow-hidden group">
         <input type="file" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept="image/*"
           @change="uploadImage" />
         <img id="profileImage" :src="previewImageUrl || meStore.user.profile_img" alt="profile"
           class="w-full h-full object-cover rounded-full" />
         <div
           class="absolute inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity">
-          <i class="pi pi-pencil text-3xl"></i>
+          <i class="pi pi-pencil text-2xl sm:text-3xl"></i>
         </div>
       </label>
     </div>
