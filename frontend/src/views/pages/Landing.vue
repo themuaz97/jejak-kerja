@@ -73,7 +73,7 @@ onMounted(() => {
                 style="background: linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), radial-gradient(77.36% 256.97% at 77.36% 57.52%, rgb(238, 239, 175) 0%, rgb(195, 227, 250) 100%); clip-path: ellipse(150% 87% at 93% 13%)">
                 <div class="mx-6 md:mx-20 mt-0 md:mt-6">
                     <h1 class="text-6xl font-bold text-gray-900 leading-tight"><span class="font-light block">Welcome
-                            to</span>Jejak Kerja</h1>
+                            to </span>Jejak Kerja</h1>
                     <p class="font-normal text-2xl leading-normal md:mt-4 text-gray-700">Effortlessly track your job
                         applications and progress with Jejak Kerja—your partner in staying on top of every opportunity!"
                     </p>
@@ -96,7 +96,7 @@ onMounted(() => {
 
                     <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
                         <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))">
+                            style="padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(187, 199, 205, 0.2))">
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                                 <div class="flex items-center justify-center bg-yellow-200 mb-4"
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
@@ -110,7 +110,7 @@ onMounted(() => {
 
                     <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg:pr-8 lg:pb-8 mt-6 lg:mt-0">
                         <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))">
+                            style="padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(145, 226, 237, 0.2), rgba(251, 199, 145, 0.2)), linear-gradient(180deg, rgba(253, 228, 165, 0.2), rgba(172, 180, 223, 0.2))">
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                                 <div class="flex items-center justify-center bg-cyan-200 mb-4"
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
@@ -141,13 +141,13 @@ onMounted(() => {
 
                     <div class="col-span-12 md:col-span-12 lg:col-span-4 p-0 lg-4 mt-6 lg:mt-0">
                         <div
-                            style="height: 160px; padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))">
+                            style="padding: 2px; border-radius: 10px; background: linear-gradient(90deg, rgba(160, 210, 250, 0.2), rgba(212, 162, 221, 0.2)), linear-gradient(180deg, rgba(246, 158, 188, 0.2), rgba(212, 162, 221, 0.2))">
                             <div class="p-4 bg-surface-0 dark:bg-surface-900 h-full" style="border-radius: 8px">
                                 <div class="flex items-center justify-center bg-purple-200 mb-4"
                                     style="width: 3.5rem; height: 3.5rem; border-radius: 10px">
                                     <i class="pi pi-fw pi-eye !text-2xl text-purple-700"></i>
                                 </div>
-                                <div class="mt-6 mb-1 text-surface-900 dark:text-surface-0 text-xl font-semibold">
+                                <div class="mb-2 text-surface-900 dark:text-surface-0">
                                     Privacy</div>
                                 <span class="text-surface-600 dark:text-surface-200">Your data is protected with robust
                                     security measures.</span>
@@ -377,7 +377,7 @@ onMounted(() => {
 
                     <div class="col-span-12 md:col-span-10">
                         <div class="grid grid-cols-12 gap-8 text-center md:text-left">
-                            <div class="col-span-12 md:col-span-3 ml-32">
+                            <div class="col-span-12 md:col-span-3 md:ml-32">
                                 <h4
                                     class="font-medium text-2xl leading-normal mb-4 text-surface-900 dark:text-surface-0">
                                     Myself</h4>
@@ -434,7 +434,7 @@ onMounted(() => {
         </div>
         <Divider />
         <div class="flex justify-center items-center pb-4">
-            <span>Copyright &copy; {{  currentYear }} Jejak Kerja. All Rights Reserved.</span>
+            <span>Copyright &copy; {{ currentYear }} Jejak Kerja. All Rights Reserved.</span>
         </div>
     </div>
 </template>

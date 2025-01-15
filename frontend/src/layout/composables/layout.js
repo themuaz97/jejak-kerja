@@ -5,7 +5,7 @@ const layoutConfig = reactive({
     primary: 'rose',
     surface: null,
     darkTheme: false,
-    menuMode: 'static'
+    menuMode: 'overlay'
 });
 
 const layoutState = reactive({
