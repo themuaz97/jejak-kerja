@@ -2,6 +2,7 @@ import { METHOD } from "@/constants/api-method.constant";
 import { base_url, jsearch_url, rapidApiKey } from "@/constants/api.constant";
 import { refreshToken } from "@/services/auth.service";
 
+// FIXME: repair refresh token
 export const apiService = async (
     url,
     method = METHOD.GET,
@@ -70,7 +71,7 @@ export const apiService = async (
                 }
             } catch (error) {
                 // If refresh fails, logout the user
-                // await logout();
+                await logout();
                 return Promise.reject("Session expired. Please log in again.");
             }
         }

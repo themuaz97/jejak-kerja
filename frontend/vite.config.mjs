@@ -20,5 +20,17 @@ export default defineConfig({
         alias: {
             '@': fileURLToPath(new URL('./src', import.meta.url))
         }
+    },
+    server: {
+        proxy: {
+            '/api': {
+                target: 'https://jejak-kerja.onrender.com',
+                changeOrigin: true,
+                headers: {
+                    Accept: 'application/json',
+                },
+                // rewrite: (path) => path.replace(/^\/api/, '')
+            }
+        }
     }
 });

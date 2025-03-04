@@ -147,7 +147,7 @@ const fetchApplicationStatuses = async () => {
 
 const fetchAddApplicationStatus = async () => {
   try {
-    const input = { name: applicationStatusName.value, colorCode: applicationStatusColorCode.value };
+    const input = { name: applicationStatusName.value, colorCode: applicationStatusColorCode?.value };
     const { data } = await addApplicationStatus(input);
 
     if (data.response.status === 201) {
@@ -280,13 +280,13 @@ onMounted(() => {
 
         <label for="applicationStatusColorCode" class="font-semibold w-24"><span class="text-red-600">*</span>Color
           Code</label>
-        <Select v-model="applicationStatusColorCode" :options="severities" optionLabel="name"
+        <Select v-model="applicationStatusColorCode" :options="severities" optionLabel="name" optionValue="value"
           placeholder="Select a severity">
           <!-- Customize the dropdown items with PrimeVue's severity classes -->
           <template #value="slotProps">
             <div v-if="slotProps.value" class="flex items-center">
-              <Badge :severity="slotProps.value.value" style="margin-right: 8px;">
-                {{ slotProps.value.name }}
+              <Badge :severity="slotProps.value" style="margin-right: 8px;">
+                {{ slotProps.value }}
               </Badge>
             </div>
             <span v-else>

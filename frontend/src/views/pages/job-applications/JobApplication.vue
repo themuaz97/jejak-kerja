@@ -131,6 +131,7 @@ const confirmDelete = (event, id) => {
   });
 };
 
+// TODO: show url, applied date, add, update too
 const fetchJobApplication = async () => {
   try {
     const { data } = await getJobApplications({ page: currentPage.value });
