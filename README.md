@@ -22,7 +22,7 @@
   <li>Admin Dashboard: Admin users can manage user accounts, job applications, and view application stats.</li>
   <li>Data Storage: All application data is securely stored and managed using PostgreSQL and Prisma.</li>
 
-<h2>Technologies Used</h2>
+<h2>Tech Stacks</h2>
   <li>Frontend: Vue.js</li>
   <li>Backend: Node.js, Express.js</li>
   <li>Database: PostgreSQL with Prisma ORM</li>
